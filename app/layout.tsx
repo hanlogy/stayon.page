@@ -19,8 +19,22 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="en">
-      <body className={clsx(robotoSans.variable, 'font-sans', 'antialiased')}>
-        {children}
+      <body
+        className={clsx(
+          robotoSans.variable,
+          'font-sans',
+          'antialiased',
+          'min-h-dvh',
+          'flex',
+          'flex-col'
+        )}
+      >
+        <div className="flex-1">{children}</div>
+        <footer>
+          <div className="my-6 text-center text-sm text-gray-400">
+            © 2026 stayon.page
+          </div>
+        </footer>
       </body>
     </html>
   );
