@@ -5,7 +5,7 @@ import {
   CircleQuestionMarkIcon,
   ListChecksIcon,
 } from 'lucide-react';
-import Link from 'next/link';
+import { LazyLink } from '@/component/LazyLink';
 
 const options = [
   {
@@ -39,7 +39,7 @@ export function CreateCards() {
     <>
       {options.map(({ name, description, path, icon }) => {
         return (
-          <Link
+          <LazyLink
             href={`/editor/${path}`}
             key={path}
             className={clsx(
@@ -53,7 +53,7 @@ export function CreateCards() {
               <h3 className="text-xl">{name}</h3>
             </div>
             <p className="text-gray-500">{description}</p>
-          </Link>
+          </LazyLink>
         );
       })}
     </>
