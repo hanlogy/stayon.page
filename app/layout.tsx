@@ -11,7 +11,7 @@ const robotoSans = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: 'StayOn Pages | Create and Share Disposable Pages Instantly',
+  title: 'StayOn Page - No-account checklists, polls, events & booking',
   description:
     'Create anonymous shopping lists, event itineraries, and voting polls instantly. No account required, no ads, no tracking, and links auto-expire for privacy.',
 };
@@ -29,12 +29,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           'flex-col'
         )}
       >
-        <div className="flex-1">{children}</div>
-        <footer>
-          <div className="my-6 text-center text-sm text-gray-400">
-            © 2026 stayon.page
-          </div>
-        </footer>
+        {children}
       </body>
     </html>
   );

@@ -1,15 +1,13 @@
 import clsx from 'clsx';
 import { CreateCards } from './components/CreateCards';
-import { Header } from './components/header';
 
 export default function HomePage() {
   return (
     <>
-      <Header />
       <main className="">
         <div className="mt-8 mb-10 text-center md:mt-10 md:mb-12 lg:mt-12 lg:mb-16">
           <div className="mb-2 text-gray-500 lg:mb-4 lg:text-lg">
-            Anonymous • No tracking
+            No account, no tracking
           </div>
           <h2 className="text-3xl font-medium text-gray-600 md:text-4xl lg:text-5xl">
             I want to create...

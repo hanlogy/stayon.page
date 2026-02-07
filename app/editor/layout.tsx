@@ -1,13 +1,19 @@
-import { XIcon } from 'lucide-react';
+import { ChevronLeftIcon } from 'lucide-react';
 import Link from 'next/link';
+import { Appbar } from '@/component/Appbar';
 
 export default function EditorLayout({ children }: LayoutProps<'/editor'>) {
   return (
     <>
-      <Link href="/" replace className="fixed top-2 right-2 p-2">
-        <XIcon />
-      </Link>
-      <div className="mx-auto max-w-2xl">{children}</div>
+      <Appbar>
+        <Link href="/" replace className="p-2">
+          <ChevronLeftIcon />
+        </Link>
+      </Appbar>
+      <div className="mx-auto max-w-2xl">
+        {children}
+        <div></div>
+      </div>
     </>
   );
 }
