@@ -1,5 +1,5 @@
 import { SVGProps } from 'react';
-import { SvgIcon } from './SvgIcon';
+import { SvgIcon } from '@hanlogy/react-web-ui';
 
 export function LogoIcon(props: SVGProps<SVGSVGElement>) {
   return (

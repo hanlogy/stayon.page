@@ -10,6 +10,8 @@
     "test": "jest"
   },
   "dependencies": {
+    "@hanlogy/react-web-ui": "^1.0.0",
+    "@hanlogy/ts-lib": "^1.0.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.563.0",
     "next": "16.1.6",
