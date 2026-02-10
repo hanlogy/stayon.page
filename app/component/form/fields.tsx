@@ -1,0 +1,29 @@
+import {
+  clsx,
+  createTextareaField,
+  createTextField,
+} from '@hanlogy/react-web-ui';
+
+const labelClass = 'text-gray-500';
+const helperClass = 'text-gray-500';
+const errorClass = 'text-red-600';
+const inputClass = ({ isError }: { isError: boolean }) => {
+  return clsx('border rounded-xl focus-within:ring-2', {
+    'bg-red-100 border-red-300 focus-within:ring-red-200': isError,
+    'bg-gray-100 border-gray-300 focus-within:ring-blue-300': !isError,
+  });
+};
+
+export const TextField = createTextField({
+  labelClass,
+  helperClass,
+  errorClass,
+  inputClass,
+});
+
+export const TextareaField = createTextareaField({
+  labelClass,
+  helperClass,
+  errorClass,
+  inputClass,
+});
