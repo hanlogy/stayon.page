@@ -1,7 +1,7 @@
 import { Button, type ButtonProps } from '@hanlogy/react-web-ui';
 import clsx from 'clsx';
 
-export function TextdButton({ className, ...rest }: ButtonProps) {
+export function TextButton({ className, ...rest }: ButtonProps) {
   return (
     <Button
       className={clsx(
@@ -15,7 +15,7 @@ export function TextdButton({ className, ...rest }: ButtonProps) {
 
 export function OutlinedButton({ className, ...rest }: ButtonProps) {
   return (
-    <TextdButton
+    <TextButton
       className={clsx('border border-gray-300', className)}
       {...rest}
     />

@@ -22,11 +22,8 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       <body
         className={clsx(
           robotoSans.variable,
-          'font-sans',
-          'antialiased',
-          'min-h-dvh',
-          'flex',
-          'flex-col'
+          'font-sans antialiased',
+          'flex min-h-dvh flex-col'
         )}
       >
         {children}
