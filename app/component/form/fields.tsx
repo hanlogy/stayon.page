@@ -1,5 +1,7 @@
 import {
   clsx,
+  createCheckboxField,
+  createSelectField,
   createTextareaField,
   createTextField,
 } from '@hanlogy/react-web-ui';
@@ -10,7 +12,7 @@ const errorClass = 'text-red-600';
 const inputClass = ({ isError }: { isError: boolean }) => {
   return clsx('border rounded-xl focus-within:ring-2', {
     'bg-red-100 border-red-300 focus-within:ring-red-200': isError,
-    'bg-gray-100 border-gray-300 focus-within:ring-blue-300': !isError,
+    'bg-gray-50 border-gray-200 focus-within:ring-blue-300': !isError,
   });
 };
 
@@ -26,4 +28,17 @@ export const TextareaField = createTextareaField({
   helperClass,
   errorClass,
   inputClass,
+});
+
+export const SelectField = createSelectField({
+  labelClass,
+  helperClass,
+  errorClass,
+  inputClass,
+});
+
+export const CheckboxField = createCheckboxField({
+  labelClass,
+  helperClass,
+  errorClass,
 });

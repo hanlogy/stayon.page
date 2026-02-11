@@ -48,10 +48,10 @@ export function ItemEditorDialog({
     >
       <div className="space-y-4">
         <TextField
+          autoComplete="off"
           label="Item name"
           controller={register('name', {
             validator: ({ name }) => {
-              console.log(name);
               if (!name?.trim()) {
                 return 'Name is required';
               }

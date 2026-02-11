@@ -43,9 +43,9 @@ export function CreateCards() {
             href={`/editor/${path}`}
             key={path}
             className={clsx(
-              'block rounded-2xl bg-white p-4 transition lg:p-6',
-              'hover:shadow-lg hover:shadow-gray-100',
-              'active:shadow-lg active:shadow-gray-100'
+              'block rounded-2xl border border-white bg-white p-4 transition lg:p-6',
+              'hover:border-gray-200 hover:shadow-lg hover:shadow-gray-200',
+              'active:border-gray-200 active:shadow-lg active:shadow-gray-200'
             )}
           >
             <div className="mb-2 flex items-center space-x-2">
