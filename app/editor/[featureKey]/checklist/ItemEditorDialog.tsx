@@ -40,7 +40,7 @@ export function ItemEditorDialog({
       actions={
         <>
           <FilledButton className="min-w-26" onClick={handleSubmit(onSubmit)}>
-            Add
+            Submit
           </FilledButton>
           <TextButton onClick={() => closeDialog()}>Close</TextButton>
         </>
@@ -53,13 +53,17 @@ export function ItemEditorDialog({
           controller={register('name', {
             validator: ({ name }) => {
               if (!name?.trim()) {
-                return 'Name is required';
+                return 'Item name is required';
               }
             },
           })}
         />
 
-        <TextareaField label="Remark" controller={register('remark')} />
+        <TextareaField
+          rows={2}
+          label="Remark"
+          controller={register('remark')}
+        />
       </div>
     </Dialog>
   );
