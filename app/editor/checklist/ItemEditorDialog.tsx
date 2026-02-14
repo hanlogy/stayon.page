@@ -16,7 +16,8 @@ export function ItemEditorDialog({
   closeDialog: CloseDialogFn<ChecklistItem>;
   initialData?: Partial<ChecklistItem>;
 }) {
-  const { register, handleSubmit, setInitialValues } = useForm<FormData>();
+  const { register, validate, getValues, setInitialValues } =
+    useForm<FormData>();
 
   if (initialData) {
     setInitialValues({
@@ -25,12 +26,20 @@ export function ItemEditorDialog({
     });
   }
 
-  const onSubmit = ({ name, remark }: FormData) => {
+  const onSubmit = () => {
+    if (!validate()) {
+      return;
+    }
+    const { name, remark } = getValues();
+    if (!name) {
+      return;
+    }
+
     closeDialog({
       id: initialData?.id ?? crypto.randomUUID(),
       name,
       remark,
-      isChecked: false,
+      isChecked: initialData?.isChecked ?? false,
     });
   };
 
@@ -39,7 +48,7 @@ export function ItemEditorDialog({
       title={initialData ? 'Edit Item' : 'Add Item'}
       actions={
         <>
-          <FilledButton className="min-w-26" onClick={handleSubmit(onSubmit)}>
+          <FilledButton className="min-w-26" onClick={() => onSubmit()}>
             Submit
           </FilledButton>
           <TextButton onClick={() => closeDialog()}>Close</TextButton>

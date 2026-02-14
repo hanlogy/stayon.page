@@ -1,3 +1,4 @@
+import { PropsWithChildren } from 'react';
 import { IconButton } from '@hanlogy/react-web-ui';
 import { Edit2Icon, PlusIcon, Trash2Icon } from 'lucide-react';
 import { OutlinedButton } from '@/component/buttons';
@@ -18,10 +19,8 @@ export function DeleteIconButton(props: { onClick: VoidFunction }) {
   );
 }
 
-export function AddItemButton(props: { onClick: VoidFunction }) {
-  return (
-    <OutlinedButton icon={<PlusIcon size={18} />} {...props}>
-      Add item
-    </OutlinedButton>
-  );
+export function AddButtonWithIcon(
+  props: PropsWithChildren<{ onClick: VoidFunction }>
+) {
+  return <OutlinedButton icon={<PlusIcon size={18} />} {...props} />;
 }
