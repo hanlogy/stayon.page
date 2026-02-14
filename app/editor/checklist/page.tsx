@@ -1,5 +1,10 @@
 import { DialogProvider } from '@hanlogy/react-web-ui';
+import { Metadata } from 'next';
 import { ChecklistEditor } from './ChecklistEditor';
+
+export const metadata: Metadata = {
+  title: 'Checklist Editor',
+};
 
 export default function ChecklistEditorPage() {
   return (

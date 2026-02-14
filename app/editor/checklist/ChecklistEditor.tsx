@@ -1,9 +1,8 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { useDialog, useForm } from '@hanlogy/react-web-ui';
+import { useEffect } from 'react';
+import { HiddenField, useForm } from '@hanlogy/react-web-ui';
 import { TextField } from '@/component/form/fields';
-import { ChecklistItem } from '@/definitions/types';
 import { EditorForm } from '../components/EditorForm';
 import {
   AddButtonWithIcon,
@@ -11,38 +10,28 @@ import {
   EditIconButton,
 } from '../components/buttons';
 import { SettingsFormData } from '../types';
-import { ItemEditorDialog } from './ItemEditorDialog';
 import { publishChecklist } from './action';
+import { useChecklistItemDialog } from './useChecklistItemDialog';
 
 type FormData = SettingsFormData & {
   name: string;
+  items: string;
 };
 
 export function ChecklistEditor() {
   const formManager = useForm<FormData>();
-  const { register } = formManager;
-  const { openDialog } = useDialog();
-  const [items, setItems] = useState<ChecklistItem[]>([]);
+  const { items, setItems, openItemDialog } = useChecklistItemDialog();
+  const { register, setFieldValue, setValuesChangeListener } = formManager;
 
-  const handleOpenDialog = async (item?: ChecklistItem) => {
-    const result = await openDialog<ChecklistItem>(({ closeDialog }) => (
-      <ItemEditorDialog initialData={item} closeDialog={closeDialog} />
-    ));
+  useEffect(() => {
+    setFieldValue('items', JSON.stringify(items));
+  }, [items, setFieldValue]);
 
-    if (!result) {
-      return;
-    }
-
-    if (item) {
-      setItems((prev) => prev.map((e) => (e.id === item.id ? result : e)));
-    } else {
-      setItems((prev) => [...prev, result]);
-    }
-  };
-
-  const itemsJson = useMemo(() => {
-    return JSON.stringify(items);
-  }, [items]);
+  useEffect(() => {
+    setValuesChangeListener(() => {
+      // TODO: Save to localStroage
+    });
+  }, [setValuesChangeListener]);
 
   return (
     <EditorForm action={publishChecklist} formManager={formManager}>
@@ -54,14 +43,15 @@ export function ChecklistEditor() {
               maxLength={200}
               controller={register('name', {
                 validator: ({ name }) => {
-                  if (!name) {
+                  if (!name?.trim()) {
                     setTabName('detail');
                     return 'Checklist name is required';
                   }
                 },
               })}
             />
-            <input type="hidden" name="items" defaultValue={itemsJson} />
+
+            <HiddenField controller={register('items')} />
 
             <div className="py-4">
               {!items.length && (
@@ -81,7 +71,7 @@ export function ChecklistEditor() {
                       {remark && <div className="text-gray-500">{remark}</div>}
                     </div>
                     <div>
-                      <EditIconButton onClick={() => handleOpenDialog(item)} />
+                      <EditIconButton onClick={() => openItemDialog(item)} />
                       <DeleteIconButton
                         onClick={() =>
                           setItems((prev) => {
@@ -95,7 +85,7 @@ export function ChecklistEditor() {
               })}
             </div>
             <div className="py-4 text-center">
-              <AddButtonWithIcon onClick={() => handleOpenDialog()}>
+              <AddButtonWithIcon onClick={() => openItemDialog()}>
                 Add item
               </AddButtonWithIcon>
             </div>
