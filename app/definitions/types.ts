@@ -9,6 +9,7 @@ export interface ShareableCommon {
   readonly name: string;
   readonly hasViewPasscode: boolean;
   readonly hasAdminPasscode: boolean;
+  readonly entity: ShareableEntityName;
   readonly expiresAt: string;
 }
 

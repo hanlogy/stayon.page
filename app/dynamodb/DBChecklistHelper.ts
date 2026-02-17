@@ -1,9 +1,9 @@
-import { Checklist } from '@/definitions/types';
+import { Checklist, ShareableEntityName } from '@/definitions/types';
 import { DBHelperBase } from './DBHelperBase';
 import { DBShareableHelper } from './DBShareableHelper';
 import { ChecklistCreateFields } from './types';
 
-const ENTITY_NAME = 'checklist';
+const ENTITY_NAME: ShareableEntityName = 'checklist';
 
 export class DBChecklistHelper extends DBHelperBase {
   private get shareableHelper() {
@@ -16,6 +16,8 @@ export class DBChecklistHelper extends DBHelperBase {
       entity: ENTITY_NAME,
     });
 
-    return { ...result, items: [] };
+    return result;
   }
+
+  // async getItem(shortId: string) {}
 }

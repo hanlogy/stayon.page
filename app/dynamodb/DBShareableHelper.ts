@@ -39,12 +39,11 @@ export class DBShareableHelper extends DBHelperBase {
   }
 
   async createItem<T extends ShareableCreateFields>({
-    entity,
     viewPasscode,
     adminPasscode,
     ...fieldsRest
-  }: T & { readonly entity: ShareableEntityName }): Promise<
-    Omit<T, 'viewPasscode' | 'adminPasscode' | 'entity'> & {
+  }: T): Promise<
+    Omit<T, 'viewPasscode' | 'adminPasscode'> & {
       shortId: string;
       hasViewPasscode: boolean;
       hasAdminPasscode: boolean;
@@ -56,7 +55,6 @@ export class DBShareableHelper extends DBHelperBase {
 
     const resolvedFields = {
       shortId,
-      entity,
       viewPasscode: await this.encryptPasscode(viewPasscode),
       adminPasscode: await this.encryptPasscode(adminPasscode),
       ...fieldsRest,
