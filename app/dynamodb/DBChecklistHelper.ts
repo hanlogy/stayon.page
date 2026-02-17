@@ -19,5 +19,7 @@ export class DBChecklistHelper extends DBHelperBase {
     return result;
   }
 
-  // async getItem(shortId: string) {}
+  async getItem({ shortId }: { shortId: string }) {
+    return this.shareableHelper.getItem<Checklist>({ shortId });
+  }
 }

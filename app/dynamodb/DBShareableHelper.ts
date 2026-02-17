@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { ShareableEntityName } from '@/definitions/types';
+import { ShareableCommon } from '@/definitions/types';
 import { DBHelperBase } from './DBHelperBase';
 import { claimShortId } from './claimShortId';
 import { ShareableCreateFields } from './types';
@@ -49,7 +49,7 @@ export class DBShareableHelper extends DBHelperBase {
       hasAdminPasscode: boolean;
     }
   > {
-    const shortId = await claimShortId(this.db.client);
+    const shortId = this.formatShortId(await claimShortId(this.db.client));
     const hasViewPasscode = !!viewPasscode;
     const hasAdminPasscode = !!adminPasscode;
 
@@ -68,9 +68,38 @@ export class DBShareableHelper extends DBHelperBase {
 
     return {
       ...fieldsRest,
-      shortId: this.formatShortId(shortId),
+      shortId,
       hasViewPasscode,
       hasAdminPasscode,
+    };
+  }
+
+  async getItem<T extends ShareableCommon>({
+    shortId,
+  }: {
+    shortId: string;
+  }) {
+    const { item } = await this.db.get<
+      Omit<T, 'hasViewPasscode' | 'hasAdminPasscode'> & {
+        readonly pk: string;
+        readonly sk: string;
+        readonly viewPasscode?: string;
+        readonly adminPasscode?: string;
+      }
+    >({
+      keys: this.buildKeys({ shortId }),
+    });
+
+    if (!item) {
+      return undefined;
+    }
+
+    const { pk: _pk, sk: _sk, viewPasscode, adminPasscode, ...rest } = item;
+
+    return {
+      hasViewPasscode: !!viewPasscode,
+      hasAdminPasscode: !!adminPasscode,
+      ...rest,
     };
   }
 }
