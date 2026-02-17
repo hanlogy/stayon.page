@@ -1,7 +1,7 @@
 export interface ChecklistItem {
   readonly id: string;
   readonly name: string;
-  readonly remark?: string;
+  readonly note?: string;
 }
 
 export interface Checklist {

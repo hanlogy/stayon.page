@@ -22,13 +22,18 @@ export function OutlinedButton({ className, ...rest }: ButtonProps) {
   );
 }
 
-export function FilledButton({ className, ...rest }: ButtonProps) {
+export function FilledButton({ disabled, className, ...rest }: ButtonProps) {
   return (
     <Button
       className={clsx(
-        'bg-gray-700 text-white hover:bg-gray-900 active:bg-gray-900',
+        {
+          'bg-gray-700 text-white hover:bg-gray-900 active:bg-gray-900':
+            !disabled,
+          'bg-gray-400 text-gray-600': disabled,
+        },
         className
       )}
+      disabled={disabled}
       {...rest}
     />
   );

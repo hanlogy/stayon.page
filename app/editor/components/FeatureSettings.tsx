@@ -1,5 +1,6 @@
 import { FormFieldRegister } from '@hanlogy/react-web-ui';
 import { SelectField, TextField } from '@/component/form/fields';
+import { expiresAfterOptions } from '@/definitions/constants';
 import { formId } from '../constants';
 import { SettingsFormData } from '../types';
 
@@ -27,11 +28,10 @@ export function FeatureSettings({
       />
 
       <SelectField
-        options={[
-          { value: '1', label: '24 hours' },
-          { value: '7', label: '7 days' },
-          { value: '30', label: '30 days' },
-        ]}
+        options={expiresAfterOptions.map((v) => ({
+          value: v,
+          label: { '1': '24 hours', '7': '7 days', '30': '30 days' }[v],
+        }))}
         defaultValue="7"
         label="Expires after"
         helper="This content will be permanently deleted after the selected number of days."

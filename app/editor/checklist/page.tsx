@@ -6,7 +6,13 @@ export const metadata: Metadata = {
   title: 'Checklist Editor',
 };
 
-export default function ChecklistEditorPage() {
+export default async function ChecklistEditorPage({
+  searchParams,
+}: PageProps<'/editor/checklist'>) {
+  const itemId = (await searchParams).id;
+
+  console.log('TODO:', 'ChecklistEditorPage', itemId);
+
   return (
     <DialogProvider>
       <div className="mx-auto max-w-2xl px-4">

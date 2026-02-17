@@ -6,7 +6,7 @@ import { ChecklistItem } from './types';
 
 interface FormData {
   name: string;
-  remark?: string;
+  note?: string;
 }
 
 export function ItemEditorDialog({
@@ -22,7 +22,7 @@ export function ItemEditorDialog({
   if (initialData) {
     setInitialValues({
       name: initialData.name,
-      remark: initialData.remark,
+      note: initialData.note,
     });
   }
 
@@ -30,7 +30,7 @@ export function ItemEditorDialog({
     if (!validate()) {
       return;
     }
-    const { name, remark } = getValues();
+    const { name, note } = getValues();
     if (!name) {
       return;
     }
@@ -38,7 +38,7 @@ export function ItemEditorDialog({
     closeDialog({
       id: initialData?.id ?? crypto.randomUUID(),
       name,
-      remark,
+      note,
     });
   };
 
@@ -67,11 +67,7 @@ export function ItemEditorDialog({
           })}
         />
 
-        <TextareaField
-          rows={2}
-          label="Remark"
-          controller={register('remark')}
-        />
+        <TextareaField rows={2} label="Note" controller={register('note')} />
       </div>
     </Dialog>
   );

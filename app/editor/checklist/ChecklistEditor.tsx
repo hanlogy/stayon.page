@@ -3,23 +3,19 @@
 import { useEffect } from 'react';
 import { HiddenField, useForm } from '@hanlogy/react-web-ui';
 import { TextField } from '@/component/form/fields';
+import { nameSchema } from '@/lib/schema/checklist';
+import { safeParseField } from '@/lib/schema/helpers';
 import { EditorForm } from '../components/EditorForm';
 import {
   AddButtonWithIcon,
   DeleteIconButton,
   EditIconButton,
 } from '../components/buttons';
-import { SettingsFormData } from '../types';
-import { publishChecklist } from './action';
+import { ChecklistFormData, publishChecklist } from './action';
 import { useChecklistItemDialog } from './useChecklistItemDialog';
 
-type FormData = SettingsFormData & {
-  name: string;
-  items: string;
-};
-
 export function ChecklistEditor() {
-  const formManager = useForm<FormData>();
+  const formManager = useForm<ChecklistFormData>();
   const { items, setItems, openItemDialog } = useChecklistItemDialog();
   const { register, setFieldValue, setValuesChangeListener } = formManager;
 
@@ -43,9 +39,10 @@ export function ChecklistEditor() {
               maxLength={200}
               controller={register('name', {
                 validator: ({ name }) => {
-                  if (!name?.trim()) {
+                  const { error } = safeParseField(nameSchema, name);
+                  if (error) {
                     setTabName('detail');
-                    return 'Checklist name is required';
+                    return error;
                   }
                 },
               })}
@@ -60,7 +57,7 @@ export function ChecklistEditor() {
                 </div>
               )}
               {items.map((item) => {
-                const { id, name, remark } = item;
+                const { id, name, note } = item;
                 return (
                   <div
                     key={id}
@@ -68,7 +65,7 @@ export function ChecklistEditor() {
                   >
                     <div className="flex-1">
                       <div className="font-medium">{name}</div>
-                      {remark && <div className="text-gray-500">{remark}</div>}
+                      {note && <div className="text-gray-500">{note}</div>}
                     </div>
                     <div>
                       <EditIconButton onClick={() => openItemDialog(item)} />
