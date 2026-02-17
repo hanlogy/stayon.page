@@ -3,8 +3,8 @@
 import { useEffect } from 'react';
 import { HiddenField, useForm } from '@hanlogy/react-web-ui';
 import { TextField } from '@/component/form/fields';
-import { nameSchema } from '@/lib/schema/checklist';
-import { safeParseField } from '@/lib/schema/helpers';
+import { nameSchema } from '@/editor/schema/checklist';
+import { safeParseField } from '@/editor/schema/helpers';
 import { EditorForm } from '../components/EditorForm';
 import {
   AddButtonWithIcon,
@@ -57,10 +57,10 @@ export function ChecklistEditor() {
                 </div>
               )}
               {items.map((item) => {
-                const { id, name, note } = item;
+                const { checklistItemId, name, note } = item;
                 return (
                   <div
-                    key={id}
+                    key={checklistItemId}
                     className="flex items-center border-b border-b-gray-200 py-2 pl-1"
                   >
                     <div className="flex-1">
@@ -72,7 +72,9 @@ export function ChecklistEditor() {
                       <DeleteIconButton
                         onClick={() =>
                           setItems((prev) => {
-                            return prev.filter((e) => e.id !== id);
+                            return prev.filter(
+                              (e) => e.checklistItemId !== checklistItemId
+                            );
                           })
                         }
                       />

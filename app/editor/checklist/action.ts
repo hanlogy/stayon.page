@@ -1,8 +1,9 @@
 'use server';
 
 import { redirect } from 'next/navigation';
+import { ChecklistItem } from '@/definitions/types';
 import { DBChecklistHelper } from '@/dynamodb/DBChecklistHelper';
-import { parseWithChecklistSchema } from '@/lib/schema/checklist';
+import { parseWithChecklistSchema } from '@/editor/schema/checklist';
 import { SettingsFormData } from '../types';
 
 export type ChecklistFormData = SettingsFormData & {
@@ -18,7 +19,17 @@ export async function publishChecklist(formData: Partial<ChecklistFormData>) {
     name: formData.name,
     expiresAt: formData.expiresAfter,
     note: formData.note,
+    viewPasscode: formData.viewPasscode,
+    adminPasscode: formData.adminPasscode,
   });
+
+  let items: ChecklistItem[] = [];
+
+  if (formData.items) {
+    try {
+      items = JSON.parse(formData.items);
+    } catch {}
+  }
 
   if (error) {
     throw new Error('Something is wrong');
@@ -26,7 +37,7 @@ export async function publishChecklist(formData: Partial<ChecklistFormData>) {
 
   let shortId: string;
   try {
-    ({ shortId } = await helper.createItem(data));
+    ({ shortId } = await helper.createItem({ ...data, items }));
   } catch {
     throw new Error('Something is wrong');
   }

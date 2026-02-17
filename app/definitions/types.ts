@@ -14,8 +14,6 @@ export interface ShareableCommon {
 
 export interface ChecklistItem {
   readonly checklistItemId: string;
-  readonly shortId: string;
-  readonly order: number;
   readonly name: string;
   readonly note?: string;
 }

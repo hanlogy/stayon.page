@@ -63,18 +63,13 @@ can still access the content and clone it into a new shareable entity.
 | Attribute | Example |
 | --------- | ------- |
 | note      | foo     |
+| items     | []      |
 
-## Entity: checklist_item
-
-### Main table schema
+### item object
 
 | Field           | Type   | Example                              | Notes                |
 | --------------- | ------ | ------------------------------------ | -------------------- |
-| pk              | string | checklist_item#{shortId}             |                      |
-| sk              | string | 01#{checklistItemId}#                |                      |
-| shortId         | string | abc-def-12345                        |                      |
 | checklistItemId | string | 00000000-0000-0000-0000-000000000000 | UUID                 |
-| order           | number | 0                                    |                      |
 | name            | string | Item 1                               |                      |
 | note            | string | example                              | optional, plain text |
 
@@ -82,12 +77,13 @@ can still access the content and clone it into a new shareable entity.
 
 ```json
 {
-  "pk": "checklist_item#abcdef12345",
-  "sk": "01#00000000000000000000000000000000#",
-  "shortId": "abc-def-12345",
-  "checklistItemId": "00000000-0000-0000-0000-000000000000",
-  "order": 0,
-  "name": "Item 1",
-  "note": "example"
+  "name": "Shopping list",
+  "items": [
+    {
+      "checklistItemId": "00000000-0000-0000-0000-000000000000",
+      "name": "Item 1",
+      "note": "example"
+    }
+  ]
 }
 ```

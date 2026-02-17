@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useDialog } from '@hanlogy/react-web-ui';
+import { ChecklistItem } from '@/definitions/types';
 import { ItemEditorDialog } from './ItemEditorDialog';
-import { ChecklistItem } from './types';
 
 export function useChecklistItemDialog() {
   const { openDialog } = useDialog();
@@ -17,7 +17,11 @@ export function useChecklistItemDialog() {
     }
 
     if (item) {
-      setItems((prev) => prev.map((e) => (e.id === item.id ? result : e)));
+      setItems((prev) =>
+        prev.map((e) =>
+          e.checklistItemId === item.checklistItemId ? result : e
+        )
+      );
     } else {
       setItems((prev) => [...prev, result]);
     }

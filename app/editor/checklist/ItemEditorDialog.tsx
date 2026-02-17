@@ -2,7 +2,7 @@ import { CloseDialogFn, useForm } from '@hanlogy/react-web-ui';
 import { Dialog } from '@/component/Dialog';
 import { FilledButton, TextButton } from '@/component/buttons';
 import { TextareaField, TextField } from '@/component/form/fields';
-import { ChecklistItem } from './types';
+import { ChecklistItem } from '@/definitions/types';
 
 interface FormData {
   name: string;
@@ -36,7 +36,7 @@ export function ItemEditorDialog({
     }
 
     closeDialog({
-      id: initialData?.id ?? crypto.randomUUID(),
+      checklistItemId: initialData?.checklistItemId ?? crypto.randomUUID(),
       name,
       note,
     });

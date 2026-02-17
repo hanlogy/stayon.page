@@ -10,4 +10,4 @@ export type ShareableCreateFields = Pick<
 };
 
 export type ChecklistCreateFields = ShareableCreateFields &
-  Pick<Checklist, 'note'>;
+  Pick<Checklist, 'note' | 'items'>;

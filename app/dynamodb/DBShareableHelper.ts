@@ -23,6 +23,14 @@ export class DBShareableHelper extends DBHelperBase {
     return await bcrypt.hash(code, 12);
   }
 
+  private formatShortId(shortId: string) {
+    return [
+      shortId.slice(0, 3),
+      shortId.slice(3, 6),
+      shortId.slice(6, 10),
+    ].join('-');
+  }
+
   buildKeys({ shortId }: { shortId: string }): {
     pk: string;
     sk: string;
@@ -62,7 +70,7 @@ export class DBShareableHelper extends DBHelperBase {
 
     return {
       ...fieldsRest,
-      shortId,
+      shortId: this.formatShortId(shortId),
       hasViewPasscode,
       hasAdminPasscode,
     };
