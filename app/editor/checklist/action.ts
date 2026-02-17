@@ -17,7 +17,7 @@ export async function publishChecklist(formData: Partial<ChecklistFormData>) {
 
   const { error, data } = parseWithChecklistSchema({
     name: formData.name,
-    expiresAt: formData.expiresAfter,
+    expiresAfter: formData.expiresAfter,
     note: formData.note,
     viewPasscode: formData.viewPasscode,
     adminPasscode: formData.adminPasscode,

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import {
   adminPasscodeSchema,
-  expiresAtSchema,
+  expiresAfterSchema,
   viewPasscodeSchema,
 } from './common';
 import { safeParseFields } from './helpers';
@@ -12,7 +12,7 @@ const noteSchema = z.string().trim().min(1).optional();
 
 const publishChecklistSchema = z.object({
   name: nameSchema,
-  expiresAt: expiresAtSchema,
+  expiresAfter: expiresAfterSchema,
   note: noteSchema,
   viewPasscode: viewPasscodeSchema,
   adminPasscode: adminPasscodeSchema,

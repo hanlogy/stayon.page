@@ -39,7 +39,7 @@ can still access the content and clone it into a new shareable entity.
 | name          | {string}               |
 | viewPasscode  | {encrypted}            |
 | adminPasscode | {encrypted}            |
-| expiresAt     | {ISO date string}      |
+| expiresAfter  | {1/7/30}               |
 
 ### Example record
 
@@ -52,7 +52,7 @@ can still access the content and clone it into a new shareable entity.
   "name": "My shopping list",
   "viewPasscode": "***",
   "adminPasscode": "***",
-  "expiresAt": "2025-01-01T12:00:00.000Z"
+  "expiresAfter": 7
 }
 ```
 

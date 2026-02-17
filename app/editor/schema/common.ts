@@ -1,10 +1,9 @@
-import { shiftDate } from '@hanlogy/ts-lib';
 import { z } from 'zod';
 import { expiresAfterOptions } from '@/definitions/constants';
 
-export const expiresAtSchema = z
+export const expiresAfterSchema = z
   .enum(expiresAfterOptions)
-  .transform((v) => shiftDate({ days: Number(v) }).toISOString());
+  .transform((v) => Number(v));
 
 export const viewPasscodeSchema = z.string().optional();
 

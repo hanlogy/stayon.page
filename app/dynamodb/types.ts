@@ -3,7 +3,7 @@ import { Checklist, ShareableCommon } from '@/definitions/types';
 // The user provided fields.
 export type ShareableCreateFields = Pick<
   ShareableCommon,
-  'name' | 'expiresAt'
+  'name' | 'expiresAfter'
 > & {
   readonly viewPasscode?: string;
   readonly adminPasscode?: string;

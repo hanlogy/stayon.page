@@ -10,7 +10,7 @@ export interface ShareableCommon {
   readonly hasViewPasscode: boolean;
   readonly hasAdminPasscode: boolean;
   readonly entity: ShareableEntityName;
-  readonly expiresAt: string;
+  readonly expiresAfter: number;
 }
 
 export interface ChecklistItem {
