@@ -21,22 +21,11 @@ export default async function SharingPage({ params }: PageProps<'/[shortId]'>) {
   }
   const { viewPasscodeVersion, adminPasscodeVersion, entity } = item;
 
-  if (
-    !(await checkAccess('viewAccess', {
-      viewPasscodeVersion,
-      adminPasscodeVersion,
-      shortId,
-    }))
-  ) {
-    return (
-      <div className="mx-auto mt-10">
-        <div className="mb-2 text-center text-gray-600">
-          Enter passcode to view
-        </div>
-        <AuthForm shortId={shortId} type="viewAccess" />
-      </div>
-    );
-  }
+  const accessDenied = !(await checkAccess('viewAccess', {
+    viewPasscodeVersion,
+    adminPasscodeVersion,
+    shortId,
+  }));
 
   return (
     <>
@@ -47,11 +36,15 @@ export default async function SharingPage({ params }: PageProps<'/[shortId]'>) {
         </LazyLink>
       </div>
       <div className="h-12"></div>
-      <div className="p-8">
-        <pre>
-          <code>{JSON.stringify(item, null, 2)}</code>
-        </pre>
-      </div>
+      {accessDenied ? (
+        <AuthForm shortId={shortId} type="viewAccess" className="my-10" />
+      ) : (
+        <div className="p-8">
+          <pre>
+            <code>{JSON.stringify(item, null, 2)}</code>
+          </pre>
+        </div>
+      )}
     </>
   );
 }

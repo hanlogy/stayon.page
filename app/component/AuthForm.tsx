@@ -2,6 +2,7 @@
 
 import { SubmitEvent, useState } from 'react';
 import { useForm } from '@hanlogy/react-web-ui';
+import clsx from 'clsx';
 import { AccessType } from '@/definitions/types';
 import { grantAccess } from '@/lib/auth/grantAccess';
 import { FilledButton } from './buttons';
@@ -16,9 +17,11 @@ const TextField = createTextFieldWith({ className: 'text-center' });
 export function AuthForm({
   type,
   shortId,
+  className,
 }: {
   type: AccessType;
   shortId: string;
+  className?: string;
 }) {
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string>();
@@ -41,9 +44,27 @@ export function AuthForm({
       setIsPending(false);
     }
   };
+  const { title, placeholder } = (() => {
+    if (type === 'viewAccess') {
+      return {
+        title: 'Enter passcode to view',
+        placeholder: 'Passcode',
+      };
+    }
+
+    return {
+      title: 'Enter admin passcode to edit',
+      placeholder: 'Admin passcode',
+    };
+  })();
 
   return (
-    <form autoComplete="off" onSubmit={handleSubmit} className="text-center">
+    <form
+      autoComplete="off"
+      onSubmit={handleSubmit}
+      className={clsx('mx-auto text-center', className)}
+    >
+      <div className="mb-4 text-gray-600">{title}</div>
       <div className="w-60">
         <TextField
           controller={register('passcode', {
@@ -54,13 +75,13 @@ export function AuthForm({
             },
           })}
           type="password"
-          placeholder="Passcode"
+          placeholder={placeholder}
           maxLength={20}
         />
       </div>
       <div className="mt-4">
         <FilledButton type="submit" className="min-w-40" disabled={isPending}>
-          Verify
+          Continue
         </FilledButton>
       </div>
       {error && <div className="my-4 text-red-600">{error}</div>}
