@@ -1,4 +1,3 @@
-import { DialogProvider } from '@hanlogy/react-web-ui';
 import { Metadata } from 'next';
 import { ChecklistEditor } from './ChecklistEditor';
 
@@ -14,10 +13,8 @@ export default async function ChecklistEditorPage({
   console.log('TODO:', 'ChecklistEditorPage', itemId);
 
   return (
-    <DialogProvider>
-      <div className="mx-auto max-w-2xl px-4">
-        <ChecklistEditor />
-      </div>
-    </DialogProvider>
+    <div className="mx-auto max-w-2xl px-4">
+      <ChecklistEditor />
+    </div>
   );
 }
