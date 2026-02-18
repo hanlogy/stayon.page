@@ -32,11 +32,6 @@ export async function checkAccess(
     return true;
   }
 
-  const secret = process.env.ACCESS_SECRET;
-  if (!secret || secret.length < 32) {
-    return false;
-  }
-
   const cookieStore = await cookies();
 
   let token: string | undefined;
@@ -58,6 +53,10 @@ export async function checkAccess(
     return false;
   }
 
+  const secret = process.env.ACCESS_SECRET;
+  if (!secret || secret.length < 32) {
+    return false;
+  }
   const jwtValue = await verifyJwt({ token, secret });
   if (!jwtValue) {
     return false;

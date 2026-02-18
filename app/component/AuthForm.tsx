@@ -3,7 +3,7 @@
 import { SubmitEvent, useState } from 'react';
 import { useForm } from '@hanlogy/react-web-ui';
 import { AccessType } from '@/definitions/types';
-import { login } from '@/lib/auth/login';
+import { grantAccess } from '@/lib/auth/grantAccess';
 import { FilledButton } from './buttons';
 import { createTextFieldWith } from './form/fields';
 
@@ -34,7 +34,7 @@ export function AuthForm({
 
     try {
       setIsPending(true);
-      await login({ passcode, type, shortId }, true);
+      await grantAccess(type, { passcode, shortId }, true);
     } catch {
       setError('Varify failed');
     } finally {

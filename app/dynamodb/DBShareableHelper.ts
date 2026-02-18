@@ -1,4 +1,5 @@
 import { ShareableCommon } from '@/definitions/types';
+import { grantAccess } from '@/lib/auth/grantAccess';
 import { hashPasscode } from '@/lib/hash';
 import { DBHelperBase } from './DBHelperBase';
 import { claimShortId } from './claimShortId';
@@ -66,6 +67,15 @@ export class DBShareableHelper extends DBHelperBase {
       keyNames: ['pk', 'sk'],
       attributes: resolvedFields,
     });
+
+    // grant access automatically
+    // When with both admin passcode and view passcode, only need to grant
+    // admin access
+    if (hasAdminPasscode) {
+      await grantAccess('adminAccess', { shortId, passcode: adminPasscode });
+    } else if (hasViewPasscode) {
+      await grantAccess('viewAccess', { shortId, passcode: viewPasscode });
+    }
 
     return {
       ...fieldsRest,

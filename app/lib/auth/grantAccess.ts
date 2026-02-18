@@ -8,15 +8,14 @@ import { comparePasscode } from '../hash';
 import { generateJwt } from '../jwt';
 import { buildCookieName } from './helpers';
 
-export async function login(
+export async function grantAccess(
+  type: AccessType,
   {
     shortId,
     passcode,
-    type,
   }: {
     shortId: string;
     passcode?: string;
-    type: AccessType;
   },
   shouldRefresh: boolean = false
 ) {
