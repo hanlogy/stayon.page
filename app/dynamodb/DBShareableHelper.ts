@@ -1,8 +1,8 @@
-import bcrypt from 'bcryptjs';
 import { ShareableCommon } from '@/definitions/types';
+import { hashPasscode } from '@/lib/hash';
 import { DBHelperBase } from './DBHelperBase';
 import { claimShortId } from './claimShortId';
-import { ShareableCreateFields } from './types';
+import { ShareableCreateFields, ShareableEntity } from './types';
 
 export class DBShareableHelper extends DBHelperBase {
   private skPrefix = '01#';
@@ -13,14 +13,6 @@ export class DBShareableHelper extends DBHelperBase {
 
   private buildSk() {
     return this.db.buildKey(this.skPrefix, true);
-  }
-
-  private async encryptPasscode(code?: string): Promise<string | undefined> {
-    if (!code) {
-      return undefined;
-    }
-
-    return await bcrypt.hash(code, 12);
   }
 
   private formatShortId(shortId: string) {
@@ -55,8 +47,10 @@ export class DBShareableHelper extends DBHelperBase {
 
     const resolvedFields = {
       shortId,
-      viewPasscode: await this.encryptPasscode(viewPasscode),
-      adminPasscode: await this.encryptPasscode(adminPasscode),
+      viewPasscode: viewPasscode ? await hashPasscode(viewPasscode) : undefined,
+      adminPasscode: adminPasscode
+        ? await hashPasscode(adminPasscode)
+        : undefined,
       ...fieldsRest,
       ...this.buildKeys({ shortId }),
     };
@@ -74,22 +68,16 @@ export class DBShareableHelper extends DBHelperBase {
     };
   }
 
-  async getItem<T extends ShareableCommon>({
-    shortId,
-  }: {
-    shortId: string;
-  }) {
-    const { item } = await this.db.get<
-      Omit<T, 'hasViewPasscode' | 'hasAdminPasscode'> & {
-        readonly pk: string;
-        readonly sk: string;
-        readonly viewPasscode?: string;
-        readonly adminPasscode?: string;
-      }
-    >({
+  async get<T extends ShareableEntity>({ shortId }: { shortId: string }) {
+    const { item } = await this.db.get<T>({
       keys: this.buildKeys({ shortId }),
     });
 
+    return item;
+  }
+
+  async getItem<T extends ShareableCommon>({ shortId }: { shortId: string }) {
+    const item = await this.get<ShareableEntity<T>>({ shortId });
     if (!item) {
       return undefined;
     }

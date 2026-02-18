@@ -16,12 +16,20 @@ const inputClass = ({ isError }: { isError: boolean }) => {
   });
 };
 
-export const TextField = createTextField({
-  labelClass,
-  helperClass,
-  errorClass,
-  inputClass,
-});
+export function createTextFieldWith({
+  className,
+}: { className?: string } = {}) {
+  return createTextField({
+    labelClass,
+    helperClass,
+    errorClass,
+    inputClass: ({ isError }) => {
+      return clsx(inputClass({ isError }), className);
+    },
+  });
+}
+
+export const TextField = createTextFieldWith();
 
 export const TextareaField = createTextareaField({
   labelClass,

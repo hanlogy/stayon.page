@@ -1,8 +1,14 @@
-import { expiresAfterOptions, shareableEntityNames } from './constants';
+import {
+  accessTypes,
+  expiresAfterOptions,
+  shareableEntityNames,
+} from './constants';
 
 export type ShareableEntityName = (typeof shareableEntityNames)[number];
 
 export type ExpiresAfterValue = (typeof expiresAfterOptions)[number];
+
+export type AccessType = (typeof accessTypes)[number];
 
 export interface ShareableCommon {
   readonly shortId: string;
