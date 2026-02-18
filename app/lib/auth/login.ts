@@ -6,16 +6,20 @@ import { AccessType } from '@/definitions/types';
 import { DBShareableHelper } from '@/dynamodb/DBShareableHelper';
 import { comparePasscode } from '../hash';
 import { generateJwt } from '../jwt';
+import { buildCookieName } from './helpers';
 
-export async function login({
-  shortId,
-  passcode,
-  type,
-}: {
-  shortId: string;
-  passcode?: string;
-  type: AccessType;
-}) {
+export async function login(
+  {
+    shortId,
+    passcode,
+    type,
+  }: {
+    shortId: string;
+    passcode?: string;
+    type: AccessType;
+  },
+  shouldRefresh: boolean = false
+) {
   if (!passcode) {
     return;
   }
@@ -38,9 +42,31 @@ export async function login({
     throw new Error('unexpected');
   }
 
-  cookieStore.set(type, await generateJwt({ id: shortId, secret }), {
-    httpOnly: true,
-  });
+  const version =
+    type === 'viewAccess'
+      ? item.viewPasscodeVersion
+      : item.adminPasscodeVersion;
 
-  refresh();
+  const expiresInSeconds = 60 * 60 * 24 * 7;
+
+  cookieStore.set(
+    buildCookieName({ type, shortId }),
+    await generateJwt({
+      id: shortId,
+      secret,
+      expiresInSeconds,
+      claims: { version },
+    }),
+    {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: expiresInSeconds,
+    }
+  );
+
+  if (shouldRefresh) {
+    refresh();
+  }
 }

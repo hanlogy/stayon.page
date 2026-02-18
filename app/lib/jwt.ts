@@ -6,7 +6,7 @@ export async function generateJwt(params: {
   expiresInSeconds?: number;
   claims?: Record<string, unknown>;
 }): Promise<string> {
-  const { id, secret, expiresInSeconds = 60 * 60 * 24 * 7, claims } = params;
+  const { id, secret, expiresInSeconds = 60 * 60 * 24, claims } = params;
 
   const key = getJwtSecretKey(secret);
 

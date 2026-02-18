@@ -13,8 +13,6 @@ export type AccessType = (typeof accessTypes)[number];
 export interface ShareableCommon {
   readonly shortId: string;
   readonly name: string;
-  readonly hasViewPasscode: boolean;
-  readonly hasAdminPasscode: boolean;
   readonly entity: ShareableEntityName;
   readonly expiresAfter: number;
 }

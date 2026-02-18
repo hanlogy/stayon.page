@@ -12,12 +12,11 @@ export type ShareableCreateFields = Pick<
 export type ChecklistCreateFields = ShareableCreateFields &
   Pick<Checklist, 'note' | 'items'>;
 
-export type ShareableEntity<T extends ShareableCommon = ShareableCommon> = Omit<
-  T,
-  'hasViewPasscode' | 'hasAdminPasscode'
-> & {
+export type ShareableEntity<T extends ShareableCommon = ShareableCommon> = T & {
   readonly pk: string;
   readonly sk: string;
   readonly viewPasscode?: string;
   readonly adminPasscode?: string;
+  readonly viewPasscodeVersion?: number;
+  readonly adminPasscodeVersion?: number;
 };

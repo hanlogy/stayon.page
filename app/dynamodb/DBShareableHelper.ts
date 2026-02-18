@@ -37,20 +37,27 @@ export class DBShareableHelper extends DBHelperBase {
   }: T): Promise<
     Omit<T, 'viewPasscode' | 'adminPasscode'> & {
       shortId: string;
-      hasViewPasscode: boolean;
-      hasAdminPasscode: boolean;
     }
   > {
     const shortId = this.formatShortId(await claimShortId(this.db.client));
     const hasViewPasscode = !!viewPasscode;
     const hasAdminPasscode = !!adminPasscode;
+    const now = Date.now();
 
     const resolvedFields = {
       shortId,
-      viewPasscode: viewPasscode ? await hashPasscode(viewPasscode) : undefined,
-      adminPasscode: adminPasscode
-        ? await hashPasscode(adminPasscode)
-        : undefined,
+      ...(hasViewPasscode
+        ? {
+            viewPasscode: await hashPasscode(viewPasscode),
+            viewPasscodeVersion: now,
+          }
+        : {}),
+      ...(hasAdminPasscode
+        ? {
+            adminPasscode: await hashPasscode(adminPasscode),
+            adminPasscodeVersion: now,
+          }
+        : {}),
       ...fieldsRest,
       ...this.buildKeys({ shortId }),
     };
@@ -63,12 +70,14 @@ export class DBShareableHelper extends DBHelperBase {
     return {
       ...fieldsRest,
       shortId,
-      hasViewPasscode,
-      hasAdminPasscode,
     };
   }
 
-  async get<T extends ShareableEntity>({ shortId }: { shortId: string }) {
+  async get<T extends ShareableEntity>({
+    shortId,
+  }: {
+    shortId: string;
+  }): Promise<T | undefined> {
     const { item } = await this.db.get<T>({
       keys: this.buildKeys({ shortId }),
     });
@@ -76,18 +85,27 @@ export class DBShareableHelper extends DBHelperBase {
     return item;
   }
 
-  async getItem<T extends ShareableCommon>({ shortId }: { shortId: string }) {
+  async getItem<T extends ShareableCommon>({
+    shortId,
+  }: {
+    shortId: string;
+  }): Promise<
+    | Omit<ShareableEntity<T>, 'viewPasscode' | 'adminPasscode' | 'pk' | 'sk'>
+    | undefined
+  > {
     const item = await this.get<ShareableEntity<T>>({ shortId });
     if (!item) {
       return undefined;
     }
 
-    const { pk: _pk, sk: _sk, viewPasscode, adminPasscode, ...rest } = item;
+    const {
+      pk: _pk,
+      sk: _sk,
+      viewPasscode: _vp,
+      adminPasscode: _ap,
+      ...rest
+    } = item;
 
-    return {
-      hasViewPasscode: !!viewPasscode,
-      hasAdminPasscode: !!adminPasscode,
-      ...rest,
-    };
+    return rest;
   }
 }

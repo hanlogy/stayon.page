@@ -30,16 +30,18 @@ can still access the content and clone it into a new shareable entity.
 
 ### Main table schema
 
-| Attribute     | Example                |
-| ------------- | ---------------------- |
-| pk            | shareable#{shortId}    |
-| sk            | 01#                    |
-| entity        | checklist / poll / ... |
-| shortId       | {shortId}              |
-| name          | {string}               |
-| viewPasscode  | {encrypted}            |
-| adminPasscode | {encrypted}            |
-| expiresAfter  | {1/7/30}               |
+| Attribute            | Example                |
+| -------------------- | ---------------------- |
+| pk                   | shareable#{shortId}    |
+| sk                   | 01#                    |
+| entity               | checklist / poll / ... |
+| shortId              | {shortId}              |
+| name                 | {string}               |
+| viewPasscode         | {encrypted}            |
+| adminPasscode        | {encrypted}            |
+| viewPasscodeVersion  | {number}               |
+| adminPasscodeVersion | {number}               |
+| expiresAfter         | {1/7/30}               |
 
 ### Example record
 
@@ -52,6 +54,8 @@ can still access the content and clone it into a new shareable entity.
   "name": "My shopping list",
   "viewPasscode": "***",
   "adminPasscode": "***",
+  "viewPasscodeVersion": 1771415202059,
+  "adminPasscodeVersion": 1771415202059,
   "expiresAfter": 7
 }
 ```

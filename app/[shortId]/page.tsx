@@ -19,12 +19,12 @@ export default async function SharingPage({ params }: PageProps<'/[shortId]'>) {
   if (!item) {
     return notFound();
   }
-  const { hasAdminPasscode, hasViewPasscode, entity } = item;
+  const { viewPasscodeVersion, adminPasscodeVersion, entity } = item;
 
   if (
     !(await checkAccess('viewAccess', {
-      hasAdminPasscode,
-      hasViewPasscode,
+      viewPasscodeVersion,
+      adminPasscodeVersion,
       shortId,
     }))
   ) {

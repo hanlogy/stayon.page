@@ -34,7 +34,7 @@ export function AuthForm({
 
     try {
       setIsPending(true);
-      await login({ passcode, type, shortId });
+      await login({ passcode, type, shortId }, true);
     } catch {
       setError('Varify failed');
     } finally {

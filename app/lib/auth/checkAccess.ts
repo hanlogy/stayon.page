@@ -1,26 +1,30 @@
 import { cookies } from 'next/headers';
 import { AccessType } from '@/definitions/types';
 import { verifyJwt } from '../jwt';
+import { buildCookieName } from './helpers';
 
 // Access rules:
-// - View: public when hasViewPasscode is false, else validate view token.
+// - View: public when there is a view passcode, else validate view token.
 // - Admin:
-//   - If hasAdminPasscode is true, validate admin token.
-//   - Else if hasViewPasscode is true, validate view token (view grants admin).
+//   - If there is a admin passcode is true, validate admin token.
+//   - Else if there is a view passcode, validate view token (view grants admin).
 //   - Else (no passcodes), admin is public.
 
 export async function checkAccess(
   type: AccessType,
   {
     shortId,
-    hasAdminPasscode,
-    hasViewPasscode,
+    adminPasscodeVersion,
+    viewPasscodeVersion,
   }: {
     shortId: string;
-    hasAdminPasscode: boolean;
-    hasViewPasscode: boolean;
+    adminPasscodeVersion?: number;
+    viewPasscodeVersion?: number;
   }
 ): Promise<boolean> {
+  const hasAdminPasscode = !!adminPasscodeVersion;
+  const hasViewPasscode = !!viewPasscodeVersion;
+
   if (
     (type === 'viewAccess' && !hasViewPasscode) ||
     (!hasViewPasscode && !hasAdminPasscode)
@@ -36,11 +40,18 @@ export async function checkAccess(
   const cookieStore = await cookies();
 
   let token: string | undefined;
+  let version: number | undefined;
 
   if (type === 'adminAccess' && hasAdminPasscode) {
-    token = cookieStore.get('adminAccess')?.value;
+    token = cookieStore.get(
+      buildCookieName({ type: 'adminAccess', shortId })
+    )?.value;
+    version = adminPasscodeVersion;
   } else {
-    token = cookieStore.get('viewAccess')?.value;
+    token = cookieStore.get(
+      buildCookieName({ type: 'viewAccess', shortId })
+    )?.value;
+    version = viewPasscodeVersion;
   }
 
   if (!token) {
@@ -52,5 +63,5 @@ export async function checkAccess(
     return false;
   }
 
-  return shortId === jwtValue.id;
+  return shortId === jwtValue.id && version === jwtValue.claims.version;
 }
