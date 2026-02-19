@@ -45,7 +45,7 @@ export class DBShareableHelper extends DBHelperBase {
     const hasAdminPasscode = !!adminPasscode;
     const now = Date.now();
 
-    const resolvedFields = {
+    const item = {
       shortId,
       ...(hasViewPasscode
         ? {
@@ -63,10 +63,7 @@ export class DBShareableHelper extends DBHelperBase {
       ...this.buildKeys({ shortId }),
     };
 
-    await this.db.create({
-      keyNames: ['pk', 'sk'],
-      attributes: resolvedFields,
-    });
+    await this.db.put({ keyNames: ['pk', 'sk'], item });
 
     // grant access automatically
     // When with both admin passcode and view passcode, only need to grant
@@ -88,11 +85,11 @@ export class DBShareableHelper extends DBHelperBase {
   }: {
     shortId: string;
   }): Promise<T | undefined> {
-    const { item } = await this.db.get<T>({
+    const { item } = await this.db.get({
       keys: this.buildKeys({ shortId }),
     });
 
-    return item;
+    return item as T;
   }
 
   async getItem<T extends ShareableCommon>({

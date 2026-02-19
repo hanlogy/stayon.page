@@ -19,7 +19,11 @@ export class DBChecklistHelper extends DBHelperBase {
     return result;
   }
 
-  async getItem({ shortId }: { shortId: string }) {
+  async getItem({
+    shortId,
+  }: {
+    shortId: string;
+  }): Promise<Checklist | undefined> {
     return this.shareableHelper.getItem<Checklist>({ shortId });
   }
 }
