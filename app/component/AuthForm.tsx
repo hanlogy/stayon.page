@@ -62,7 +62,10 @@ export function AuthForm({
     <form
       autoComplete="off"
       onSubmit={handleSubmit}
-      className={clsx('mx-auto text-center', className)}
+      className={clsx(
+        'mx-auto flex flex-col items-center text-center',
+        className
+      )}
     >
       <div className="mb-4 text-gray-600">{title}</div>
       <div className="w-60">

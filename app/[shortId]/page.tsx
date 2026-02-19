@@ -1,11 +1,10 @@
 import { EditIcon } from 'lucide-react';
 import { notFound } from 'next/navigation';
-import { AuthForm } from '@/component/AuthForm';
+import { AccessGuard } from '@/component/AccessGuard';
 import { LazyLink } from '@/component/LazyLink';
 import { Checklist } from '@/definitions/types';
 import { DBShareableHelper } from '@/dynamodb/DBShareableHelper';
 import { normalizeShortId } from '@/helpers/normalizeShortId';
-import { checkAccess } from '@/lib/auth/checkAccess';
 import { ChecklistView } from './checklist/ChecklistView';
 
 export default async function SharingPage({ params }: PageProps<'/[shortId]'>) {
@@ -23,12 +22,6 @@ export default async function SharingPage({ params }: PageProps<'/[shortId]'>) {
   }
   const { viewPasscodeVersion, adminPasscodeVersion, entity } = item;
 
-  const accessDenied = !(await checkAccess('viewAccess', {
-    viewPasscodeVersion,
-    adminPasscodeVersion,
-    shortId,
-  }));
-
   return (
     <>
       <div className="fixed top-0 right-0 left-0 z-50 flex h-12 items-center px-4">
@@ -38,10 +31,15 @@ export default async function SharingPage({ params }: PageProps<'/[shortId]'>) {
         </LazyLink>
       </div>
       <div className="h-12"></div>
-      {accessDenied ? (
-        <AuthForm shortId={shortId} type="viewAccess" className="my-10" />
-      ) : (
-        (() => {
+      <AccessGuard
+        attributes={{
+          type: 'viewAccess',
+          shortId,
+          viewPasscodeVersion,
+          adminPasscodeVersion,
+        }}
+      >
+        {(() => {
           switch (item.entity) {
             case 'checklist':
               // Checlist item is safe to cast.
@@ -49,8 +47,8 @@ export default async function SharingPage({ params }: PageProps<'/[shortId]'>) {
           }
 
           return <div className="text-center">Ready soon</div>;
-        })()
-      )}
+        })()}
+      </AccessGuard>
     </>
   );
 }
