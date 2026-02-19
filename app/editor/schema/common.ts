@@ -8,3 +8,11 @@ export const expiresAfterSchema = z
 export const viewPasscodeSchema = z.string().optional();
 
 export const adminPasscodeSchema = z.string().optional();
+
+export const deleteViewPasscodeSchema = z
+  .string()
+  .transform((v) => v === 'yes');
+
+export const deleteAdminPasscodeSchema = z
+  .string()
+  .transform((v) => v === 'yes');

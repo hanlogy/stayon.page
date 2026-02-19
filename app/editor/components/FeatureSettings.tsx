@@ -1,9 +1,10 @@
 import { FormFieldRegister } from '@hanlogy/react-web-ui';
-import { SelectField, TextField } from '@/component/form/fields';
+import { SelectField } from '@/component/form/fields';
 import { expiresAfterOptions } from '@/definitions/constants';
 import { ShareableCommon } from '@/definitions/types';
 import { formId } from '../constants';
 import { SettingsFormData } from '../types';
+import { PasswordField } from './PasswordField';
 
 export function FeatureSettings<InitialValuesT extends ShareableCommon>({
   register,
@@ -18,25 +19,22 @@ export function FeatureSettings<InitialValuesT extends ShareableCommon>({
     adminPasscodeVersion,
   } = initialValues ?? {};
 
-  const hasViewPasscode = !!viewPasscodeVersion;
-  const hasAdminPasscode = !!adminPasscodeVersion;
-
   return (
     <div className="space-y-8">
-      <TextField
+      <PasswordField
+        hasPasscode={!!viewPasscodeVersion}
         label="View passcode"
         helper="Leave blank to make this public."
-        form={formId}
-        controller={register('viewPasscode')}
-        type="password"
+        setController={register('viewPasscode')}
+        deleteController={register('deleteViewPasscode')}
       />
 
-      <TextField
+      <PasswordField
+        hasPasscode={!!adminPasscodeVersion}
         label="Admin passcode"
-        form={formId}
-        controller={register('adminPasscode')}
+        setController={register('adminPasscode')}
+        deleteController={register('deleteAdminPasscode')}
         helper="Leave blank to allow anyone who can view to manage."
-        type="password"
       />
 
       <SelectField

@@ -8,6 +8,8 @@ export type ShareableEntityName = (typeof shareableEntityNames)[number];
 
 export type ExpiresAfterValue = (typeof expiresAfterOptions)[number];
 
+export type YesOrNo = 'yes' | 'no';
+
 export type AccessType = (typeof accessTypes)[number];
 
 export interface ShareableCommon {

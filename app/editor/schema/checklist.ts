@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import {
   adminPasscodeSchema,
+  deleteAdminPasscodeSchema,
+  deleteViewPasscodeSchema,
   expiresAfterSchema,
   viewPasscodeSchema,
 } from './common';
@@ -16,6 +18,8 @@ const publishChecklistSchema = z.object({
   note: noteSchema,
   viewPasscode: viewPasscodeSchema,
   adminPasscode: adminPasscodeSchema,
+  deleteViewPasscode: deleteViewPasscodeSchema,
+  deleteAdminPasscode: deleteAdminPasscodeSchema,
 });
 
 export function parseWithChecklistSchema(data: Record<string, unknown>) {

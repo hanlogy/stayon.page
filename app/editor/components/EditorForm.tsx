@@ -35,6 +35,7 @@ export function EditorForm<
   const { validate, register } = formManager;
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const isEdit = !!initialValues;
 
   const onSubmit = async (e: SubmitEvent) => {
     e.preventDefault();
@@ -84,7 +85,7 @@ export function EditorForm<
           form={formId}
           className="min-w-50"
         >
-          Publish
+          {isEdit ? 'Save' : 'Publish'}
         </FilledButton>
       </div>
     </div>
