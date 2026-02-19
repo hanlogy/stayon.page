@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import { ChecklistItem } from '@/definitions/types';
 import { DBChecklistHelper } from '@/dynamodb/DBChecklistHelper';
 import { parseWithChecklistSchema } from '@/editor/schema/checklist';
-import { SettingsFormData } from '../types';
+import { SettingsFormData } from '@/editor/types';
 
 export type ChecklistFormData = SettingsFormData & {
   name: string;

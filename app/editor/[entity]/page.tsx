@@ -1,14 +1,12 @@
-import { ReactNode } from 'react';
+import { FlexCenter } from '@hanlogy/react-web-ui';
 import { kebabToCamel } from '@hanlogy/ts-lib';
 import { HomeIcon } from 'lucide-react';
 import { notFound } from 'next/navigation';
-import { AccessGuard, AccessGuardAttributes } from '@/component/AccessGuard';
+import { AccessGuard } from '@/component/AccessGuard';
 import { Appbar } from '@/component/Appbar';
 import { LazyLink } from '@/component/LazyLink';
 import { shareableEntityNames } from '@/definitions/constants';
-import { Checklist } from '@/definitions/types';
-import { DBChecklistHelper } from '@/dynamodb/DBChecklistHelper';
-import { ChecklistEditor } from './checklist/ChecklistEditor';
+import { checklistRegister } from './checklist/checklistRegister';
 
 export default async function EditorPage({
   searchParams,
@@ -55,40 +53,34 @@ export default async function EditorPage({
 
       <main className="flex-1">
         {(async () => {
-          let accessGuardAttributes: AccessGuardAttributes | undefined;
-          let content: ReactNode | undefined;
+          const defaultRegister = () => ({
+            item: undefined,
+            editor: <FlexCenter className="py-10">Not Ready</FlexCenter>,
+          });
 
-          switch (entityName) {
-            case 'checklist': {
-              let item: Checklist | undefined;
-              if (shortIdLike) {
-                const dbHelper = new DBChecklistHelper();
-                item = await dbHelper.getItem({ shortId: shortIdLike });
-                if (!item) {
-                  return notFound();
-                }
+          const register = {
+            checklist: checklistRegister,
+            event: defaultRegister,
+            poll: defaultRegister,
+            timeSlots: defaultRegister,
+          }[entityName];
 
-                const { viewPasscodeVersion, adminPasscodeVersion, shortId } =
-                  item;
-                accessGuardAttributes = {
-                  type: 'adminAccess',
-                  shortId,
-                  viewPasscodeVersion,
-                  adminPasscodeVersion,
-                };
+          const { item, editor } = await register({
+            shortId: shortIdLike,
+          });
+
+          const accessGuardAttributes = item
+            ? {
+                type: 'adminAccess' as const,
+                shortId: item.shortId,
+                viewPasscodeVersion: item.viewPasscodeVersion,
+                adminPasscodeVersion: item.adminPasscodeVersion,
               }
-
-              content = <ChecklistEditor initialData={item} />;
-            }
-          }
-
-          if (!content) {
-            return <div>Not ready</div>;
-          }
+            : undefined;
 
           return (
             <AccessGuard attributes={accessGuardAttributes}>
-              {content}
+              {editor}
             </AccessGuard>
           );
         })()}
