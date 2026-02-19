@@ -6,12 +6,12 @@ import { TextField } from '@/component/form/fields';
 import { Checklist } from '@/definitions/types';
 import { nameSchema } from '@/editor/schema/checklist';
 import { safeParseField } from '@/editor/schema/helpers';
-import { EditorForm } from '../components/EditorForm';
+import { EditorForm } from '../../components/EditorForm';
 import {
   AddButtonWithIcon,
   DeleteIconButton,
   EditIconButton,
-} from '../components/buttons';
+} from '../../components/buttons';
 import { ChecklistFormData, publishChecklist } from './action';
 import { useChecklistItemDialog } from './useChecklistItemDialog';
 
@@ -38,7 +38,11 @@ export function ChecklistEditor({ initialData }: { initialData?: Checklist }) {
   }, [setValuesChangeListener]);
 
   return (
-    <EditorForm action={publishChecklist} formManager={formManager}>
+    <EditorForm
+      className='px-4" mx-auto max-w-2xl'
+      action={publishChecklist}
+      formManager={formManager}
+    >
       {({ setTabName }) => {
         return (
           <>

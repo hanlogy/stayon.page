@@ -12,10 +12,12 @@ import { EditorTabs } from './EditorTabs';
 import { FeatureSettings } from './FeatureSettings';
 
 export function EditorForm<T extends FormDataConstraint<T>>({
+  className,
   children,
   action,
   formManager,
 }: {
+  className?: string;
   children:
     | ReactNode
     | ((options: {
@@ -49,7 +51,7 @@ export function EditorForm<T extends FormDataConstraint<T>>({
   };
 
   return (
-    <>
+    <div className={className}>
       <FlexCenter className="mt-8 mb-8">
         <EditorTabs tabName={tabName} onChange={setTabName} />
       </FlexCenter>
@@ -79,6 +81,6 @@ export function EditorForm<T extends FormDataConstraint<T>>({
           Publish
         </FilledButton>
       </div>
-    </>
+    </div>
   );
 }
