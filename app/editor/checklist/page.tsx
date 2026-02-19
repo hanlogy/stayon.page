@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { Checklist } from '@/definitions/types';
 import { DBChecklistHelper } from '@/dynamodb/DBChecklistHelper';
 import {
   AccessGuard,
@@ -18,9 +19,10 @@ export default async function ChecklistEditorPage({
 
   let accessGuardAttributes: AccessGuardAttributes | undefined;
 
+  let item: Checklist | undefined;
   if (typeof shortIdLike === 'string') {
     const dbHelper = new DBChecklistHelper();
-    const item = await dbHelper.getItem({ shortId: shortIdLike });
+    item = await dbHelper.getItem({ shortId: shortIdLike });
     if (!item) {
       return notFound();
     }
@@ -37,7 +39,7 @@ export default async function ChecklistEditorPage({
   return (
     <AccessGuard attributes={accessGuardAttributes}>
       <div className="mx-auto max-w-2xl px-4">
-        <ChecklistEditor />
+        <ChecklistEditor initialData={item} />
       </div>
     </AccessGuard>
   );

@@ -32,7 +32,6 @@ export function FeatureSettings({
           value: v,
           label: { '1': '24 hours', '7': '7 days', '30': '30 days' }[v],
         }))}
-        defaultValue="7"
         label="Expires after"
         helper="This content will be permanently deleted after the selected number of days."
         form={formId}
