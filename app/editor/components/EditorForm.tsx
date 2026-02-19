@@ -1,4 +1,4 @@
-import { useState, SubmitEvent, ReactNode } from 'react';
+import { useState, SubmitEvent, PropsWithChildren } from 'react';
 import {
   clsx,
   FlexCenter,
@@ -7,7 +7,8 @@ import {
 } from '@hanlogy/react-web-ui';
 import { FilledButton } from '@/component/buttons';
 import { formId } from '../constants';
-import { EditorTabName, SettingsFormData } from '../types';
+import { useEditorContext } from '../state/hooks';
+import { SettingsFormData } from '../types';
 import { EditorTabs } from './EditorTabs';
 import { FeatureSettings } from './FeatureSettings';
 
@@ -16,20 +17,15 @@ export function EditorForm<T extends FormDataConstraint<T>>({
   children,
   action,
   formManager,
-}: {
+}: PropsWithChildren<{
   className?: string;
-  children:
-    | ReactNode
-    | ((options: {
-        setTabName: (tabName: EditorTabName) => void;
-      }) => ReactNode);
   action: (formData: Partial<T & SettingsFormData>) => void | Promise<void>;
   formManager: FormManager<T & SettingsFormData>;
-}) {
+}>) {
+  const { tabName } = useEditorContext();
   const { validate, register } = formManager;
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [tabName, setTabName] = useState<EditorTabName>('detail');
 
   const onSubmit = async (e: SubmitEvent) => {
     e.preventDefault();
@@ -53,7 +49,7 @@ export function EditorForm<T extends FormDataConstraint<T>>({
   return (
     <div className={className}>
       <FlexCenter className="mt-8 mb-8">
-        <EditorTabs tabName={tabName} onChange={setTabName} />
+        <EditorTabs />
       </FlexCenter>
       <form autoComplete="off" id={formId} onSubmit={onSubmit}>
         <div>
@@ -61,9 +57,7 @@ export function EditorForm<T extends FormDataConstraint<T>>({
             <FeatureSettings register={register} />
           </div>
           <div className={clsx('contents', { hidden: tabName !== 'detail' })}>
-            {typeof children === 'function'
-              ? children({ setTabName })
-              : children}
+            {children}
           </div>
         </div>
       </form>

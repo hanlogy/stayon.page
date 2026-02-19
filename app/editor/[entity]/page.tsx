@@ -1,3 +1,4 @@
+import { DialogProvider } from '@hanlogy/react-web-ui';
 import { FlexCenter } from '@hanlogy/react-web-ui';
 import { kebabToCamel } from '@hanlogy/ts-lib';
 import { HomeIcon } from 'lucide-react';
@@ -6,6 +7,7 @@ import { AccessGuard } from '@/component/AccessGuard';
 import { Appbar } from '@/component/Appbar';
 import { LazyLink } from '@/component/LazyLink';
 import { shareableEntityNames } from '@/definitions/constants';
+import { EditorContextProvider } from '../state/provider';
 import { checklistRegister } from './checklist/checklistRegister';
 
 export default async function EditorPage({
@@ -80,7 +82,9 @@ export default async function EditorPage({
 
           return (
             <AccessGuard attributes={accessGuardAttributes}>
-              {editor}
+              <DialogProvider>
+                <EditorContextProvider>{editor}</EditorContextProvider>
+              </DialogProvider>
             </AccessGuard>
           );
         })()}

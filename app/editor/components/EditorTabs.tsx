@@ -1,18 +1,19 @@
 import { ButtonGroup, clsx } from '@hanlogy/react-web-ui';
-import { EditorTabItem, EditorTabName } from '../types';
+import { useEditorContext } from '../state/hooks';
+import { EditorTabName } from '../state/type';
+
+export interface EditorTabItem {
+  value: EditorTabName;
+  label: string;
+}
 
 const tabItems: EditorTabItem[] = [
   { value: 'detail', label: 'Details' },
   { value: 'settings', label: 'Access & Expiry' },
 ];
 
-export function EditorTabs({
-  tabName,
-  onChange,
-}: {
-  tabName: EditorTabName;
-  onChange: (tabName: EditorTabName) => void;
-}) {
+export function EditorTabs() {
+  const { tabName, setTabName } = useEditorContext();
   return (
     <ButtonGroup
       className="w-full max-w-80"
@@ -22,7 +23,7 @@ export function EditorTabs({
         return (
           <button
             type="button"
-            onClick={() => onChange(item.value)}
+            onClick={() => setTabName(item.value)}
             key={item.value}
             className={clsx(
               'h-10',

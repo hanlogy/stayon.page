@@ -1,4 +1,3 @@
-import { DialogProvider } from '@hanlogy/react-web-ui';
 import clsx from 'clsx';
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
@@ -27,7 +26,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           'flex min-h-dvh flex-col'
         )}
       >
-        <DialogProvider>{children}</DialogProvider>
+        {children}
       </body>
     </html>
   );
