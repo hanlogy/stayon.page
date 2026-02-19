@@ -12,7 +12,10 @@ export type ChecklistFormData = SettingsFormData & {
   note?: string;
 };
 
-export async function publishChecklist(formData: Partial<ChecklistFormData>) {
+export async function publishChecklist(
+  shortId: string | undefined,
+  formData: Partial<ChecklistFormData>
+) {
   const helper = new DBChecklistHelper();
 
   const { error, data } = parseWithChecklistSchema({
@@ -35,9 +38,12 @@ export async function publishChecklist(formData: Partial<ChecklistFormData>) {
     throw new Error('Something is wrong');
   }
 
-  let shortId: string;
   try {
-    ({ shortId } = await helper.createItem({ ...data, items }));
+    if (!shortId) {
+      ({ shortId } = await helper.createItem({ ...data, items }));
+    } else {
+      console.log(1);
+    }
   } catch {
     throw new Error('Something is wrong');
   }

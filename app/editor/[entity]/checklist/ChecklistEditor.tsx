@@ -17,12 +17,7 @@ import { ChecklistFormData, publishChecklist } from './action';
 import { useChecklistItemDialog } from './useChecklistItemDialog';
 
 export function ChecklistEditor({ initialData }: { initialData?: Checklist }) {
-  const formManager = useForm<ChecklistFormData>({
-    initialValues: {
-      name: initialData?.name,
-      expiresAfter: String(initialData?.expiresAfter ?? 7),
-    },
-  });
+  const formManager = useForm<ChecklistFormData>();
   const { items, setItems, openItemDialog } = useChecklistItemDialog(
     initialData?.items
   );
@@ -42,10 +37,12 @@ export function ChecklistEditor({ initialData }: { initialData?: Checklist }) {
   return (
     <EditorForm
       className='px-4" mx-auto max-w-2xl'
+      initialValues={initialData}
       action={publishChecklist}
       formManager={formManager}
     >
       <TextField
+        defaultValue={initialData?.name}
         label="Checklist name"
         maxLength={200}
         controller={register('name', {

@@ -6,21 +6,30 @@ import {
   FormManager,
 } from '@hanlogy/react-web-ui';
 import { FilledButton } from '@/component/buttons';
+import { ShareableCommon } from '@/definitions/types';
 import { formId } from '../constants';
 import { useEditorContext } from '../state/hooks';
 import { SettingsFormData } from '../types';
 import { EditorTabs } from './EditorTabs';
 import { FeatureSettings } from './FeatureSettings';
 
-export function EditorForm<T extends FormDataConstraint<T>>({
+export function EditorForm<
+  T extends FormDataConstraint<T>,
+  InitialValuesT extends ShareableCommon,
+>({
   className,
   children,
   action,
   formManager,
+  initialValues,
 }: PropsWithChildren<{
   className?: string;
-  action: (formData: Partial<T & SettingsFormData>) => void | Promise<void>;
+  action: (
+    shortId: string | undefined,
+    formData: Partial<T & SettingsFormData>
+  ) => void | Promise<void>;
   formManager: FormManager<T & SettingsFormData>;
+  initialValues: InitialValuesT | undefined;
 }>) {
   const { tabName } = useEditorContext();
   const { validate, register } = formManager;
@@ -38,7 +47,7 @@ export function EditorForm<T extends FormDataConstraint<T>>({
 
     try {
       setIsPending(true);
-      await action(formManager.getValues());
+      await action(initialValues?.shortId, formManager.getValues());
     } catch {
       setError('Something is wrong');
     } finally {
@@ -54,7 +63,10 @@ export function EditorForm<T extends FormDataConstraint<T>>({
       <form autoComplete="off" id={formId} onSubmit={onSubmit}>
         <div>
           <div className={clsx('contents', { hidden: tabName !== 'settings' })}>
-            <FeatureSettings register={register} />
+            <FeatureSettings
+              initialValues={initialValues}
+              register={register}
+            />
           </div>
           <div className={clsx('contents', { hidden: tabName !== 'detail' })}>
             {children}
