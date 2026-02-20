@@ -1,3 +1,4 @@
+import { DialogProvider } from '@hanlogy/react-web-ui';
 import { EditIcon } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import { AccessGuard } from '@/component/AccessGuard';
@@ -6,6 +7,7 @@ import { Checklist } from '@/definitions/types';
 import { DBShareableHelper } from '@/dynamodb/DBShareableHelper';
 import { normalizeShortId } from '@/helpers/shortId';
 import { ChecklistView } from './checklist/ChecklistView';
+import { ShareButton } from './components/ShareButton';
 
 export default async function SharingPage({ params }: PageProps<'/[shortId]'>) {
   const maybeShortId = (await params).shortId;
@@ -24,8 +26,11 @@ export default async function SharingPage({ params }: PageProps<'/[shortId]'>) {
 
   return (
     <>
-      <div className="fixed top-0 right-0 left-0 z-50 flex h-12 items-center px-4">
+      <div className="fixed top-0 right-0 left-0 z-50 flex h-12 items-center space-x-2 px-4">
         <div className="flex-1"></div>
+        <DialogProvider>
+          <ShareButton shortId={shortId} />
+        </DialogProvider>
         <LazyLink href={`/editor/${entity}?id=${shortId}`}>
           <EditIcon size={18} />
         </LazyLink>
