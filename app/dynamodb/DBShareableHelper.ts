@@ -1,9 +1,17 @@
 import { ShareableCommon } from '@/definitions/types';
-import { grantAccess } from '@/lib/auth/grantAccess';
-import { hashPasscode } from '@/lib/hash';
+import { formatShortId } from '@/helpers/shortId';
 import { DBHelperBase } from './DBHelperBase';
+import {
+  buildAdminPasscodeFields,
+  buildViewPasscodeFields,
+} from './buildPasscodeFields';
 import { claimShortId } from './claimShortId';
-import { ShareableCreateFields, ShareableEntity } from './types';
+import { grantAccessIfNeeded } from './grantAccessIfNeeded';
+import type {
+  ShareableCreateFields,
+  ShareableEntity,
+  ShareableUpdateFields,
+} from './types';
 
 export class DBShareableHelper extends DBHelperBase {
   private skPrefix = '01#';
@@ -14,14 +22,6 @@ export class DBShareableHelper extends DBHelperBase {
 
   private buildSk() {
     return this.db.buildKey(this.skPrefix, true);
-  }
-
-  private formatShortId(shortId: string) {
-    return [
-      shortId.slice(0, 3),
-      shortId.slice(3, 6),
-      shortId.slice(6, 10),
-    ].join('-');
   }
 
   buildKeys({ shortId }: { shortId: string }): {
@@ -40,36 +40,27 @@ export class DBShareableHelper extends DBHelperBase {
       shortId: string;
     }
   > {
-    const shortId = this.formatShortId(await claimShortId(this.db.client));
-    const hasViewPasscode = !!viewPasscode;
-    const hasAdminPasscode = !!adminPasscode;
+    const shortId = formatShortId(await claimShortId(this.db.client));
     const now = Date.now();
 
     const item = {
       shortId,
-      ...(hasViewPasscode
-        ? {
-            viewPasscode: await hashPasscode(viewPasscode),
-            viewPasscodeVersion: now,
-          }
-        : {}),
-      ...(hasAdminPasscode
-        ? {
-            adminPasscode: await hashPasscode(adminPasscode),
-            adminPasscodeVersion: now,
-          }
-        : {}),
+      ...(await buildViewPasscodeFields({
+        passcode: viewPasscode,
+        version: now,
+      })),
+      ...(await buildAdminPasscodeFields({
+        passcode: adminPasscode,
+        version: now,
+      })),
       ...fieldsRest,
       ...this.buildKeys({ shortId }),
     };
 
     await this.db.put({ keyNames: ['pk', 'sk'], item });
-
-    // grant access automatically
-    // When with both admin passcode and view passcode, only need to grant
-    // admin access
-    await grantAccess({
-      type: hasAdminPasscode ? 'adminAccess' : 'viewAccess',
+    await grantAccessIfNeeded({
+      forViewAccess: !!viewPasscode,
+      forAdminAccess: !!adminPasscode,
       shortId,
       version: now,
     });
@@ -78,6 +69,50 @@ export class DBShareableHelper extends DBHelperBase {
       ...fieldsRest,
       shortId,
     };
+  }
+
+  async updateItem<T extends ShareableUpdateFields>(
+    { shortId }: { shortId: string },
+    {
+      viewPasscode,
+      adminPasscode,
+      deleteViewPasscode,
+      deleteAdminPasscode,
+      ...fieldsRest
+    }: T
+  ): Promise<void> {
+    const now = Date.now();
+    const attributes = {
+      ...(await buildViewPasscodeFields({
+        isDelete: deleteViewPasscode,
+        passcode: viewPasscode,
+        version: now,
+      })),
+      ...(await buildAdminPasscodeFields({
+        isDelete: deleteAdminPasscode,
+        passcode: adminPasscode,
+        version: now,
+      })),
+      ...fieldsRest,
+    };
+
+    const removeAttributes = [
+      ...(deleteViewPasscode ? ['viewPasscode', 'viewPasscodeVersion'] : []),
+      ...(deleteAdminPasscode ? ['adminPasscode', 'adminPasscodeVersion'] : []),
+    ];
+
+    await this.db.update({
+      keys: this.buildKeys({ shortId }),
+      setAttributes: attributes,
+      removeAttributes,
+    });
+
+    await grantAccessIfNeeded({
+      forViewAccess: !deleteViewPasscode && !!viewPasscode,
+      forAdminAccess: !deleteAdminPasscode && !!adminPasscode,
+      shortId,
+      version: now,
+    });
   }
 
   async get<T extends ShareableEntity>({

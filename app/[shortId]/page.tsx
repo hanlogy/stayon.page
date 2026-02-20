@@ -4,7 +4,7 @@ import { AccessGuard } from '@/component/AccessGuard';
 import { LazyLink } from '@/component/LazyLink';
 import { Checklist } from '@/definitions/types';
 import { DBShareableHelper } from '@/dynamodb/DBShareableHelper';
-import { normalizeShortId } from '@/helpers/normalizeShortId';
+import { normalizeShortId } from '@/helpers/shortId';
 import { ChecklistView } from './checklist/ChecklistView';
 
 export default async function SharingPage({ params }: PageProps<'/[shortId]'>) {

@@ -24,6 +24,8 @@ export async function publishChecklist(
     note: formData.note,
     viewPasscode: formData.viewPasscode,
     adminPasscode: formData.adminPasscode,
+    deleteViewPasscode: formData.deleteViewPasscode,
+    deleteAdminPasscode: formData.deleteAdminPasscode,
   });
 
   let items: ChecklistItem[] = [];
@@ -42,7 +44,7 @@ export async function publishChecklist(
     if (!shortId) {
       ({ shortId } = await helper.createItem({ ...data, items }));
     } else {
-      console.log(1);
+      await helper.updateItem(shortId, { ...data, items });
     }
   } catch {
     throw new Error('Something is wrong');

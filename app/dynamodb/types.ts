@@ -9,7 +9,20 @@ export type ShareableCreateFields = Pick<
   readonly adminPasscode?: string;
 };
 
+export type ShareableUpdateFields = Pick<
+  ShareableCommon,
+  'name' | 'expiresAfter'
+> & {
+  readonly viewPasscode?: string;
+  readonly adminPasscode?: string;
+  readonly deleteViewPasscode?: boolean;
+  readonly deleteAdminPasscode?: boolean;
+};
+
 export type ChecklistCreateFields = ShareableCreateFields &
+  Pick<Checklist, 'note' | 'items'>;
+
+export type ChecklistUpdateFields = ShareableUpdateFields &
   Pick<Checklist, 'note' | 'items'>;
 
 export type ShareableEntity<T extends ShareableCommon = ShareableCommon> = T & {
