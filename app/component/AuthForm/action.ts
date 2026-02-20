@@ -4,11 +4,11 @@ import { refresh } from 'next/cache';
 import { cookies } from 'next/headers';
 import { AccessType } from '@/definitions/types';
 import { DBShareableHelper } from '@/dynamodb/DBShareableHelper';
-import { comparePasscode } from '../hash';
-import { generateJwt } from '../jwt';
-import { buildCookieName } from './helpers';
+import { buildCookieName } from '../../lib/auth/helpers';
+import { comparePasscode } from '../../lib/hash';
+import { generateJwt } from '../../lib/jwt';
 
-export async function grantAccess(
+export async function auth(
   type: AccessType,
   {
     shortId,
@@ -16,8 +16,7 @@ export async function grantAccess(
   }: {
     shortId: string;
     passcode?: string;
-  },
-  shouldRefresh: boolean = false
+  }
 ) {
   if (!passcode) {
     return;
@@ -65,7 +64,5 @@ export async function grantAccess(
     }
   );
 
-  if (shouldRefresh) {
-    refresh();
-  }
+  refresh();
 }

@@ -4,9 +4,9 @@ import { SubmitEvent, useState } from 'react';
 import { useForm } from '@hanlogy/react-web-ui';
 import clsx from 'clsx';
 import { AccessType } from '@/definitions/types';
-import { grantAccess } from '@/lib/auth/grantAccess';
-import { FilledButton } from './buttons';
-import { createTextFieldWith } from './form/fields';
+import { FilledButton } from '../buttons';
+import { createTextFieldWith } from '../form/fields';
+import { auth } from './action';
 
 interface FormData {
   passcode: string;
@@ -37,7 +37,7 @@ export function AuthForm({
 
     try {
       setIsPending(true);
-      await grantAccess(type, { passcode, shortId }, true);
+      await auth(type, { passcode, shortId });
     } catch {
       setError('Varify failed');
     } finally {

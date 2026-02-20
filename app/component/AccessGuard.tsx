@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react';
 import { AccessType } from '@/definitions/types';
 import { checkAccess } from '@/lib/auth/checkAccess';
-import { AuthForm } from './AuthForm';
+import { AuthForm } from './AuthForm/AuthForm';
 
 export interface AccessGuardAttributes {
   type: AccessType;
