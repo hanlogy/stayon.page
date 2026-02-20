@@ -1,0 +1,18 @@
+@import 'tailwindcss';
+@source '../node_modules/@hanlogy/react-web-ui';
+
+@theme {
+  --container-8xl: 90rem;
+}
+
+@utility flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@utility inline-flex-center {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
