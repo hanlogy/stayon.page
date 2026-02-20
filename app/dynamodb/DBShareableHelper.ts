@@ -68,11 +68,11 @@ export class DBShareableHelper extends DBHelperBase {
     // grant access automatically
     // When with both admin passcode and view passcode, only need to grant
     // admin access
-    if (hasAdminPasscode) {
-      await grantAccess('adminAccess', { shortId, passcode: adminPasscode });
-    } else if (hasViewPasscode) {
-      await grantAccess('viewAccess', { shortId, passcode: viewPasscode });
-    }
+    await grantAccess({
+      type: hasAdminPasscode ? 'adminAccess' : 'viewAccess',
+      shortId,
+      version: now,
+    });
 
     return {
       ...fieldsRest,
