@@ -57,7 +57,11 @@ export default async function EditorPage({
         {(async () => {
           const defaultRegister = () => ({
             item: undefined,
-            editor: <FlexCenter className="py-10">Not Ready</FlexCenter>,
+            editor: (
+              <FlexCenter className="py-10 text-3xl text-gray-400">
+                Coming soon...
+              </FlexCenter>
+            ),
           });
 
           const register = {

@@ -39,15 +39,17 @@ export default async function SharingPage({ params }: PageProps<'/[shortId]'>) {
           adminPasscodeVersion,
         }}
       >
-        {(() => {
-          switch (item.entity) {
-            case 'checklist':
-              // Checlist item is safe to cast.
-              return <ChecklistView item={item as Checklist} />;
-          }
+        <main className="flex-1">
+          {(() => {
+            switch (item.entity) {
+              case 'checklist':
+                // Checlist item is safe to cast.
+                return <ChecklistView item={item as Checklist} />;
+            }
 
-          return <div className="text-center">Ready soon</div>;
-        })()}
+            return <div className="text-center">Ready soon</div>;
+          })()}
+        </main>
       </AccessGuard>
     </>
   );
