@@ -1,12 +1,10 @@
 'use server';
 
 import { refresh } from 'next/cache';
-import { cookies } from 'next/headers';
 import { AccessType } from '@/definitions/types';
 import { DBShareableHelper } from '@/dynamodb/DBShareableHelper';
-import { buildCookieName } from '../../lib/auth/helpers';
+import { grantAccess } from '@/lib/auth/grantAccess';
 import { comparePasscode } from '../../lib/hash';
-import { generateJwt } from '../../lib/jwt';
 
 export async function auth(
   type: AccessType,
@@ -29,40 +27,27 @@ export async function auth(
     throw new Error('item does not exist');
   }
 
-  const hash = type === 'adminAccess' ? item.adminPasscode : item.viewPasscode;
-  if (hash && !(await comparePasscode({ passcode, hash }))) {
+  const {
+    viewPasscode,
+    adminPasscode,
+    viewPasscodeVersion,
+    adminPasscodeVersion,
+  } = item;
+
+  const [hash, version] =
+    type === 'viewAccess'
+      ? [viewPasscode, viewPasscodeVersion]
+      : [adminPasscode, adminPasscodeVersion];
+
+  if (!hash || !version) {
+    return;
+  }
+
+  if (!(await comparePasscode({ passcode, hash }))) {
     throw new Error('failed');
   }
 
-  const cookieStore = await cookies();
-  const secret = process.env.ACCESS_SECRET;
-  if (!secret || secret.length < 32) {
-    throw new Error('unexpected');
-  }
-
-  const version =
-    type === 'viewAccess'
-      ? item.viewPasscodeVersion
-      : item.adminPasscodeVersion;
-
-  const expiresInSeconds = 60 * 60 * 24 * 7;
-
-  cookieStore.set(
-    buildCookieName({ type, shortId }),
-    await generateJwt({
-      id: shortId,
-      secret,
-      expiresInSeconds,
-      claims: { version },
-    }),
-    {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge: expiresInSeconds,
-    }
-  );
+  await grantAccess({ type, shortId, version });
 
   refresh();
 }
