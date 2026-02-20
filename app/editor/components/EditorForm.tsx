@@ -59,7 +59,7 @@ export function EditorForm<
   };
 
   return (
-    <div className={className}>
+    <div className={clsx('px-4', className)}>
       <FlexCenter className="mt-8 mb-8">
         <EditorTabs />
       </FlexCenter>
@@ -80,6 +80,9 @@ export function EditorForm<
 
       <div className="h-22 sm:h-30"></div>
       <div className="fixed right-0 bottom-0 left-0 flex h-22 items-center justify-center space-x-4 sm:h-30">
+        {initialValues?.shortId && (
+          <DeleteEntity shortId={initialValues.shortId} />
+        )}
         <FilledButton
           disabled={isPending}
           type="submit"
@@ -89,10 +92,6 @@ export function EditorForm<
         >
           {isEdit ? 'Save' : 'Publish'}
         </FilledButton>
-
-        {initialValues?.shortId && (
-          <DeleteEntity shortId={initialValues.shortId} />
-        )}
       </div>
     </div>
   );

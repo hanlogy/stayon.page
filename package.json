@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 9181",
+    "dev": "next dev -H 0.0.0.0 -p 9181  --experimental-https  --experimental-https-key ./certificates/dev-key.pem  --experimental-https-cert ./certificates/dev-cert.pem",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
