@@ -150,4 +150,10 @@ export class DBShareableHelper extends DBHelperBase {
 
     return rest;
   }
+
+  async deleteItem({ shortId }: { shortId: string }) {
+    await this.db.delete({
+      keys: this.buildKeys({ shortId }),
+    });
+  }
 }

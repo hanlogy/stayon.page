@@ -10,6 +10,7 @@ import { ActionResponse, ShareableCommon } from '@/definitions/types';
 import { formId } from '../constants';
 import { useEditorContext } from '../state/hooks';
 import { SettingsFormData } from '../types';
+import { DeleteEntity } from './DeleteEntity/DeleteEntity';
 import { EditorTabs } from './EditorTabs';
 import { FeatureSettings } from './FeatureSettings';
 
@@ -78,7 +79,7 @@ export function EditorForm<
       <div className="p-4 text-center text-red-600">{error}</div>
 
       <div className="h-22 sm:h-30"></div>
-      <div className="fixed right-0 bottom-0 left-0 flex h-22 items-center justify-center sm:h-30">
+      <div className="fixed right-0 bottom-0 left-0 flex h-22 items-center justify-center space-x-4 sm:h-30">
         <FilledButton
           disabled={isPending}
           type="submit"
@@ -88,6 +89,10 @@ export function EditorForm<
         >
           {isEdit ? 'Save' : 'Publish'}
         </FilledButton>
+
+        {initialValues?.shortId && (
+          <DeleteEntity shortId={initialValues.shortId} />
+        )}
       </div>
     </div>
   );

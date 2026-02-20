@@ -25,8 +25,12 @@ export async function publishChecklist(
     note: formData.note,
     viewPasscode: formData.viewPasscode,
     adminPasscode: formData.adminPasscode,
-    deleteViewPasscode: formData.deleteViewPasscode,
-    deleteAdminPasscode: formData.deleteAdminPasscode,
+    ...(shortId
+      ? {
+          deleteViewPasscode: formData.deleteViewPasscode,
+          deleteAdminPasscode: formData.deleteAdminPasscode,
+        }
+      : {}),
   });
 
   let items: ChecklistItem[] = [];
@@ -38,6 +42,7 @@ export async function publishChecklist(
   }
 
   if (error) {
+    console.log(error);
     return toActionError({
       message: 'Invalid data',
     });

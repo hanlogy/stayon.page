@@ -11,8 +11,10 @@ export const adminPasscodeSchema = z.string().optional();
 
 export const deleteViewPasscodeSchema = z
   .string()
-  .transform((v) => v === 'yes');
+  .transform((v) => v === 'yes')
+  .optional();
 
 export const deleteAdminPasscodeSchema = z
   .string()
-  .transform((v) => v === 'yes');
+  .transform((v) => v === 'yes')
+  .optional();
