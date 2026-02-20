@@ -35,14 +35,12 @@ export function AuthForm({
 
     const { passcode } = getValues();
 
-    try {
-      setIsPending(true);
-      await auth(type, { passcode, shortId });
-    } catch {
-      setError('Varify failed');
-    } finally {
-      setIsPending(false);
+    setIsPending(true);
+    const { ok, error } = await auth(type, { passcode, shortId });
+    if (!ok) {
+      setError(error?.message ?? 'Varify failed');
     }
+    setIsPending(false);
   };
   const { title, placeholder } = (() => {
     if (type === 'viewAccess') {

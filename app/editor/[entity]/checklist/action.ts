@@ -1,10 +1,11 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { ChecklistItem } from '@/definitions/types';
+import { ActionResponse, ChecklistItem } from '@/definitions/types';
 import { DBChecklistHelper } from '@/dynamodb/DBChecklistHelper';
 import { parseWithChecklistSchema } from '@/editor/schema/checklist';
 import { SettingsFormData } from '@/editor/types';
+import { toActionError } from '@/helpers/action';
 
 export type ChecklistFormData = SettingsFormData & {
   name: string;
@@ -15,7 +16,7 @@ export type ChecklistFormData = SettingsFormData & {
 export async function publishChecklist(
   shortId: string | undefined,
   formData: Partial<ChecklistFormData>
-) {
+): Promise<ActionResponse> {
   const helper = new DBChecklistHelper();
 
   const { error, data } = parseWithChecklistSchema({
@@ -37,7 +38,9 @@ export async function publishChecklist(
   }
 
   if (error) {
-    throw new Error('Something is wrong');
+    return toActionError({
+      message: 'Invalid data',
+    });
   }
 
   try {
@@ -47,7 +50,9 @@ export async function publishChecklist(
       await helper.updateItem(shortId, { ...data, items });
     }
   } catch {
-    throw new Error('Something is wrong');
+    return toActionError({
+      message: 'Something is wrong when saving data',
+    });
   }
 
   redirect(`/${shortId}`);

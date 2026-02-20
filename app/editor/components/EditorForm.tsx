@@ -6,7 +6,7 @@ import {
   FormManager,
 } from '@hanlogy/react-web-ui';
 import { FilledButton } from '@/component/buttons';
-import { ShareableCommon } from '@/definitions/types';
+import { ActionResponse, ShareableCommon } from '@/definitions/types';
 import { formId } from '../constants';
 import { useEditorContext } from '../state/hooks';
 import { SettingsFormData } from '../types';
@@ -27,7 +27,7 @@ export function EditorForm<
   action: (
     shortId: string | undefined,
     formData: Partial<T & SettingsFormData>
-  ) => void | Promise<void>;
+  ) => ActionResponse | Promise<ActionResponse>;
   formManager: FormManager<T & SettingsFormData>;
   initialValues: InitialValuesT | undefined;
 }>) {
@@ -45,15 +45,16 @@ export function EditorForm<
     }
 
     setError(null);
+    setIsPending(true);
+    const { ok, error } = await action(
+      initialValues?.shortId,
+      formManager.getValues()
+    );
 
-    try {
-      setIsPending(true);
-      await action(initialValues?.shortId, formManager.getValues());
-    } catch {
-      setError('Something is wrong');
-    } finally {
-      setIsPending(false);
+    if (!ok) {
+      setError(error?.message ?? 'Something is wrong');
     }
+    setIsPending(false);
   };
 
   return (

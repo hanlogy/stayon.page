@@ -31,3 +31,21 @@ export interface Checklist extends ShareableCommon {
   readonly note?: string;
   readonly items: readonly ChecklistItem[];
 }
+
+export interface ActionOk<DataT = undefined> {
+  readonly ok: true;
+  readonly data?: DataT | undefined;
+  readonly error?: undefined;
+}
+
+export interface ActionError {
+  readonly ok: false;
+  readonly data?: undefined;
+  readonly error?:
+    | {
+        message?: string | undefined;
+      }
+    | undefined;
+}
+
+export type ActionResponse<DataT = undefined> = ActionOk<DataT> | ActionError;
