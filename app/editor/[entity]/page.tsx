@@ -1,11 +1,10 @@
 import { DialogProvider } from '@hanlogy/react-web-ui';
 import { FlexCenter } from '@hanlogy/react-web-ui';
 import { kebabToCamel } from '@hanlogy/ts-lib';
-import { HomeIcon } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import { AccessGuard } from '@/component/AccessGuard';
 import { Appbar } from '@/component/Appbar';
-import { LazyLink } from '@/component/LazyLink';
+import { HomeLink } from '@/component/HomeLink';
 import { shareableEntityNames } from '@/definitions/constants';
 import { EditorContextProvider } from '../state/provider';
 import { checklistRegister } from './checklist/checklistRegister';
@@ -41,13 +40,7 @@ export default async function EditorPage({
   return (
     <>
       <Appbar>
-        <LazyLink
-          href="/"
-          replace
-          className="fixed ml-2 flex h-10 w-10 items-center justify-center rounded-full hover:bg-gray-100"
-        >
-          <HomeIcon className="w-5" />
-        </LazyLink>
+        <HomeLink />
         <div className="w-full text-center text-xl font-medium text-gray-600">
           {`${shortIdLike ? 'Edit' : 'Create'} ${entityTitle}`}
         </div>
