@@ -1,60 +1,60 @@
-import { useCallback, useRef, useSyncExternalStore } from 'react';
-
-const empty: string[] = [];
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { IDBHandle, openDB } from '@/lib/indexedDB';
 
 export function useStateStore({ shortId }: { shortId: string }) {
-  const key = `state-${shortId}`;
-  const itemsRef = useRef<string[]>([]);
-  const rawRaf = useRef<string | null>(null);
-  const listenerRef = useRef<VoidFunction>(null);
+  const dbRef = useRef<IDBHandle | null>(null);
+  const [checkedItems, setCheckedItems] = useState<string[]>([]);
 
-  const items = useSyncExternalStore(
-    (listener: VoidFunction) => {
-      listenerRef.current = listener;
-      return () => {
-        listenerRef.current = null;
-      };
-    },
-    () => {
-      const raw = localStorage.getItem(key);
-      if (!raw) {
-        return empty;
+  const getItems = useCallback(async () => {
+    const db = dbRef.current;
+    if (!db) {
+      return [];
+    }
+    return (await db.get('checklistState', shortId))?.checkedItems ?? [];
+  }, [shortId]);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const db = await openDB();
+      if (cancelled) {
+        return;
       }
+      dbRef.current = db;
 
-      if (raw === rawRaf.current) {
-        return itemsRef.current;
-      }
+      setCheckedItems(await getItems());
+    })();
 
-      rawRaf.current = raw;
-
-      try {
-        itemsRef.current = JSON.parse(raw);
-        return itemsRef.current;
-      } catch {
-        return empty;
-      }
-    },
-    () => empty
-  );
+    return () => {
+      cancelled = true;
+    };
+  }, [getItems]);
 
   const toggleChecked = useCallback(
-    (id: string) => {
-      const itemsBefore = itemsRef.current;
+    async (id: string) => {
+      const itemsBefore = await getItems();
+
       const itemsNow = itemsBefore.includes(id)
         ? itemsBefore.filter((e) => e !== id)
         : [...itemsBefore, id];
 
-      localStorage.setItem(key, JSON.stringify(itemsNow));
+      const db = dbRef.current;
 
-      if (listenerRef.current) {
-        listenerRef.current();
+      if (!db) {
+        return;
       }
+
+      setCheckedItems(itemsNow);
+      await db.put('checklistState', {
+        shortId,
+        checkedItems: itemsNow,
+      });
     },
-    [key]
+    [getItems, shortId]
   );
 
   return {
-    checkedItems: items,
+    checkedItems,
     toggleChecked,
   };
 }

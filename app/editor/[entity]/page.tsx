@@ -3,8 +3,7 @@ import { FlexCenter } from '@hanlogy/react-web-ui';
 import { kebabToCamel } from '@hanlogy/ts-lib';
 import { notFound } from 'next/navigation';
 import { AccessGuard } from '@/component/AccessGuard';
-import { Appbar } from '@/component/Appbar';
-import { HomeLink } from '@/component/HomeLink';
+import { Layout } from '@/component/Layout';
 import { shareableEntityNames } from '@/definitions/constants';
 import { EditorContextProvider } from '../state/provider';
 import { checklistRegister } from './checklist/checklistRegister';
@@ -37,55 +36,57 @@ export default async function EditorPage({
     return undefined;
   })();
 
+  const title = `${shortIdLike ? 'Edit' : 'Create'} ${entityTitle}`;
+
   return (
-    <>
-      <Appbar>
-        <HomeLink />
+    <Layout
+      leading="home"
+      title={
         <div className="w-full text-center text-xl font-medium text-gray-600">
-          {`${shortIdLike ? 'Edit' : 'Create'} ${entityTitle}`}
+          {title}
         </div>
-      </Appbar>
+      }
+      withFooter={false}
+    >
+      <title>{title}</title>
+      {(async () => {
+        const defaultRegister = () => ({
+          item: undefined,
+          editor: (
+            <FlexCenter className="py-10 text-3xl text-gray-400">
+              Coming soon...
+            </FlexCenter>
+          ),
+        });
 
-      <main className="flex-1">
-        {(async () => {
-          const defaultRegister = () => ({
-            item: undefined,
-            editor: (
-              <FlexCenter className="py-10 text-3xl text-gray-400">
-                Coming soon...
-              </FlexCenter>
-            ),
-          });
+        const register = {
+          checklist: checklistRegister,
+          event: defaultRegister,
+          poll: defaultRegister,
+          timeSlots: defaultRegister,
+        }[entityName];
 
-          const register = {
-            checklist: checklistRegister,
-            event: defaultRegister,
-            poll: defaultRegister,
-            timeSlots: defaultRegister,
-          }[entityName];
+        const { item, editor } = await register({
+          shortId: shortIdLike,
+        });
 
-          const { item, editor } = await register({
-            shortId: shortIdLike,
-          });
+        const accessGuardAttributes = item
+          ? {
+              type: 'adminAccess' as const,
+              shortId: item.shortId,
+              viewPasscodeVersion: item.viewPasscodeVersion,
+              adminPasscodeVersion: item.adminPasscodeVersion,
+            }
+          : undefined;
 
-          const accessGuardAttributes = item
-            ? {
-                type: 'adminAccess' as const,
-                shortId: item.shortId,
-                viewPasscodeVersion: item.viewPasscodeVersion,
-                adminPasscodeVersion: item.adminPasscodeVersion,
-              }
-            : undefined;
-
-          return (
-            <AccessGuard attributes={accessGuardAttributes}>
-              <DialogProvider>
-                <EditorContextProvider>{editor}</EditorContextProvider>
-              </DialogProvider>
-            </AccessGuard>
-          );
-        })()}
-      </main>
-    </>
+        return (
+          <AccessGuard attributes={accessGuardAttributes}>
+            <DialogProvider>
+              <EditorContextProvider>{editor}</EditorContextProvider>
+            </DialogProvider>
+          </AccessGuard>
+        );
+      })()}
+    </Layout>
   );
 }

@@ -2,7 +2,7 @@ import { DialogProvider } from '@hanlogy/react-web-ui';
 import { EditIcon } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import { AccessGuard } from '@/component/AccessGuard';
-import { HomeLink } from '@/component/HomeLink';
+import { Layout } from '@/component/Layout';
 import { LazyLink } from '@/component/LazyLink';
 import { Checklist } from '@/definitions/types';
 import { DBShareableHelper } from '@/dynamodb/DBShareableHelper';
@@ -26,18 +26,20 @@ export default async function SharingPage({ params }: PageProps<'/[shortId]'>) {
   const { viewPasscodeVersion, adminPasscodeVersion, entity } = item;
 
   return (
-    <>
-      <div className="fixed top-0 right-0 left-0 z-50 flex h-12 items-center space-x-2 px-4">
-        <HomeLink />
-        <div className="flex-1"></div>
-        <DialogProvider>
-          <ShareButton shortId={shortId} />
-        </DialogProvider>
-        <LazyLink href={`/editor/${entity}?id=${shortId}`}>
-          <EditIcon size={18} />
-        </LazyLink>
-      </div>
-      <div className="h-12"></div>
+    <Layout
+      leading="home"
+      trailing={
+        <div className="flex items-center space-x-4">
+          <DialogProvider>
+            <ShareButton shortId={shortId} />
+          </DialogProvider>
+          <LazyLink href={`/editor/${entity}?id=${shortId}`}>
+            <EditIcon size={18} />
+          </LazyLink>
+        </div>
+      }
+    >
+      <title>{item.name}</title>
       <AccessGuard
         attributes={{
           type: 'viewAccess',
@@ -58,6 +60,6 @@ export default async function SharingPage({ params }: PageProps<'/[shortId]'>) {
           })()}
         </main>
       </AccessGuard>
-    </>
+    </Layout>
   );
 }
