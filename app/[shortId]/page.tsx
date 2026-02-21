@@ -27,6 +27,7 @@ export default async function SharingPage({ params }: PageProps<'/[shortId]'>) {
 
   return (
     <>
+      <title>{item.name}</title>
       <div className="fixed top-0 right-0 left-0 z-50 flex h-12 items-center space-x-2 px-4">
         <HomeLink />
         <div className="flex-1"></div>
