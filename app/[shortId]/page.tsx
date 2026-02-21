@@ -29,7 +29,7 @@ export default async function SharingPage({ params }: PageProps<'/[shortId]'>) {
     <Layout
       leading="home"
       trailing={
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-4">
           <DialogProvider>
             <ShareButton shortId={shortId} />
           </DialogProvider>

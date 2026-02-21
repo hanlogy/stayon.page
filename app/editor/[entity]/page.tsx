@@ -36,16 +36,19 @@ export default async function EditorPage({
     return undefined;
   })();
 
+  const title = `${shortIdLike ? 'Edit' : 'Create'} ${entityTitle}`;
+
   return (
     <Layout
       leading="home"
       title={
         <div className="w-full text-center text-xl font-medium text-gray-600">
-          {`${shortIdLike ? 'Edit' : 'Create'} ${entityTitle}`}
+          {title}
         </div>
       }
       withFooter={false}
     >
+      <title>{title}</title>
       {(async () => {
         const defaultRegister = () => ({
           item: undefined,
