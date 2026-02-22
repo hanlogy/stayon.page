@@ -6,7 +6,7 @@ import { DBChecklistHelper } from '@/dynamodb/DBChecklistHelper';
 import { parseWithSchema } from '@/editor/schema/helpers';
 import { SettingsFormData } from '@/editor/types';
 import { toActionError } from '@/helpers/action';
-import { checklistSchemaFields } from './schema';
+import { checklistSchema } from './schema';
 
 export type ChecklistFormData = SettingsFormData & {
   name: string;
@@ -18,7 +18,7 @@ export async function publishChecklist(
   shortId: string | undefined,
   formData: Partial<ChecklistFormData>
 ): Promise<ActionResponse> {
-  const { error, data } = parseWithSchema(checklistSchemaFields, formData);
+  const { error, data } = parseWithSchema(checklistSchema, formData);
 
   let items: ChecklistItem[] = [];
 

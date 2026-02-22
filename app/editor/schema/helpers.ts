@@ -1,10 +1,9 @@
-import { FormFieldValue } from '@hanlogy/react-web-ui';
 import { z } from 'zod';
 import { YesOrNo } from '@/definitions/types';
-import { settingsSchemaFields } from './common';
+import { commonFieldsSchemas } from './common';
 
-export function safeParseFields<S extends z.ZodTypeAny>(
-  schema: S,
+export function safeParseFields<TShape extends z.ZodRawShape>(
+  schema: z.ZodObject<TShape>,
   data: Record<string, unknown>
 ) {
   const parsed = schema.safeParse(data);
@@ -18,10 +17,7 @@ export function safeParseFields<S extends z.ZodTypeAny>(
   };
 }
 
-export function safeParseField<S extends z.ZodTypeAny>(
-  schema: S,
-  data: FormFieldValue | undefined
-) {
+export function safeParseField<S extends z.ZodType>(schema: S, data: unknown) {
   const parsed = schema.safeParse(data);
   if (!parsed.success) {
     return {
@@ -34,16 +30,14 @@ export function safeParseField<S extends z.ZodTypeAny>(
 }
 
 export function parseWithSchema<
-  S extends Record<string, z.ZodTypeAny>,
+  TShape extends z.ZodRawShape,
   T extends {
+    name?: string;
     viewPasscode?: string;
     adminPasscode?: string;
     deleteViewPasscode?: YesOrNo;
     deleteAdminPasscode?: YesOrNo;
   },
->(fields: S, data: T) {
-  return safeParseFields(
-    z.object({ ...fields, ...settingsSchemaFields }),
-    data
-  );
+>(schema: z.ZodObject<TShape>, data: T) {
+  return safeParseFields(schema.extend(commonFieldsSchemas), data);
 }

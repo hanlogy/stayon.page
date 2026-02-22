@@ -14,7 +14,8 @@ const deletePasscodeSchema = z
   .transform((v) => (!v ? undefined : v === 'yes'))
   .optional();
 
-export const settingsSchemaFields = {
+export const commonFieldsSchemas = {
+  name: entityNameSchema,
   viewPasscode: passcodeSchema,
   adminPasscode: passcodeSchema,
   deleteViewPasscode: deletePasscodeSchema,

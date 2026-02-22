@@ -1,9 +1,7 @@
 import { z } from 'zod';
-import { entityNameSchema } from '../../schema/common';
 
 const noteSchema = z.string().trim().min(1).optional();
 
-export const checklistSchemaFields = {
-  name: entityNameSchema,
+export const checklistSchema = z.object({
   note: noteSchema,
-};
+});
