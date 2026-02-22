@@ -2,11 +2,8 @@
 
 import { useEffect } from 'react';
 import { HiddenField, useForm } from '@hanlogy/react-web-ui';
-import { TextField } from '@/component/form/fields';
 import { Checklist } from '@/definitions/types';
-import { entityNameSchema } from '@/editor/schema/common';
-import { safeParseField } from '@/editor/schema/helpers';
-import { useEditorContext } from '@/editor/state/hooks';
+import { EntityNameField } from '@/editor/components/EntityNameField';
 import { EditorForm } from '../../components/EditorForm';
 import {
   AddButtonWithIcon,
@@ -22,7 +19,6 @@ export function ChecklistEditor({ initialData }: { initialData?: Checklist }) {
     initialData?.items
   );
   const { register, setFieldValue, setValuesChangeListener } = formManager;
-  const { setTabName } = useEditorContext();
 
   useEffect(() => {
     setFieldValue('items', JSON.stringify(items));
@@ -41,20 +37,7 @@ export function ChecklistEditor({ initialData }: { initialData?: Checklist }) {
       action={publishChecklist}
       formManager={formManager}
     >
-      <TextField
-        defaultValue={initialData?.name}
-        label="Checklist name"
-        maxLength={200}
-        controller={register('name', {
-          validator: ({ name }) => {
-            const { error } = safeParseField(entityNameSchema, name);
-            if (error) {
-              setTabName('detail');
-              return error;
-            }
-          },
-        })}
-      />
+      <EntityNameField register={register} defaultValue={initialData?.name} />
 
       <HiddenField controller={register('items')} />
 
