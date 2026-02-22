@@ -7,6 +7,7 @@ import { Layout } from '@/component/Layout';
 import { shareableEntityNames } from '@/definitions/constants';
 import { EditorContextProvider } from '../state/provider';
 import { checklistRegister } from './checklist/checklistRegister';
+import { eventRegister } from './event/eventRegister';
 
 export default async function EditorPage({
   searchParams,
@@ -61,7 +62,7 @@ export default async function EditorPage({
 
         const register = {
           checklist: checklistRegister,
-          event: defaultRegister,
+          event: eventRegister,
           poll: defaultRegister,
           timeSlots: defaultRegister,
         }[entityName];
