@@ -43,10 +43,6 @@ export function PasswordField<
 
   return (
     <>
-      <HiddenField
-        defaultValue={isDelete ? 'yes' : 'no'}
-        controller={deleteController}
-      />
       {(() => {
         if (!hasPasscode || isChange) {
           const textField = (
@@ -88,6 +84,10 @@ export function PasswordField<
             >
               {isDelete ? (
                 <>
+                  <HiddenField
+                    defaultValue={isDelete ? 'yes' : 'no'}
+                    controller={deleteController}
+                  />
                   <div className="pl-3 text-red-600">Marked for deletion.</div>
                   <OutlinedButton
                     onClick={() => setIsDelete(false)}
