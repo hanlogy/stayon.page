@@ -32,7 +32,7 @@ export function ChecklistEditor({ initialData }: { initialData?: Checklist }) {
 
   return (
     <EditorForm
-      className='px-4" mx-auto max-w-2xl'
+      className="max-w-2xl"
       initialValues={initialData}
       action={publishChecklist}
       formManager={formManager}
