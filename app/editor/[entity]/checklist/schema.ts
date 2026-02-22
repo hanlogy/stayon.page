@@ -1,27 +1,9 @@
 import { z } from 'zod';
-import {
-  adminPasscodeSchema,
-  deleteAdminPasscodeSchema,
-  deleteViewPasscodeSchema,
-  expiresAfterSchema,
-  viewPasscodeSchema,
-} from '../../schema/common';
-import { safeParseFields } from '../../schema/helpers';
-
-export const nameSchema = z.string().trim().min(1, 'Name is required');
+import { entityNameSchema } from '../../schema/common';
 
 const noteSchema = z.string().trim().min(1).optional();
 
-const publishChecklistSchema = z.object({
-  name: nameSchema,
-  expiresAfter: expiresAfterSchema,
+export const checklistSchemaFields = {
+  name: entityNameSchema,
   note: noteSchema,
-  viewPasscode: viewPasscodeSchema,
-  adminPasscode: adminPasscodeSchema,
-  deleteViewPasscode: deleteViewPasscodeSchema,
-  deleteAdminPasscode: deleteAdminPasscodeSchema,
-});
-
-export function parseWithChecklistSchema(data: Record<string, unknown>) {
-  return safeParseFields(publishChecklistSchema, data);
-}
+};

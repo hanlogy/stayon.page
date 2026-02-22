@@ -5,16 +5,19 @@ export const expiresAfterSchema = z
   .enum(expiresAfterOptions)
   .transform((v) => Number(v));
 
-export const viewPasscodeSchema = z.string().optional();
+export const entityNameSchema = z.string().trim().min(1, 'Name is required');
 
-export const adminPasscodeSchema = z.string().optional();
+const passcodeSchema = z.string().optional();
 
-export const deleteViewPasscodeSchema = z
+const deletePasscodeSchema = z
   .string()
-  .transform((v) => v === 'yes')
+  .transform((v) => (!v ? undefined : v === 'yes'))
   .optional();
 
-export const deleteAdminPasscodeSchema = z
-  .string()
-  .transform((v) => v === 'yes')
-  .optional();
+export const settingsSchemaFields = {
+  viewPasscode: passcodeSchema,
+  adminPasscode: passcodeSchema,
+  deleteViewPasscode: deletePasscodeSchema,
+  deleteAdminPasscode: deletePasscodeSchema,
+  expiresAfter: expiresAfterSchema,
+};
