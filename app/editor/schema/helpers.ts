@@ -8,9 +8,19 @@ export function safeParseFields<TShape extends z.ZodRawShape>(
 ) {
   const parsed = schema.safeParse(data);
   if (!parsed.success) {
-    return {
-      error: z.flattenError(parsed.error).fieldErrors,
-    };
+    const fieldErrors = z.flattenError(parsed.error).fieldErrors;
+
+    const parsedErrors: Partial<
+      Record<Extract<keyof typeof fieldErrors, string>, string>
+    > = {};
+    for (const field in fieldErrors) {
+      const error = fieldErrors[field];
+      if (error && error.length > 0) {
+        parsedErrors[field] = error[0];
+      }
+    }
+
+    return { error: parsedErrors };
   }
   return {
     data: parsed.data,

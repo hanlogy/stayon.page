@@ -37,7 +37,11 @@ export function ChecklistEditor({ initialData }: { initialData?: Checklist }) {
       action={publishChecklist}
       formManager={formManager}
     >
-      <EntityNameField register={register} defaultValue={initialData?.name} />
+      <EntityNameField
+        label="Checklist name"
+        register={register}
+        defaultValue={initialData?.name}
+      />
 
       <HiddenField controller={register('items')} />
 

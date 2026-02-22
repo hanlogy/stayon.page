@@ -5,9 +5,11 @@ import { safeParseField } from '../schema/helpers';
 import { useEditorContext } from '../state/hooks';
 
 export function EntityNameField({
+  label,
   defaultValue,
   register,
 }: {
+  label: string;
   defaultValue?: string;
   register: FormFieldRegister<{ name: string }>;
 }) {
@@ -16,7 +18,7 @@ export function EntityNameField({
   return (
     <TextField
       defaultValue={defaultValue}
-      label="Checklist name"
+      label={label}
       maxLength={200}
       controller={register('name', {
         validator: ({ name }) => {

@@ -1,5 +1,6 @@
 import {
   accessTypes,
+  eventTypes,
   expiresAfterOptions,
   rsvpResponses,
   rsvpVisibilities,
@@ -10,6 +11,7 @@ export type ShareableEntityName = (typeof shareableEntityNames)[number];
 
 export type ExpiresAfterValue = (typeof expiresAfterOptions)[number];
 
+export type EventType = (typeof eventTypes)[number];
 export type RsvpVisibility = (typeof rsvpVisibilities)[number];
 export type RsvpResponse = (typeof rsvpResponses)[number];
 
@@ -41,9 +43,9 @@ export interface Checklist extends ShareableCommon {
 // Event
 export interface Event extends ShareableCommon {
   readonly startTime: string;
-  readonly endTime: string;
-  readonly type: 'inPerson' | 'Virtual';
-  readonly location: string;
+  readonly endTime?: string;
+  readonly type?: EventType;
+  readonly location?: string;
   readonly description?: string;
   readonly isRsvpRequired: boolean;
   readonly rsvpVisibility?: RsvpVisibility;
