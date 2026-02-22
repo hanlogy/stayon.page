@@ -4,7 +4,6 @@ import { useEffect } from 'react';
 import { HiddenField, useForm } from '@hanlogy/react-web-ui';
 import { TextField } from '@/component/form/fields';
 import { Checklist } from '@/definitions/types';
-import { nameSchema } from '@/editor/schema/checklist';
 import { safeParseField } from '@/editor/schema/helpers';
 import { useEditorContext } from '@/editor/state/hooks';
 import { EditorForm } from '../../components/EditorForm';
@@ -14,6 +13,7 @@ import {
   EditIconButton,
 } from '../../components/buttons';
 import { ChecklistFormData, publishChecklist } from './action';
+import { nameSchema } from './schema';
 import { useChecklistItemDialog } from './useChecklistItemDialog';
 
 export function ChecklistEditor({ initialData }: { initialData?: Checklist }) {

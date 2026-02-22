@@ -3,9 +3,9 @@
 import { redirect } from 'next/navigation';
 import { ActionResponse, ChecklistItem } from '@/definitions/types';
 import { DBChecklistHelper } from '@/dynamodb/DBChecklistHelper';
-import { parseWithChecklistSchema } from '@/editor/schema/checklist';
 import { SettingsFormData } from '@/editor/types';
 import { toActionError } from '@/helpers/action';
+import { parseWithChecklistSchema } from './schema';
 
 export type ChecklistFormData = SettingsFormData & {
   name: string;

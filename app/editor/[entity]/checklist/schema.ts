@@ -5,8 +5,8 @@ import {
   deleteViewPasscodeSchema,
   expiresAfterSchema,
   viewPasscodeSchema,
-} from './common';
-import { safeParseFields } from './helpers';
+} from '../../schema/common';
+import { safeParseFields } from '../../schema/helpers';
 
 export const nameSchema = z.string().trim().min(1, 'Name is required');
 
