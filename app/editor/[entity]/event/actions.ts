@@ -1,6 +1,8 @@
 'use server';
 
+import { redirect } from 'next/navigation';
 import { ActionResponse, Event } from '@/definitions/types';
+import { DBEventHelper } from '@/dynamodb/DBEventHelper';
 import { parseWithSchema } from '@/editor/schema/helpers';
 import { SettingsFormData } from '@/editor/types';
 import { toActionError } from '@/helpers/action';
@@ -24,6 +26,26 @@ export async function publishEvent(
   formData: Partial<EventFormData>
 ): Promise<ActionResponse> {
   const { error, data } = parseWithSchema(eventSchema, formData);
-  console.log({ error, data });
-  return toActionError();
+
+  if (error || !data) {
+    return toActionError({
+      message: 'Invalid data',
+    });
+  }
+
+  try {
+    const helper = new DBEventHelper();
+
+    if (!shortId) {
+      ({ shortId } = await helper.createItem(data));
+    } else {
+      await helper.updateItem(shortId, data);
+    }
+  } catch {
+    return toActionError({
+      message: 'Something is wrong when saving data',
+    });
+  }
+
+  redirect(`/${shortId}`);
 }

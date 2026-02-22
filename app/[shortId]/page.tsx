@@ -4,11 +4,12 @@ import { notFound } from 'next/navigation';
 import { AccessGuard } from '@/component/AccessGuard';
 import { Layout } from '@/component/Layout';
 import { LazyLink } from '@/component/LazyLink';
-import { Checklist } from '@/definitions/types';
+import type { Checklist, Event } from '@/definitions/types';
 import { DBShareableHelper } from '@/dynamodb/DBShareableHelper';
 import { normalizeShortId } from '@/helpers/shortId';
 import { ChecklistView } from './checklist/ChecklistView';
 import { ShareButton } from './components/ShareButton';
+import { EventView } from './event/EventView';
 
 export default async function SharingPage({ params }: PageProps<'/[shortId]'>) {
   const maybeShortId = (await params).shortId;
@@ -54,6 +55,9 @@ export default async function SharingPage({ params }: PageProps<'/[shortId]'>) {
               case 'checklist':
                 // Checlist item is safe to cast.
                 return <ChecklistView item={item as Checklist} />;
+              case 'event':
+                // Event item is safe to cast.
+                return <EventView item={item as Event} />;
             }
 
             return <div className="text-center">Ready soon</div>;

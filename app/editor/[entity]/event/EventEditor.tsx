@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useForm } from '@hanlogy/react-web-ui';
+import { toDate } from '@hanlogy/ts-lib';
 import {
   CheckboxField,
   SelectField,
@@ -13,6 +14,7 @@ import { Event } from '@/definitions/types';
 import { EditorForm } from '@/editor/components/EditorForm';
 import { EntityNameField } from '@/editor/components/EntityNameField';
 import { safeParseField, safeParseFields } from '@/editor/schema/helpers';
+import { toLocalISODateTime } from '@/helpers/toLocalISODateTime';
 import { EndTimeToggleButton } from './EndTimeToggleButton';
 import { EventFormData, publishEvent } from './actions';
 import { startTimeSchema, timeFieldsSchema } from './schema';
@@ -27,7 +29,35 @@ function transformDateTime(input?: string | undefined) {
 
 export function EventEditor({ initialData }: { initialData?: Event }) {
   const formManager = useForm<EventFormData>();
-  const [withEndTime, setWithEndTime] = useState<boolean>(false);
+
+  const defaultValues = useMemo(() => {
+    if (!initialData) {
+      return {};
+    }
+    const {
+      name,
+      startTime,
+      endTime,
+      type,
+      location,
+      description,
+      isRsvpRequired,
+    } = initialData;
+
+    return {
+      name,
+      startTime: startTime
+        ? toLocalISODateTime(toDate(startTime)).dateTime
+        : '',
+      endTime: endTime ? toLocalISODateTime(toDate(endTime)).dateTime : '',
+      type: type && eventTypes.includes(type) ? type : '',
+      location,
+      description,
+      isRsvpRequired: isRsvpRequired === true,
+    };
+  }, [initialData]);
+
+  const [withEndTime, setWithEndTime] = useState<boolean>(!!defaultValues.endTime);
   const { register, setFieldValue } = formManager;
 
   return (
@@ -41,10 +71,11 @@ export function EventEditor({ initialData }: { initialData?: Event }) {
         <EntityNameField
           label="Event name"
           register={register}
-          defaultValue={initialData?.name}
+          defaultValue={defaultValues.name}
         />
         <div>
           <TextField
+            defaultValue={defaultValues.startTime}
             label="Start date and time"
             controller={register('startTime', {
               transform: transformDateTime,
@@ -70,6 +101,7 @@ export function EventEditor({ initialData }: { initialData?: Event }) {
         {withEndTime && (
           <div>
             <TextField
+              defaultValue={defaultValues.endTime}
               label="End date and time"
               controller={register('endTime', {
                 transform: transformDateTime,
@@ -99,6 +131,7 @@ export function EventEditor({ initialData }: { initialData?: Event }) {
           </div>
         )}
         <SelectField
+          defaultValue={defaultValues.type}
           label="In persion or virtural?"
           controller={register('type')}
           options={(['', ...eventTypes] as const).map((v) => ({
@@ -106,13 +139,19 @@ export function EventEditor({ initialData }: { initialData?: Event }) {
             label: { '': '', inPerson: 'In person', virtual: 'virtual' }[v],
           }))}
         />
-        <TextField label="Location" controller={register('location')} />
+        <TextField
+          defaultValue={defaultValues.location}
+          label="Location"
+          controller={register('location')}
+        />
         <TextareaField
           rows={5}
+          defaultValue={defaultValues.description}
           label="Description"
           controller={register('description')}
         />
         <CheckboxField
+          defaultChecked={defaultValues.isRsvpRequired}
           label="Need to Rsvp"
           controller={register('isRsvpRequired')}
         />
