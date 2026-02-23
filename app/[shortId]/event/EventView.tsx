@@ -1,5 +1,6 @@
 import { MarkdownViewer } from '@/component/MarkdownViewer';
 import { Event } from '@/definitions/types';
+import { RsvpButton } from './RsvpButton';
 import { StartTimeAndEndTime } from './StartTimeAndEndTime';
 
 export function EventView({
@@ -18,6 +19,7 @@ export function EventView({
           {name}
         </div>
         {location && <div className="mt-2 text-gray-600">{location}</div>}
+        {rsvpDeadline && <RsvpButton rsvpDeadline={rsvpDeadline} />}
       </div>
 
       {description && (

@@ -1,3 +1,4 @@
+import { DialogProvider } from '@hanlogy/react-web-ui';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -8,5 +9,5 @@ export const metadata: Metadata = {
 export default async function SharingLayout({
   children,
 }: LayoutProps<'/[shortId]'>) {
-  return <>{children}</>;
+  return <DialogProvider>{children}</DialogProvider>;
 }

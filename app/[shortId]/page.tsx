@@ -1,4 +1,3 @@
-import { DialogProvider } from '@hanlogy/react-web-ui';
 import { EditIcon } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import { AccessGuard } from '@/component/AccessGuard';
@@ -31,9 +30,7 @@ export default async function SharingPage({ params }: PageProps<'/[shortId]'>) {
       leading="home"
       trailing={
         <div className="flex items-center space-x-4">
-          <DialogProvider>
-            <ShareButton shortId={shortId} />
-          </DialogProvider>
+          <ShareButton shortId={shortId} />
           <LazyLink href={`/editor/${entity}?id=${shortId}`}>
             <EditIcon size={18} />
           </LazyLink>

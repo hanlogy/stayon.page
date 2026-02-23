@@ -1,3 +1,5 @@
+'use client';
+
 import { toDate } from '@hanlogy/ts-lib';
 import { isSameDay } from '@/helpers/isSameDay';
 import { toLocalDateTime, toLocalTime } from '@/helpers/toLocalDateTime';
