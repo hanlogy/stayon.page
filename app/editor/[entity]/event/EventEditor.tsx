@@ -2,30 +2,16 @@
 
 import { useMemo, useState } from 'react';
 import { useForm } from '@hanlogy/react-web-ui';
-import { toDate } from '@hanlogy/ts-lib';
-import {
-  CheckboxField,
-  SelectField,
-  TextareaField,
-  TextField,
-} from '@/component/form/fields';
+import { SelectField, TextareaField, TextField } from '@/component/form/fields';
 import { eventTypes } from '@/definitions/constants';
 import { Event } from '@/definitions/types';
 import { EditorForm } from '@/editor/components/EditorForm';
 import { EntityNameField } from '@/editor/components/EntityNameField';
 import { safeParseField, safeParseFields } from '@/editor/schema/helpers';
-import { toLocalISODateTime } from '@/helpers/toLocalISODateTime';
-import { EndTimeToggleButton } from './EndTimeToggleButton';
+import { DateTimeFieldToggle } from './DateTimeFieldToggle';
 import { EventFormData, publishEvent } from './actions';
+import { normalizeDateTime, transformDateTime } from './helpers';
 import { startTimeSchema, timeFieldsSchema } from './schema';
-
-function transformDateTime(input?: string | undefined) {
-  if (!input) {
-    return '';
-  }
-
-  return new Date(input).toISOString();
-}
 
 export function EventEditor({ initialData }: { initialData?: Event }) {
   const formManager = useForm<EventFormData>();
@@ -41,23 +27,27 @@ export function EventEditor({ initialData }: { initialData?: Event }) {
       type,
       location,
       description,
-      isRsvpRequired,
+      rsvpDeadline,
     } = initialData;
 
     return {
       name,
-      startTime: startTime
-        ? toLocalISODateTime(toDate(startTime)).dateTime
-        : '',
-      endTime: endTime ? toLocalISODateTime(toDate(endTime)).dateTime : '',
+      startTime: normalizeDateTime(startTime),
+      endTime: normalizeDateTime(endTime),
       type: type && eventTypes.includes(type) ? type : '',
       location,
       description,
-      isRsvpRequired: isRsvpRequired === true,
+      rsvpDeadline: normalizeDateTime(rsvpDeadline),
     };
   }, [initialData]);
 
-  const [withEndTime, setWithEndTime] = useState<boolean>(!!defaultValues.endTime);
+  const [withEndTime, setWithEndTime] = useState<boolean>(
+    !!defaultValues.endTime
+  );
+
+  const [withRsvpDeadline, setWithRsvpDeadline] = useState<boolean>(
+    !!defaultValues.rsvpDeadline
+  );
   const { register, setFieldValue } = formManager;
 
   return (
@@ -89,7 +79,8 @@ export function EventEditor({ initialData }: { initialData?: Event }) {
             type="datetime-local"
           />
           {!withEndTime && (
-            <EndTimeToggleButton
+            <DateTimeFieldToggle
+              field="endTime"
               isAdd={true}
               onClick={() => {
                 setWithEndTime(true);
@@ -121,7 +112,8 @@ export function EventEditor({ initialData }: { initialData?: Event }) {
               })}
               type="datetime-local"
             />
-            <EndTimeToggleButton
+            <DateTimeFieldToggle
+              field="endTime"
               isAdd={false}
               onClick={() => {
                 setWithEndTime(false);
@@ -144,17 +136,43 @@ export function EventEditor({ initialData }: { initialData?: Event }) {
           label="Location"
           controller={register('location')}
         />
-        <TextareaField
-          rows={5}
-          defaultValue={defaultValues.description}
-          label="Description"
-          controller={register('description')}
-        />
-        <CheckboxField
-          defaultChecked={defaultValues.isRsvpRequired}
-          label="Need to Rsvp"
-          controller={register('isRsvpRequired')}
-        />
+        <div>
+          <TextareaField
+            rows={5}
+            defaultValue={defaultValues.description}
+            label="Description"
+            controller={register('description')}
+          />
+          {!withRsvpDeadline && (
+            <DateTimeFieldToggle
+              field="rsvpDeadline"
+              isAdd={true}
+              onClick={() => {
+                setWithRsvpDeadline(true);
+              }}
+            />
+          )}
+        </div>
+        {withRsvpDeadline && (
+          <div>
+            <TextField
+              defaultValue={defaultValues.rsvpDeadline}
+              label="RSVP deadline"
+              controller={register('rsvpDeadline', {
+                transform: transformDateTime,
+              })}
+              type="datetime-local"
+            />
+            <DateTimeFieldToggle
+              field="rsvpDeadline"
+              isAdd={false}
+              onClick={() => {
+                setWithRsvpDeadline(false);
+                setFieldValue('rsvpDeadline', '');
+              }}
+            />
+          </div>
+        )}
       </div>
     </EditorForm>
   );

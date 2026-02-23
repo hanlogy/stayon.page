@@ -20,14 +20,8 @@ export class DBEventHelper extends DBHelperBase {
   }
 
   async updateItem(shortId: string, fields: EventUpdateFields): Promise<void> {
-    const removeAttributes: string[] = [];
-    if (!fields.endTime) {
-      removeAttributes.push('endTime');
-    }
-
-    if (!fields.type) {
-      removeAttributes.push('type');
-    }
+    const optinalFields = ['endTime', 'type', 'rsvpDeadline'] as const;
+    const removeAttributes = optinalFields.filter((e) => !fields[e]);
 
     await this.shareableHelper.updateItem(
       { shortId },

@@ -1,10 +1,12 @@
 import { MouseEventHandler } from 'react';
 import { MinusIcon, PlusIcon } from 'lucide-react';
 
-export function EndTimeToggleButton({
+export function DateTimeFieldToggle({
+  field,
   isAdd,
   onClick,
 }: {
+  field: 'endTime' | 'rsvpDeadline';
   isAdd: boolean;
   onClick: MouseEventHandler;
 }) {
@@ -19,7 +21,8 @@ export function EndTimeToggleButton({
       ) : (
         <MinusIcon className="mr-1" size={16} />
       )}
-      End date and time
+      {field === 'endTime' && 'End date and time'}
+      {field === 'rsvpDeadline' && 'RSVP deadline'}
     </button>
   );
 }

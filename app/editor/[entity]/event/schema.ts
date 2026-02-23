@@ -31,5 +31,5 @@ export const eventSchema = timeFieldsSchema.extend({
   ),
   location: z.string().optional(),
   description: z.string().optional(),
-  isRsvpRequired: z.boolean(),
+  rsvpDeadline: timeSchema.optional(),
 });

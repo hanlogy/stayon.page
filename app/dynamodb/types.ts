@@ -33,7 +33,7 @@ export type EventCreateFields = ShareableCreateFields &
     | 'type'
     | 'location'
     | 'description'
-    | 'isRsvpRequired'
+    | 'rsvpDeadline'
     | 'rsvpVisibility'
   >;
 
@@ -45,7 +45,7 @@ export type EventUpdateFields = ShareableUpdateFields &
     | 'type'
     | 'location'
     | 'description'
-    | 'isRsvpRequired'
+    | 'rsvpDeadline'
     | 'rsvpVisibility'
   >;
 

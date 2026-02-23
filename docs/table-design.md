@@ -103,7 +103,7 @@ can still access the content and clone it into a new shareable entity.
 | type           | inPerson/Virtual |
 | location       | string           |
 | description    | string           |
-| isRsvpRequired | boolean          |
+| rsvpDeadline   | string           |
 | rsvpVisibility | RsvpVisibility   |
 
 ## Entity: event_rsvp

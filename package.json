@@ -13,7 +13,7 @@
     "@aws-sdk/client-dynamodb": "^3.990.0",
     "@aws-sdk/lib-dynamodb": "^3.990.0",
     "@hanlogy/react-web-ui": "^1.1.1",
-    "@hanlogy/ts-dynamodb": "^1.1.1",
+    "@hanlogy/ts-dynamodb": "^1.1.3",
     "@hanlogy/ts-lib": "^1.0.0",
     "bcryptjs": "^3.0.3",
     "clsx": "^2.1.1",
