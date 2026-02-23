@@ -26,6 +26,7 @@ export function FilledButton({ disabled, className, ...rest }: ButtonProps) {
   return (
     <Button
       className={clsx(
+        'pointer-events-auto',
         {
           'bg-gray-700 text-white hover:bg-gray-900 active:bg-gray-900':
             !disabled,

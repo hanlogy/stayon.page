@@ -78,7 +78,7 @@ export function EditorForm<
         <div className="p-4 text-center text-red-600">{error}</div>
       </div>
       <div className="h-22 sm:h-30"></div>
-      <div className="fixed right-0 bottom-0 left-0 flex h-22 items-center justify-center space-x-4 sm:h-30">
+      <div className="pointer-events-none fixed right-0 bottom-0 left-0 flex h-22 items-center justify-center space-x-4 sm:h-30">
         {initialValues?.shortId && (
           <DeleteEntity shortId={initialValues.shortId} />
         )}
