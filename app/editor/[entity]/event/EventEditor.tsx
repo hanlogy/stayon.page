@@ -133,7 +133,7 @@ export function EventEditor({ initialData }: { initialData?: Event }) {
         />
         <TextField
           defaultValue={defaultValues.location}
-          label="Location"
+          label="Address / URL"
           controller={register('location')}
         />
         <div>

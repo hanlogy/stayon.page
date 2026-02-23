@@ -1,9 +1,32 @@
+import { MarkdownViewer } from '@/component/MarkdownViewer';
 import { Event } from '@/definitions/types';
+import { StartTimeAndEndTime } from './StartTimeAndEndTime';
 
-export function EventView({ item: { name } }: { item: Event }) {
+export function EventView({
+  item: { name, startTime, endTime, location, type, description, rsvpDeadline },
+}: {
+  item: Event;
+}) {
   return (
-    <div className="mx-auto max-w-3xl px-4 pb-10">
-      <div className="text-center text-xl text-gray-700">{name}</div>
+    <div className="mx-auto max-w-3xl pb-10">
+      <div className="px-4">
+        <div className="mb-2 text-gray-500">
+          <StartTimeAndEndTime startTime={startTime} endTime={endTime} />
+        </div>
+
+        <div className="text-2xl font-semibold text-gray-800 sm:text-3xl">
+          {name}
+        </div>
+        {location && <div className="mt-2 text-gray-600">{location}</div>}
+      </div>
+
+      {description && (
+        <div className="mt-4 sm:mt-6 sm:px-4">
+          <div className="bg-gray-50 p-4 text-gray-800 sm:rounded-2xl sm:p-6">
+            <MarkdownViewer text={description} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
