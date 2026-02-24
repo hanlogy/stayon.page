@@ -91,13 +91,16 @@ export function EditorLayout<
       withFooter={false}
       trailing={
         shortId && (
-          <LazyLink
-            href={`/${shortId}`}
-            className="flex items-center font-semibold"
-          >
-            <EyeIcon size={18} className="mr-1" />
-            View
-          </LazyLink>
+          <div className="flex items-center space-x-4">
+            <LazyLink
+              href={`/${shortId}`}
+              className="flex items-center font-semibold text-gray-600 hover:text-gray-800"
+            >
+              <EyeIcon size={18} className="mr-1" />
+              View
+            </LazyLink>
+            <DeleteEntity shortId={shortId} />
+          </div>
         )
       }
     >
@@ -120,8 +123,7 @@ export function EditorLayout<
         <div className="p-4 text-center text-red-600">{error}</div>
       </div>
       <div className="h-22 sm:h-30"></div>
-      <div className="pointer-events-none fixed right-0 bottom-0 left-0 flex h-22 items-center justify-center space-x-4 sm:h-30">
-        {shortId && <DeleteEntity shortId={shortId} />}
+      <div className="pointer-events-none fixed right-0 bottom-0 left-0 flex h-22 items-center justify-center sm:h-30">
         <FilledButton
           disabled={isPending}
           type="submit"
