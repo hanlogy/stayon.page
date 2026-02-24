@@ -7,7 +7,7 @@ import { eventTypes } from '@/definitions/constants';
 import { Event } from '@/definitions/types';
 import { EditorForm } from '@/editor/components/EditorForm';
 import { EntityNameField } from '@/editor/components/EntityNameField';
-import { safeParseField, safeParseFields } from '@/editor/schema/helpers';
+import { safeParseField, safeParseFields } from '@/helpers/schemaHelpers';
 import { DateTimeFieldToggle } from './DateTimeFieldToggle';
 import { EventFormData, publishEvent } from './actions';
 import { normalizeDateTime, transformDateTime } from './helpers';

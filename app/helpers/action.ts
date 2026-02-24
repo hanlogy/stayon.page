@@ -7,5 +7,11 @@ export function toActionOk<DataT>(data?: DataT | undefined): ActionOk<DataT> {
 export function toActionError(
   error: { message?: string | undefined } = {}
 ): ActionError {
-  return { ok: false, error };
+  return {
+    ok: false,
+    error: {
+      message: 'Unknown error',
+      ...error,
+    },
+  };
 }

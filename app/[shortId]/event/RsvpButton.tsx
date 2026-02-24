@@ -4,11 +4,24 @@ import { useDialog } from '@hanlogy/react-web-ui';
 import { toDate } from '@hanlogy/ts-lib';
 import { RsvpDialog } from './RsvpDialog';
 
-export function RsvpButton({ rsvpDeadline }: { rsvpDeadline: string }) {
+export function RsvpButton({
+  rsvpDeadline,
+  shortId,
+}: {
+  rsvpDeadline: string;
+  shortId: string;
+}) {
   const { openDialog } = useDialog();
 
   const handleRsvp = () => {
-    openDialog(({ closeDialog }) => <RsvpDialog closeDialog={closeDialog} />);
+    openDialog(
+      ({ closeDialog }) => (
+        <RsvpDialog closeDialog={closeDialog} shortId={shortId} />
+      ),
+      {
+        closeOnBackdropClick: false,
+      }
+    );
   };
 
   const dateTime = toDate(rsvpDeadline).toLocaleString([], {

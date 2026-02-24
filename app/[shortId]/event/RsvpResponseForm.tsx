@@ -7,8 +7,10 @@ import {
 } from '@hanlogy/react-web-ui';
 import { CheckIcon } from 'lucide-react';
 import { TextField } from '@/component/form/fields';
-import { RsvpResponse } from '@/definitions/types';
-import type { RsvpFormData } from './RsvpDialog';
+import { EventRsvp, RsvpResponse } from '@/definitions/types';
+import { safeParseField } from '@/helpers/schemaHelpers';
+import type { RsvpFormData } from './action';
+import { rsvpNameSchema } from './schema';
 
 const options = [
   { label: 'Going', value: 'going' },
@@ -18,13 +20,23 @@ const options = [
 
 export function RsvpResponseForm({
   register,
+  rsvp,
 }: {
+  rsvp?: EventRsvp;
   register: FormFieldRegister<RsvpFormData>;
 }) {
-  const [response, setResponse] = useState<RsvpResponse>('going');
+  const [response, setResponse] = useState<RsvpResponse>(
+    rsvp?.response ?? 'going'
+  );
 
   return (
-    <div className="space-y-6 pb-1">
+    <form autoComplete="off" className="space-y-6 pb-1">
+      {rsvp && (
+        <div className="text-center">
+          <span className="text-gray-500">RSVP Code:</span>{' '}
+          <span className="font-semibold">{rsvp.code}</span>
+        </div>
+      )}
       <HiddenField defaultValue={response} controller={register('response')} />
       <ButtonGroup
         value={response}
@@ -53,16 +65,26 @@ export function RsvpResponseForm({
         }}
         items={options}
       />
-      <TextField controller={register('name')} label="Your Name" />
+      <TextField
+        defaultValue={rsvp?.name}
+        controller={register('name', {
+          validator: ({ name }) => {
+            const { error } = safeParseField(rsvpNameSchema, name);
+            return error;
+          },
+        })}
+        label="Your Name"
+      />
       {response !== 'notGoing' && (
         <>
           <TextField
+            defaultValue={rsvp?.guestCount}
             type="number"
             controller={register('guestCount')}
             label="How many others are with you?"
           />
         </>
       )}
-    </div>
+    </form>
   );
 }

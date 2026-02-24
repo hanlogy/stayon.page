@@ -53,9 +53,11 @@ export interface Event extends ShareableCommon {
 }
 
 export interface EventRsvp {
+  readonly shortId: string;
+  readonly code: string;
   readonly response: RsvpResponse;
-  readonly name?: string;
-  readonly guestCount?: string;
+  readonly name: string;
+  readonly guestCount?: number;
 }
 
 export interface ActionOk<DataT = undefined> {

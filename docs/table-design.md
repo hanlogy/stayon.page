@@ -113,7 +113,7 @@ can still access the content and clone it into a new shareable entity.
 | Field      | Value                  |
 | ---------- | ---------------------- |
 | pk         | event_rsvp#shortId     |
-| sk         | 01#{userId#}           |
+| sk         | 01#{code}#             |
 | shortId    | string                 |
 | code       | string                 |
 | name       | string                 |

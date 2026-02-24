@@ -4,7 +4,16 @@ import { RsvpButton } from './RsvpButton';
 import { StartTimeAndEndTime } from './StartTimeAndEndTime';
 
 export function EventView({
-  item: { name, startTime, endTime, location, type, description, rsvpDeadline },
+  item: {
+    shortId,
+    name,
+    startTime,
+    endTime,
+    location,
+    type,
+    description,
+    rsvpDeadline,
+  },
 }: {
   item: Event;
 }) {
@@ -19,7 +28,9 @@ export function EventView({
           {name}
         </div>
         {location && <div className="mt-2 text-gray-600">{location}</div>}
-        {rsvpDeadline && <RsvpButton rsvpDeadline={rsvpDeadline} />}
+        {rsvpDeadline && (
+          <RsvpButton shortId={shortId} rsvpDeadline={rsvpDeadline} />
+        )}
       </div>
 
       {description && (
