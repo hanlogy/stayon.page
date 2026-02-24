@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { HiddenField, useForm } from '@hanlogy/react-web-ui';
 import { Checklist } from '@/definitions/types';
 import { EntityNameField } from '@/editor/components/EntityNameField';
-import { EditorForm } from '../../components/EditorForm';
+import { EditorLayout } from '../../components/EditorLayout';
 import {
   AddButtonWithIcon,
   DeleteIconButton,
@@ -31,9 +31,10 @@ export function ChecklistEditor({ initialData }: { initialData?: Checklist }) {
   }, [setValuesChangeListener]);
 
   return (
-    <EditorForm
+    <EditorLayout
+      nameForTitle="checklist"
       className="max-w-2xl"
-      initialValues={initialData}
+      initialData={initialData}
       action={publishChecklist}
       formManager={formManager}
     >
@@ -81,6 +82,6 @@ export function ChecklistEditor({ initialData }: { initialData?: Checklist }) {
           Add item
         </AddButtonWithIcon>
       </div>
-    </EditorForm>
+    </EditorLayout>
   );
 }

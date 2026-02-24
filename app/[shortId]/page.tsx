@@ -26,26 +26,26 @@ export default async function SharingPage({ params }: PageProps<'/[shortId]'>) {
   const { viewPasscodeVersion, adminPasscodeVersion, entity } = item;
 
   return (
-    <Layout
-      leading="home"
-      trailing={
-        <div className="flex items-center space-x-4">
-          <ShareButton shortId={shortId} />
-          <LazyLink href={`/editor/${entity}?id=${shortId}`}>
-            <EditIcon size={18} />
-          </LazyLink>
-        </div>
-      }
+    <AccessGuard
+      attributes={{
+        type: 'viewAccess',
+        shortId,
+        viewPasscodeVersion,
+        adminPasscodeVersion,
+      }}
     >
-      <title>{item.name}</title>
-      <AccessGuard
-        attributes={{
-          type: 'viewAccess',
-          shortId,
-          viewPasscodeVersion,
-          adminPasscodeVersion,
-        }}
+      <Layout
+        leading="home"
+        trailing={
+          <div className="flex items-center space-x-4">
+            <ShareButton shortId={shortId} />
+            <LazyLink href={`/editor/${entity}?id=${shortId}`}>
+              <EditIcon size={18} />
+            </LazyLink>
+          </div>
+        }
       >
+        <title>{item.name}</title>
         <main className="flex-1">
           {(() => {
             switch (item.entity) {
@@ -60,7 +60,7 @@ export default async function SharingPage({ params }: PageProps<'/[shortId]'>) {
             return <div className="text-center">Ready soon</div>;
           })()}
         </main>
-      </AccessGuard>
-    </Layout>
+      </Layout>
+    </AccessGuard>
   );
 }

@@ -5,7 +5,7 @@ import { useForm } from '@hanlogy/react-web-ui';
 import { SelectField, TextareaField, TextField } from '@/component/form/fields';
 import { eventTypes } from '@/definitions/constants';
 import { Event } from '@/definitions/types';
-import { EditorForm } from '@/editor/components/EditorForm';
+import { EditorLayout } from '@/editor/components/EditorLayout';
 import { EntityNameField } from '@/editor/components/EntityNameField';
 import { safeParseField, safeParseFields } from '@/helpers/schemaHelpers';
 import { DateTimeFieldToggle } from './DateTimeFieldToggle';
@@ -51,9 +51,10 @@ export function EventEditor({ initialData }: { initialData?: Event }) {
   const { register, setFieldValue } = formManager;
 
   return (
-    <EditorForm
+    <EditorLayout
+      nameForTitle="event"
       className="mx-auto max-w-2xl space-y-4"
-      initialValues={initialData}
+      initialData={initialData}
       action={publishEvent}
       formManager={formManager}
     >
@@ -174,6 +175,6 @@ export function EventEditor({ initialData }: { initialData?: Event }) {
           </div>
         )}
       </div>
-    </EditorForm>
+    </EditorLayout>
   );
 }

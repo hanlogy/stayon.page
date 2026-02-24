@@ -1,10 +1,13 @@
-import { useState, SubmitEvent, PropsWithChildren } from 'react';
+import { useState, SubmitEvent, PropsWithChildren, useMemo } from 'react';
 import {
   clsx,
   FlexCenter,
   FormDataConstraint,
   FormManager,
 } from '@hanlogy/react-web-ui';
+import { EyeIcon } from 'lucide-react';
+import { Layout } from '@/component/Layout';
+import { LazyLink } from '@/component/LazyLink';
 import { FilledButton } from '@/component/buttons';
 import { ActionResponse, ShareableCommon } from '@/definitions/types';
 import { formId } from '../constants';
@@ -16,27 +19,48 @@ import { FeatureSettings } from './FeatureSettings';
 
 export function EditorLayout<
   T extends FormDataConstraint<T>,
-  InitialValuesT extends ShareableCommon,
+  DataT extends ShareableCommon,
 >({
+  nameForTitle,
   className,
   children,
   action,
   formManager,
-  initialValues,
+  initialData,
 }: PropsWithChildren<{
+  nameForTitle: string;
   className?: string;
   action: (
     shortId: string | undefined,
     formData: Partial<T & SettingsFormData>
   ) => ActionResponse | Promise<ActionResponse>;
   formManager: FormManager<T & SettingsFormData>;
-  initialValues: InitialValuesT | undefined;
+  initialData: DataT | undefined;
 }>) {
   const { tabName } = useEditorContext();
   const { validate, register } = formManager;
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const isEdit = !!initialValues;
+  const shortId = initialData?.shortId;
+  const isManage = !!shortId;
+
+  const defaultValues = useMemo(() => {
+    if (!initialData) {
+      return {
+        hasViewPasscode: false,
+        hasAdminPasscode: false,
+        expiresAfter: '7',
+      };
+    }
+    const { viewPasscodeVersion, adminPasscodeVersion, expiresAfter } =
+      initialData;
+
+    return {
+      hasViewPasscode: !!viewPasscodeVersion,
+      hasAdminPasscode: !!adminPasscodeVersion,
+      expiresAfter: String(expiresAfter),
+    };
+  }, [initialData]);
 
   const onSubmit = async (e: SubmitEvent) => {
     e.preventDefault();
@@ -47,19 +71,37 @@ export function EditorLayout<
 
     setError(null);
     setIsPending(true);
-    const { success, error } = await action(
-      initialValues?.shortId,
-      formManager.getValues()
-    );
+    const { success, error } = await action(shortId, formManager.getValues());
 
     if (!success) {
       setError(error?.message ?? 'Something is wrong');
     }
     setIsPending(false);
   };
+  const title = `${isManage ? 'Manage' : 'Create'} ${nameForTitle}`;
 
   return (
-    <>
+    <Layout
+      title={
+        <div className="w-full text-center text-xl font-medium text-gray-600">
+          {title}
+        </div>
+      }
+      leading="home"
+      withFooter={false}
+      trailing={
+        shortId && (
+          <LazyLink
+            href={`/${shortId}`}
+            className="flex items-center font-semibold"
+          >
+            <EyeIcon size={18} className="mr-1" />
+            View
+          </LazyLink>
+        )
+      }
+    >
+      <title>{title}</title>
       <div className={clsx('mx-auto px-4', className)}>
         <FlexCenter className="mt-8 mb-8">
           <EditorTabs />
@@ -67,7 +109,7 @@ export function EditorLayout<
         <form autoComplete="off" id={formId} onSubmit={onSubmit}>
           <div className={clsx('contents', { hidden: tabName !== 'settings' })}>
             <FeatureSettings
-              initialValues={initialValues}
+              defaultValues={defaultValues}
               register={register}
             />
           </div>
@@ -79,9 +121,7 @@ export function EditorLayout<
       </div>
       <div className="h-22 sm:h-30"></div>
       <div className="pointer-events-none fixed right-0 bottom-0 left-0 flex h-22 items-center justify-center space-x-4 sm:h-30">
-        {initialValues?.shortId && (
-          <DeleteEntity shortId={initialValues.shortId} />
-        )}
+        {shortId && <DeleteEntity shortId={shortId} />}
         <FilledButton
           disabled={isPending}
           type="submit"
@@ -89,9 +129,9 @@ export function EditorLayout<
           form={formId}
           className="min-w-50"
         >
-          {isEdit ? 'Save' : 'Publish'}
+          {isManage ? 'Update' : 'Publish'}
         </FilledButton>
       </div>
-    </>
+    </Layout>
   );
 }

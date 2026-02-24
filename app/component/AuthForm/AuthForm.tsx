@@ -51,7 +51,7 @@ export function AuthForm({
     }
 
     return {
-      title: 'Enter admin passcode to edit',
+      title: 'Enter admin passcode to manage',
       placeholder: 'Admin passcode',
     };
   })();

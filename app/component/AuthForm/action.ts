@@ -51,5 +51,5 @@ export async function auth(
   await grantAccess({ type, shortId, version });
 
   refresh();
-  return { success: true };
+  return toActionSuccess();
 }
