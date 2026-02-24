@@ -14,7 +14,7 @@ import { DeleteEntity } from './DeleteEntity/DeleteEntity';
 import { EditorTabs } from './EditorTabs';
 import { FeatureSettings } from './FeatureSettings';
 
-export function EditorForm<
+export function EditorLayout<
   T extends FormDataConstraint<T>,
   InitialValuesT extends ShareableCommon,
 >({
