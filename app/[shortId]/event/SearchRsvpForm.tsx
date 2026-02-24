@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { InputLabel, TextInput } from '@hanlogy/react-web-ui';
 import { FilledButton } from '@/component/buttons';
 import { EventRsvp } from '@/definitions/types';
-import { searchRsvp } from './action';
+import { searchRsvp } from './actions';
 
 export function SearchRsvpForm({
   shortId,

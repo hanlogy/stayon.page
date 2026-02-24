@@ -1,7 +1,8 @@
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, ReactNode } from 'react';
 import { AccessType } from '@/definitions/types';
 import { checkAccess } from '@/lib/auth/checkAccess';
 import { AuthForm } from './AuthForm/AuthForm';
+import { Layout } from './Layout';
 import { LazyLink } from './LazyLink';
 
 export interface AccessGuardAttributes {
@@ -24,8 +25,10 @@ export async function AccessGuard({
     return children;
   }
 
+  let content: ReactNode;
+
   if (attributes.type === 'adminAccess' && !attributes.adminPasscodeVersion) {
-    return (
+    content = (
       <div className="text-center">
         <div className="mt-4 mb-2 font-medium text-gray-600">Access Denied</div>
         <div className="text-gray-500">You do not have an admin password</div>
@@ -39,7 +42,14 @@ export async function AccessGuard({
         </div>
       </div>
     );
+  } else {
+    content = <AuthForm type={attributes.type} shortId={attributes.shortId} />;
   }
 
-  return <AuthForm type={attributes.type} shortId={attributes.shortId} />;
+  return (
+    <Layout>
+      <title>Access Denied</title>
+      {content}
+    </Layout>
+  );
 }

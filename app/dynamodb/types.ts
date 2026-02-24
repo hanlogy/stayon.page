@@ -66,3 +66,7 @@ export type ShareableEntity<T extends ShareableCommon = ShareableCommon> = T & {
   readonly viewPasscodeVersion?: number;
   readonly adminPasscodeVersion?: number;
 };
+
+export interface DBShareableRepository<T extends ShareableCommon> {
+  getItem: ({ shortId }: { shortId: string }) => Promise<T | undefined>;
+}

@@ -1,11 +1,18 @@
 import { Checklist, ShareableEntityName } from '@/definitions/types';
 import { DBHelperBase } from './DBHelperBase';
 import { DBShareableHelper } from './DBShareableHelper';
-import type { ChecklistCreateFields, ChecklistUpdateFields } from './types';
+import type {
+  ChecklistCreateFields,
+  ChecklistUpdateFields,
+  DBShareableRepository,
+} from './types';
 
 const ENTITY_NAME: ShareableEntityName = 'checklist';
 
-export class DBChecklistHelper extends DBHelperBase {
+export class DBChecklistHelper
+  extends DBHelperBase
+  implements DBShareableRepository<Checklist>
+{
   private get shareableHelper() {
     return this.createHelper(DBShareableHelper);
   }

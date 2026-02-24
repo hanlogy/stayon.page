@@ -1,11 +1,18 @@
 import { Event, ShareableEntityName } from '@/definitions/types';
 import { DBHelperBase } from './DBHelperBase';
 import { DBShareableHelper } from './DBShareableHelper';
-import type { EventCreateFields, EventUpdateFields } from './types';
+import type {
+  DBShareableRepository,
+  EventCreateFields,
+  EventUpdateFields,
+} from './types';
 
 const ENTITY_NAME: ShareableEntityName = 'event';
 
-export class DBEventHelper extends DBHelperBase {
+export class DBEventHelper
+  extends DBHelperBase
+  implements DBShareableRepository<Event>
+{
   private get shareableHelper() {
     return this.createHelper(DBShareableHelper);
   }

@@ -85,7 +85,7 @@ export function PasswordField<
               {isDelete ? (
                 <>
                   <HiddenField
-                    defaultValue={isDelete ? 'yes' : 'no'}
+                    defaultValue="yes"
                     controller={deleteController}
                   />
                   <div className="pl-3 text-red-600">Marked for deletion.</div>

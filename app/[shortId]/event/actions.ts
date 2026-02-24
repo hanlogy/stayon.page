@@ -2,7 +2,7 @@
 
 import { ActionResponse, EventRsvp, RsvpResponse } from '@/definitions/types';
 import { DBEventRsvpHelper } from '@/dynamodb/DBEventRsvpHelper';
-import { toActionError, toActionOk } from '@/helpers/action';
+import { toActionFailure, toActionSuccess } from '@/helpers/action';
 import { safeParseFields } from '@/helpers/schemaHelpers';
 import { rsvpSchema } from './schema';
 
@@ -24,7 +24,7 @@ export async function saveRsvp(
 ): Promise<ActionResponse<{ code: string }>> {
   const { error, data } = safeParseFields(rsvpSchema, formData);
   if (error || !data) {
-    return toActionError();
+    return toActionFailure();
   }
 
   const helper = new DBEventRsvpHelper();
@@ -43,7 +43,7 @@ export async function saveRsvp(
       ...data,
     });
   }
-  return toActionOk({
+  return toActionSuccess({
     code: item.code,
   });
 }
@@ -56,16 +56,16 @@ export async function searchRsvp({
   shortId: string;
 }): Promise<ActionResponse<EventRsvp>> {
   if (!code || !shortId) {
-    return toActionError();
+    return toActionFailure();
   }
   const helper = new DBEventRsvpHelper();
 
   const item = await helper.getItem({ code, shortId });
   if (!item) {
-    return toActionError({
+    return toActionFailure({
       message: 'No RSVP found for that code.',
     });
   }
 
-  return toActionOk(item);
+  return toActionSuccess(item);
 }

@@ -1,17 +1,21 @@
-import { ActionError, ActionOk } from '@/definitions/types';
+import { ActionFailure, ActionSuccess } from '@/definitions/types';
 
-export function toActionOk<DataT>(data?: DataT | undefined): ActionOk<DataT> {
-  return { ok: true, data };
+export function toActionSuccess(): ActionSuccess<undefined>;
+export function toActionSuccess<DataT>(data: DataT): ActionSuccess<DataT>;
+export function toActionSuccess<DataT>(data?: DataT) {
+  if (arguments.length === 0) {
+    return { success: true, data: undefined };
+  }
+
+  return { success: true, data };
 }
 
-export function toActionError(
-  error: { message?: string | undefined } = {}
-): ActionError {
+export function toActionFailure({
+  code = 'unknown',
+  message,
+}: { code?: string; message?: string | undefined } = {}): ActionFailure {
   return {
-    ok: false,
-    error: {
-      message: 'Unknown error',
-      ...error,
-    },
+    success: false,
+    error: { code, message },
   };
 }

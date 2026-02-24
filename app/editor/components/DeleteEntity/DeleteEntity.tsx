@@ -15,8 +15,9 @@ export function DeleteEntity({ shortId }: { shortId: string }) {
     if (!yes) {
       return;
     }
-    const { ok, error = {} } = await deleteEntity({ shortId });
-    if (!ok) {
+    const { success, error } = await deleteEntity({ shortId });
+
+    if (!success) {
       await openDialog(({ closeDialog }) => {
         return (
           <ErrorDialog
@@ -31,10 +32,9 @@ export function DeleteEntity({ shortId }: { shortId: string }) {
   return (
     <IconButton
       onClick={() => showConfirm()}
-      size="medium"
-      className="pointer-events-auto bg-gray-100 text-gray-600 hover:text-red-600"
+      className="pointer-events-auto text-gray-600 hover:bg-gray-100 hover:text-red-600"
     >
-      <Trash2Icon />
+      <Trash2Icon size={18} />
     </IconButton>
   );
 }

@@ -5,7 +5,7 @@ import { ActionResponse, ChecklistItem } from '@/definitions/types';
 import { DBChecklistHelper } from '@/dynamodb/DBChecklistHelper';
 import { parseWithSchema } from '@/editor/schema/helpers';
 import { SettingsFormData } from '@/editor/types';
-import { toActionError } from '@/helpers/action';
+import { toActionFailure } from '@/helpers/action';
 import { checklistSchema } from './schema';
 
 export type ChecklistFormData = SettingsFormData & {
@@ -29,7 +29,7 @@ export async function publishChecklist(
   }
 
   if (error || !data) {
-    return toActionError({
+    return toActionFailure({
       message: 'Invalid data',
     });
   }
@@ -43,7 +43,7 @@ export async function publishChecklist(
       await helper.updateItem(shortId, { ...data, items });
     }
   } catch {
-    return toActionError({
+    return toActionFailure({
       message: 'Something is wrong when saving data',
     });
   }

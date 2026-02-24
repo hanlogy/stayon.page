@@ -36,8 +36,8 @@ export function AuthForm({
     const { passcode } = getValues();
 
     setIsPending(true);
-    const { ok, error } = await auth(type, { passcode, shortId });
-    if (!ok) {
+    const { success, error } = await auth(type, { passcode, shortId });
+    if (!success) {
       setError(error?.message ?? 'Varify failed');
     }
     setIsPending(false);
@@ -51,7 +51,7 @@ export function AuthForm({
     }
 
     return {
-      title: 'Enter admin passcode to edit',
+      title: 'Enter admin passcode to manage',
       placeholder: 'Admin passcode',
     };
   })();

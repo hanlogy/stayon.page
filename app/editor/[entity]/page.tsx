@@ -1,15 +1,22 @@
+import { ComponentType } from 'react';
 import { DialogProvider } from '@hanlogy/react-web-ui';
 import { FlexCenter } from '@hanlogy/react-web-ui';
 import { kebabToCamel } from '@hanlogy/ts-lib';
-import { EyeIcon } from 'lucide-react';
+import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { AccessGuard } from '@/component/AccessGuard';
-import { Layout } from '@/component/Layout';
-import { LazyLink } from '@/component/LazyLink';
+import { AccessGuard, AccessGuardAttributes } from '@/component/AccessGuard';
 import { shareableEntityNames } from '@/definitions/constants';
+import { ShareableCommon } from '@/definitions/types';
+import { DBChecklistHelper } from '@/dynamodb/DBChecklistHelper';
+import { DBEventHelper } from '@/dynamodb/DBEventHelper';
+import { DBShareableRepository } from '@/dynamodb/types';
 import { EditorContextProvider } from '../state/provider';
-import { checklistRegister } from './checklist/checklistRegister';
-import { eventRegister } from './event/eventRegister';
+import { ChecklistEditor } from './checklist/ChecklistEditor';
+import { EventEditor } from './event/EventEditor';
+
+export const metadata: Metadata = {
+  title: null,
+};
 
 export default async function EditorPage({
   searchParams,
@@ -24,79 +31,57 @@ export default async function EditorPage({
     return notFound();
   }
 
-  const entityTitle = {
-    checklist: 'Checklist',
-    poll: 'Poll',
-    event: 'Event',
-    timeSlots: 'Time slots',
-  }[entityName];
+  const shortIdLike = (await searchParams).id;
 
-  const shortIdLike = await (async () => {
-    const id = (await searchParams).id;
-    if (typeof id === 'string') {
-      return id;
+  switch (entityName) {
+    case 'checklist':
+      return await createEditor(
+        shortIdLike,
+        DBChecklistHelper,
+        ChecklistEditor
+      );
+
+    case 'event':
+      return await createEditor(shortIdLike, DBEventHelper, EventEditor);
+
+    default:
+      return (
+        <FlexCenter className="py-10 text-3xl text-gray-400">
+          Coming soon...
+        </FlexCenter>
+      );
+  }
+}
+
+async function createEditor<DataT extends ShareableCommon>(
+  shortId: unknown,
+  Helper: new () => DBShareableRepository<DataT>,
+  Editor: ComponentType<{ initialData: DataT | undefined }>
+) {
+  let item: DataT | undefined = undefined;
+  let accessGuardAttributes: AccessGuardAttributes | undefined;
+
+  if (typeof shortId === 'string') {
+    item = await new Helper().getItem({ shortId });
+    if (!item) {
+      return notFound();
     }
-    return undefined;
-  })();
 
-  const title = `${shortIdLike ? 'Edit' : 'Create'} ${entityTitle}`;
-
-  const defaultRegister = () => ({
-    item: undefined,
-    editor: (
-      <FlexCenter className="py-10 text-3xl text-gray-400">
-        Coming soon...
-      </FlexCenter>
-    ),
-  });
-
-  const register = {
-    checklist: checklistRegister,
-    event: eventRegister,
-    poll: defaultRegister,
-    timeSlots: defaultRegister,
-  }[entityName];
-
-  const { item, editor } = await register({
-    shortId: shortIdLike,
-  });
-
-  const accessGuardAttributes = item
-    ? {
-        type: 'adminAccess' as const,
-        shortId: item.shortId,
-        viewPasscodeVersion: item.viewPasscodeVersion,
-        adminPasscodeVersion: item.adminPasscodeVersion,
-      }
-    : undefined;
+    accessGuardAttributes = {
+      type: 'adminAccess' as const,
+      shortId: item.shortId,
+      viewPasscodeVersion: item.viewPasscodeVersion,
+      adminPasscodeVersion: item.adminPasscodeVersion,
+    };
+  }
 
   return (
-    <Layout
-      leading="home"
-      title={
-        <div className="w-full text-center text-xl font-medium text-gray-600">
-          {title}
-        </div>
-      }
-      withFooter={false}
-      trailing={
-        item && (
-          <LazyLink
-            href={`/${item.shortId}`}
-            className="flex items-center font-semibold"
-          >
-            <EyeIcon size={18} className="mr-1" />
-            View
-          </LazyLink>
-        )
-      }
-    >
-      <title>{title}</title>
-      <AccessGuard attributes={accessGuardAttributes}>
-        <DialogProvider>
-          <EditorContextProvider>{editor}</EditorContextProvider>
-        </DialogProvider>
-      </AccessGuard>
-    </Layout>
+    <AccessGuard attributes={accessGuardAttributes}>
+      <DialogProvider>
+        <EditorContextProvider>
+          <Editor initialData={item} />
+        </EditorContextProvider>
+      </DialogProvider>
+    </AccessGuard>
   );
 }
