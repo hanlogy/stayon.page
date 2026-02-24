@@ -3,7 +3,7 @@
 import { refresh } from 'next/cache';
 import { AccessType, ActionResponse } from '@/definitions/types';
 import { DBShareableHelper } from '@/dynamodb/DBShareableHelper';
-import { toActionError, toActionOk } from '@/helpers/action';
+import { toActionError, toActionSuccess } from '@/helpers/action';
 import { grantAccess } from '@/lib/auth/grantAccess';
 import { comparePasscode } from '../../lib/hash';
 
@@ -18,7 +18,7 @@ export async function auth(
   }
 ): Promise<ActionResponse> {
   if (!passcode) {
-    return toActionOk();
+    return toActionSuccess();
   }
 
   const shareableHelper = new DBShareableHelper();
@@ -41,7 +41,7 @@ export async function auth(
       : [adminPasscode, adminPasscodeVersion];
 
   if (!hash || !version) {
-    return toActionOk();
+    return toActionSuccess();
   }
 
   if (!(await comparePasscode({ passcode, hash }))) {
@@ -51,5 +51,5 @@ export async function auth(
   await grantAccess({ type, shortId, version });
 
   refresh();
-  return { ok: true };
+  return { success: true };
 }

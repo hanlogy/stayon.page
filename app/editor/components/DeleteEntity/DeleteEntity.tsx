@@ -15,8 +15,8 @@ export function DeleteEntity({ shortId }: { shortId: string }) {
     if (!yes) {
       return;
     }
-    const { ok, error = {} } = await deleteEntity({ shortId });
-    if (!ok) {
+    const { success, error = {} } = await deleteEntity({ shortId });
+    if (!success) {
       await openDialog(({ closeDialog }) => {
         return (
           <ErrorDialog

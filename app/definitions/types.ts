@@ -60,20 +60,21 @@ export interface EventRsvp {
   readonly guestCount?: number;
 }
 
-export interface ActionOk<DataT = undefined> {
-  readonly ok: true;
+export interface ActionSuccess<DataT = undefined> {
+  readonly success: true;
   readonly data?: DataT | undefined;
   readonly error?: undefined;
 }
 
 export interface ActionError {
-  readonly ok: false;
+  readonly success: false;
   readonly data?: undefined;
-  readonly error?:
-    | {
-        message?: string | undefined;
-      }
-    | undefined;
+  readonly error: {
+    code: string;
+    message?: string | undefined;
+  };
 }
 
-export type ActionResponse<DataT = undefined> = ActionOk<DataT> | ActionError;
+export type ActionResponse<DataT = undefined> =
+  | ActionSuccess<DataT>
+  | ActionError;

@@ -47,12 +47,12 @@ export function EditorLayout<
 
     setError(null);
     setIsPending(true);
-    const { ok, error } = await action(
+    const { success, error } = await action(
       initialValues?.shortId,
       formManager.getValues()
     );
 
-    if (!ok) {
+    if (!success) {
       setError(error?.message ?? 'Something is wrong');
     }
     setIsPending(false);

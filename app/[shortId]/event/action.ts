@@ -2,7 +2,7 @@
 
 import { ActionResponse, EventRsvp, RsvpResponse } from '@/definitions/types';
 import { DBEventRsvpHelper } from '@/dynamodb/DBEventRsvpHelper';
-import { toActionError, toActionOk } from '@/helpers/action';
+import { toActionError, toActionSuccess } from '@/helpers/action';
 import { safeParseFields } from '@/helpers/schemaHelpers';
 import { rsvpSchema } from './schema';
 
@@ -43,7 +43,7 @@ export async function saveRsvp(
       ...data,
     });
   }
-  return toActionOk({
+  return toActionSuccess({
     code: item.code,
   });
 }
@@ -67,5 +67,5 @@ export async function searchRsvp({
     });
   }
 
-  return toActionOk(item);
+  return toActionSuccess(item);
 }
