@@ -1,12 +1,19 @@
 import {
   accessTypes,
+  eventTypes,
   expiresAfterOptions,
+  rsvpResponses,
+  rsvpVisibilities,
   shareableEntityNames,
 } from './constants';
 
 export type ShareableEntityName = (typeof shareableEntityNames)[number];
 
 export type ExpiresAfterValue = (typeof expiresAfterOptions)[number];
+
+export type EventType = (typeof eventTypes)[number];
+export type RsvpVisibility = (typeof rsvpVisibilities)[number];
+export type RsvpResponse = (typeof rsvpResponses)[number];
 
 export type YesOrNo = 'yes' | 'no';
 
@@ -21,6 +28,7 @@ export interface ShareableCommon {
   readonly adminPasscodeVersion?: number;
 }
 
+// Checklist
 export interface ChecklistItem {
   readonly checklistItemId: string;
   readonly name: string;
@@ -30,6 +38,26 @@ export interface ChecklistItem {
 export interface Checklist extends ShareableCommon {
   readonly note?: string;
   readonly items: readonly ChecklistItem[];
+}
+
+// Event
+export interface Event extends ShareableCommon {
+  readonly startTime: string;
+  readonly endTime?: string;
+  readonly type?: EventType;
+  readonly location?: string;
+  readonly description?: string;
+  readonly rsvpDeadline?: string;
+  readonly rsvpVisibility?: RsvpVisibility;
+  readonly rsvpList?: readonly EventRsvp[];
+}
+
+export interface EventRsvp {
+  readonly shortId: string;
+  readonly code: string;
+  readonly response: RsvpResponse;
+  readonly name: string;
+  readonly guestCount?: number;
 }
 
 export interface ActionOk<DataT = undefined> {

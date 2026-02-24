@@ -91,3 +91,31 @@ can still access the content and clone it into a new shareable entity.
   ]
 }
 ```
+
+## Entity: event
+
+### Entity-specific attributes
+
+| Field          | Type             |
+| -------------- | ---------------- |
+| startTime      | string           |
+| endTime        | string           |
+| type           | inPerson/Virtual |
+| location       | string           |
+| description    | string           |
+| rsvpDeadline   | string           |
+| rsvpVisibility | RsvpVisibility   |
+
+## Entity: event_rsvp
+
+### Table design
+
+| Field      | Value                  |
+| ---------- | ---------------------- |
+| pk         | event_rsvp#shortId     |
+| sk         | 01#{code}#             |
+| shortId    | string                 |
+| code       | string                 |
+| name       | string                 |
+| response   | {going/notGoing/maybe} |
+| guestCount | number                 |

@@ -3,9 +3,10 @@
 import { redirect } from 'next/navigation';
 import { ActionResponse, ChecklistItem } from '@/definitions/types';
 import { DBChecklistHelper } from '@/dynamodb/DBChecklistHelper';
-import { parseWithChecklistSchema } from '@/editor/schema/checklist';
+import { parseWithSchema } from '@/editor/schema/helpers';
 import { SettingsFormData } from '@/editor/types';
 import { toActionError } from '@/helpers/action';
+import { checklistSchema } from './schema';
 
 export type ChecklistFormData = SettingsFormData & {
   name: string;
@@ -17,21 +18,7 @@ export async function publishChecklist(
   shortId: string | undefined,
   formData: Partial<ChecklistFormData>
 ): Promise<ActionResponse> {
-  const helper = new DBChecklistHelper();
-
-  const { error, data } = parseWithChecklistSchema({
-    name: formData.name,
-    expiresAfter: formData.expiresAfter,
-    note: formData.note,
-    viewPasscode: formData.viewPasscode,
-    adminPasscode: formData.adminPasscode,
-    ...(shortId
-      ? {
-          deleteViewPasscode: formData.deleteViewPasscode,
-          deleteAdminPasscode: formData.deleteAdminPasscode,
-        }
-      : {}),
-  });
+  const { error, data } = parseWithSchema(checklistSchema, formData);
 
   let items: ChecklistItem[] = [];
 
@@ -41,14 +28,15 @@ export async function publishChecklist(
     } catch {}
   }
 
-  if (error) {
-    console.log(error);
+  if (error || !data) {
     return toActionError({
       message: 'Invalid data',
     });
   }
 
   try {
+    const helper = new DBChecklistHelper();
+
     if (!shortId) {
       ({ shortId } = await helper.createItem({ ...data, items }));
     } else {

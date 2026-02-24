@@ -1,4 +1,9 @@
-import { Checklist, ShareableCommon } from '@/definitions/types';
+import {
+  Checklist,
+  Event,
+  EventRsvp,
+  ShareableCommon,
+} from '@/definitions/types';
 
 // The user provided fields.
 export type ShareableCreateFields = Pick<
@@ -24,6 +29,34 @@ export type ChecklistCreateFields = ShareableCreateFields &
 
 export type ChecklistUpdateFields = ShareableUpdateFields &
   Pick<Checklist, 'note' | 'items'>;
+
+export type EventCreateFields = ShareableCreateFields &
+  Pick<
+    Event,
+    | 'startTime'
+    | 'endTime'
+    | 'type'
+    | 'location'
+    | 'description'
+    | 'rsvpDeadline'
+    | 'rsvpVisibility'
+  >;
+
+export type EventUpdateFields = ShareableUpdateFields &
+  Pick<
+    Event,
+    | 'startTime'
+    | 'endTime'
+    | 'type'
+    | 'location'
+    | 'description'
+    | 'rsvpDeadline'
+    | 'rsvpVisibility'
+  >;
+
+export type RsvpCreateFields = Omit<EventRsvp, 'code'>;
+
+export type RsvpUpdateFields = EventRsvp;
 
 export type ShareableEntity<T extends ShareableCommon = ShareableCommon> = T & {
   readonly pk: string;

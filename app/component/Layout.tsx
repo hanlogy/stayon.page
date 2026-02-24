@@ -29,7 +29,7 @@ export function Layout({
           'grid grid-cols-[1fr_auto_1fr] items-center'
         )}
       >
-        <div>
+        <div className="justify-self-start">
           {leading && (
             <LazyLink href="/" className="flex items-center">
               {leading === 'logo' && (

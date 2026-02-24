@@ -79,7 +79,8 @@ export class DBShareableHelper extends DBHelperBase {
       deleteViewPasscode,
       deleteAdminPasscode,
       ...fieldsRest
-    }: T
+    }: T,
+    { removeAttributes = [] }: { removeAttributes?: string[] } = {}
   ): Promise<void> {
     const now = Date.now();
     const attributes = {
@@ -96,15 +97,16 @@ export class DBShareableHelper extends DBHelperBase {
       ...fieldsRest,
     };
 
-    const removeAttributes = [
-      ...(deleteViewPasscode ? ['viewPasscode', 'viewPasscodeVersion'] : []),
-      ...(deleteAdminPasscode ? ['adminPasscode', 'adminPasscodeVersion'] : []),
-    ];
-
     await this.db.update({
       keys: this.buildKeys({ shortId }),
       setAttributes: attributes,
-      removeAttributes,
+      removeAttributes: [
+        ...removeAttributes,
+        ...(deleteViewPasscode ? ['viewPasscode', 'viewPasscodeVersion'] : []),
+        ...(deleteAdminPasscode
+          ? ['adminPasscode', 'adminPasscodeVersion']
+          : []),
+      ],
     });
 
     await grantAccessIfNeeded({

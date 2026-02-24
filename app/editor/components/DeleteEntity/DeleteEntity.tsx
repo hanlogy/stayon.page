@@ -32,7 +32,7 @@ export function DeleteEntity({ shortId }: { shortId: string }) {
     <IconButton
       onClick={() => showConfirm()}
       size="medium"
-      className="bg-gray-100 text-gray-600 hover:text-red-600"
+      className="pointer-events-auto bg-gray-100 text-gray-600 hover:text-red-600"
     >
       <Trash2Icon />
     </IconButton>
