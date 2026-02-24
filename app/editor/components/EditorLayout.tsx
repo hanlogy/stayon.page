@@ -1,4 +1,10 @@
-import { useState, SubmitEvent, PropsWithChildren, useMemo } from 'react';
+import {
+  useState,
+  SubmitEvent,
+  PropsWithChildren,
+  useMemo,
+  ReactNode,
+} from 'react';
 import {
   clsx,
   FlexCenter,
@@ -27,6 +33,7 @@ export function EditorLayout<
   action,
   formManager,
   initialData,
+  actions,
 }: PropsWithChildren<{
   nameForTitle: string;
   className?: string;
@@ -36,6 +43,7 @@ export function EditorLayout<
   ) => ActionResponse | Promise<ActionResponse>;
   formManager: FormManager<T & SettingsFormData>;
   initialData: DataT | undefined;
+  actions?: ReactNode;
 }>) {
   const { tabName } = useEditorContext();
   const { validate, register } = formManager;
@@ -83,25 +91,28 @@ export function EditorLayout<
   return (
     <Layout
       title={
-        <div className="w-full text-center text-xl font-medium text-gray-600">
+        <div className="hidden w-full text-center text-xl font-medium text-gray-600 sm:block">
           {title}
         </div>
       }
       leading="home"
       withFooter={false}
       trailing={
-        shortId && (
-          <div className="flex items-center space-x-4">
-            <LazyLink
-              href={`/${shortId}`}
-              className="flex items-center font-semibold text-gray-600 hover:text-gray-800"
-            >
-              <EyeIcon size={18} className="mr-1" />
-              View
-            </LazyLink>
-            <DeleteEntity shortId={shortId} />
-          </div>
-        )
+        <div className="flex items-center space-x-4">
+          {actions}
+          {shortId && (
+            <>
+              <LazyLink
+                href={`/${shortId}`}
+                className="flex items-center font-semibold text-gray-600 hover:text-gray-800"
+              >
+                <EyeIcon size={18} className="mr-1" />
+                View
+              </LazyLink>
+              <DeleteEntity shortId={shortId} />
+            </>
+          )}
+        </div>
       }
     >
       <title>{title}</title>

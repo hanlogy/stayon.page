@@ -1,11 +1,12 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { ActionResponse, Event } from '@/definitions/types';
+import { ActionResponse, Event, EventRsvp } from '@/definitions/types';
 import { DBEventHelper } from '@/dynamodb/DBEventHelper';
+import { DBEventRsvpHelper } from '@/dynamodb/DBEventRsvpHelper';
 import { parseWithSchema } from '@/editor/schema/helpers';
 import { SettingsFormData } from '@/editor/types';
-import { toActionFailure } from '@/helpers/action';
+import { toActionFailure, toActionSuccess } from '@/helpers/action';
 import { eventSchema } from './schema';
 
 export type EventFormData = SettingsFormData &
@@ -48,4 +49,13 @@ export async function publishEvent(
   }
 
   redirect(`/${shortId}`);
+}
+
+export async function fetchRsvpList(
+  shortId: string
+): Promise<ActionResponse<EventRsvp[]>> {
+  const helper = new DBEventRsvpHelper();
+
+  const items = await helper.getItems({ shortId });
+  return toActionSuccess(items);
 }

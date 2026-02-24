@@ -16,7 +16,8 @@ export function RsvpDialog({
   closeDialog: CloseDialogFn;
   shortId: string;
 }) {
-  const { register, getValues, validate, setValues } = useForm<RsvpFormData>();
+  const { register, getValues, validate, setValues, setFieldValue } =
+    useForm<RsvpFormData>();
   const [isRetrieve, setIsRetrieve] = useState(false);
   const [rsvpToUpdate, setRsvpToUpdate] = useState<EventRsvp | undefined>(
     undefined
@@ -77,7 +78,11 @@ export function RsvpDialog({
     }
     content = (
       <>
-        <RsvpResponseForm rsvp={rsvpToUpdate} register={register} />
+        <RsvpResponseForm
+          setFieldValue={setFieldValue}
+          rsvp={rsvpToUpdate}
+          register={register}
+        />
         <div className="mt-4">
           <span className="text-gray-500">Already Rsvp?</span>
           <button

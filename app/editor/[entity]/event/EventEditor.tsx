@@ -9,6 +9,7 @@ import { EditorLayout } from '@/editor/components/EditorLayout';
 import { EntityNameField } from '@/editor/components/EntityNameField';
 import { safeParseField, safeParseFields } from '@/helpers/schemaHelpers';
 import { DateTimeFieldToggle } from './DateTimeFieldToggle';
+import { RsvpListButton } from './RsvpListButton';
 import { EventFormData, publishEvent } from './actions';
 import { normalizeDateTime, transformDateTime } from './helpers';
 import { startTimeSchema, timeFieldsSchema } from './schema';
@@ -57,6 +58,9 @@ export function EventEditor({ initialData }: { initialData?: Event }) {
       initialData={initialData}
       action={publishEvent}
       formManager={formManager}
+      actions={
+        initialData?.shortId && <RsvpListButton shortId={initialData.shortId} />
+      }
     >
       <div className="space-y-6">
         <EntityNameField

@@ -43,6 +43,25 @@ export class DBEventRsvpHelper extends DBHelperBase {
     };
   }
 
+  async getItems({ shortId }: { shortId: string }): Promise<EventRsvp[]> {
+    const { items } = await this.db.query({
+      keyConditions: [
+        { attribute: 'pk', value: this.buildPk({ shortId }) },
+        { attribute: 'sk', value: this.skPrefix, operator: 'begins_with' },
+      ],
+    });
+
+    return items.map(({ response, name, guestCount, code }) => {
+      return {
+        shortId,
+        code,
+        response,
+        name,
+        guestCount,
+      };
+    });
+  }
+
   private async generateCode(
     shortId: string,
     count: number = 0
