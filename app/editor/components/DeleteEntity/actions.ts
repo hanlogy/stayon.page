@@ -3,7 +3,7 @@
 import { redirect } from 'next/navigation';
 import { ActionResponse } from '@/definitions/types';
 import { DBShareableHelper } from '@/dynamodb/DBShareableHelper';
-import { toActionError } from '@/helpers/action';
+import { toActionFailure } from '@/helpers/action';
 
 export async function deleteEntity({
   shortId,
@@ -14,7 +14,7 @@ export async function deleteEntity({
   try {
     await helper.deleteItem({ shortId });
   } catch {
-    return toActionError({ message: 'Delete failed' });
+    return toActionFailure({ message: 'Delete failed' });
   }
 
   redirect('/');

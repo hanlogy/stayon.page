@@ -62,11 +62,11 @@ export interface EventRsvp {
 
 export interface ActionSuccess<DataT = undefined> {
   readonly success: true;
-  readonly data?: DataT | undefined;
+  readonly data: DataT;
   readonly error?: undefined;
 }
 
-export interface ActionError {
+export interface ActionFailure {
   readonly success: false;
   readonly data?: undefined;
   readonly error: {
@@ -77,4 +77,4 @@ export interface ActionError {
 
 export type ActionResponse<DataT = undefined> =
   | ActionSuccess<DataT>
-  | ActionError;
+  | ActionFailure;

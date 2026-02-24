@@ -5,7 +5,7 @@ import { ActionResponse, Event } from '@/definitions/types';
 import { DBEventHelper } from '@/dynamodb/DBEventHelper';
 import { parseWithSchema } from '@/editor/schema/helpers';
 import { SettingsFormData } from '@/editor/types';
-import { toActionError } from '@/helpers/action';
+import { toActionFailure } from '@/helpers/action';
 import { eventSchema } from './schema';
 
 export type EventFormData = SettingsFormData &
@@ -28,7 +28,7 @@ export async function publishEvent(
   const { error, data } = parseWithSchema(eventSchema, formData);
 
   if (error || !data) {
-    return toActionError({
+    return toActionFailure({
       message: 'Invalid data',
     });
   }
@@ -42,7 +42,7 @@ export async function publishEvent(
       await helper.updateItem(shortId, data);
     }
   } catch {
-    return toActionError({
+    return toActionFailure({
       message: 'Something is wrong when saving data',
     });
   }

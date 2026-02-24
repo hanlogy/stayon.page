@@ -3,7 +3,7 @@
 import { refresh } from 'next/cache';
 import { AccessType, ActionResponse } from '@/definitions/types';
 import { DBShareableHelper } from '@/dynamodb/DBShareableHelper';
-import { toActionError, toActionSuccess } from '@/helpers/action';
+import { toActionFailure, toActionSuccess } from '@/helpers/action';
 import { grantAccess } from '@/lib/auth/grantAccess';
 import { comparePasscode } from '../../lib/hash';
 
@@ -25,7 +25,7 @@ export async function auth(
 
   const item = await shareableHelper.get({ shortId });
   if (!item) {
-    return toActionError({ message: 'item does not exist' });
+    return toActionFailure({ message: 'item does not exist' });
   }
 
   const {
@@ -45,7 +45,7 @@ export async function auth(
   }
 
   if (!(await comparePasscode({ passcode, hash }))) {
-    return toActionError({ message: 'Wrong passcode' });
+    return toActionFailure({ message: 'Wrong passcode' });
   }
 
   await grantAccess({ type, shortId, version });
