@@ -7,7 +7,7 @@ import { EventRsvp } from '@/definitions/types';
 import { RsvpConfirmedView } from './RsvpConfirmedView';
 import { RsvpResponseForm } from './RsvpResponseForm';
 import { SearchRsvpForm } from './SearchRsvpForm';
-import { saveRsvp, type RsvpFormData } from './action';
+import { saveRsvp, type RsvpFormData } from './actions';
 
 export function RsvpDialog({
   closeDialog,
