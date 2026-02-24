@@ -16,8 +16,7 @@ export function RsvpDialog({
   closeDialog: CloseDialogFn;
   shortId: string;
 }) {
-  const { register, getValues, validate, setInitialValues } =
-    useForm<RsvpFormData>();
+  const { register, getValues, validate, setValues } = useForm<RsvpFormData>();
   const [isRetrieve, setIsRetrieve] = useState(false);
   const [rsvpToUpdate, setRsvpToUpdate] = useState<EventRsvp | undefined>(
     undefined
@@ -63,10 +62,7 @@ export function RsvpDialog({
         onSuccess={(e) => {
           setRsvpToUpdate(e);
           setIsRetrieve(false);
-          // Need to call this, otherwise there was value before search, the old
-          // values will not update
-          // TODO: Try to add reset method to useForm
-          setInitialValues({
+          setValues({
             response: e.response,
             name: e.name,
             guestCount: e.guestCount ? String(e.guestCount) : '',
