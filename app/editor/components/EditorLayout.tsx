@@ -33,7 +33,7 @@ export function EditorLayout<
   action,
   formManager,
   initialData,
-  actions,
+  topbar,
 }: PropsWithChildren<{
   nameForTitle: string;
   className?: string;
@@ -43,7 +43,7 @@ export function EditorLayout<
   ) => ActionResponse | Promise<ActionResponse>;
   formManager: FormManager<T & SettingsFormData>;
   initialData: DataT | undefined;
-  actions?: ReactNode;
+  topbar?: ReactNode;
 }>) {
   const { tabName } = useEditorContext();
   const { validate, register } = formManager;
@@ -91,23 +91,22 @@ export function EditorLayout<
   return (
     <Layout
       title={
-        <div className="hidden w-full text-center text-xl font-medium text-gray-600 sm:block">
+        <div className="w-full text-center font-medium text-gray-600 sm:text-xl">
           {title}
         </div>
       }
       leading="home"
       withFooter={false}
       trailing={
-        <div className="flex items-center space-x-4">
-          {actions}
+        <div className="flex items-center space-x-2 sm:space-x-4">
           {shortId && (
             <>
               <LazyLink
                 href={`/${shortId}`}
                 className="flex items-center font-semibold text-gray-600 hover:text-gray-800"
               >
-                <EyeIcon size={18} className="mr-1" />
-                View
+                <EyeIcon size={18} />
+                <span className="ml-1 hidden sm:block">View</span>
               </LazyLink>
               <DeleteEntity shortId={shortId} />
             </>
@@ -116,6 +115,7 @@ export function EditorLayout<
       }
     >
       <title>{title}</title>
+      {topbar}
       <div className={clsx('mx-auto px-4', className)}>
         <FlexCenter className="mt-8 mb-8">
           <EditorTabs />

@@ -58,8 +58,13 @@ export function EventEditor({ initialData }: { initialData?: Event }) {
       initialData={initialData}
       action={publishEvent}
       formManager={formManager}
-      actions={
-        initialData?.shortId && <RsvpListButton shortId={initialData.shortId} />
+      topbar={
+        initialData?.shortId &&
+        initialData.rsvpDeadline && (
+          <div className="flex-center mt-2">
+            <RsvpListButton shortId={initialData.shortId} />
+          </div>
+        )
       }
     >
       <div className="space-y-6">
