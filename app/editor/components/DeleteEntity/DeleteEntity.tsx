@@ -31,10 +31,11 @@ export function DeleteEntity({ shortId }: { shortId: string }) {
 
   return (
     <IconButton
+      size="xsmall"
       onClick={() => showConfirm()}
       className="pointer-events-auto text-gray-600 hover:bg-gray-100 hover:text-red-600"
     >
-      <Trash2Icon size={18} />
+      <Trash2Icon size={16} />
     </IconButton>
   );
 }

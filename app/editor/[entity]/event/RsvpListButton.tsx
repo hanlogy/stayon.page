@@ -20,7 +20,7 @@ export function RsvpListButton({ shortId }: { shortId: string }) {
       }}
     >
       <UsersIcon size={18} className="mr-1 text-green-600" />
-      <span className="text-sm font-semibold">RSVP</span>
+      <span className="text-sm font-semibold">RSVP List</span>
     </button>
   );
 }
@@ -48,6 +48,9 @@ function RsvpListDialog({
     >
       {rsvpList && (
         <div className="space-y-3">
+          {rsvpList && !rsvpList.length && (
+            <div className="text-gray-500 italic">Empty</div>
+          )}
           {rsvpList.map(({ code, name, guestCount, response }) => {
             return (
               <div
