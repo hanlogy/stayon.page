@@ -2,6 +2,7 @@ import {
   Checklist,
   Event,
   EventRsvp,
+  Poll,
   ShareableCommon,
 } from '@/definitions/types';
 
@@ -57,6 +58,13 @@ export type EventUpdateFields = ShareableUpdateFields &
 export type RsvpCreateFields = Omit<EventRsvp, 'code'>;
 
 export type RsvpUpdateFields = EventRsvp;
+
+// Poll
+export type PollCreateFields = ShareableCreateFields &
+  Pick<Poll, 'note' | 'questions' | 'closesAt' | 'resultsVisibility'>;
+
+export type PollUpdateFields = ShareableUpdateFields &
+  Pick<Poll, 'note' | 'questions' | 'closesAt' | 'resultsVisibility'>;
 
 export type ShareableEntity<T extends ShareableCommon = ShareableCommon> = T & {
   readonly pk: string;
