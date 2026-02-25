@@ -33,16 +33,44 @@ export default async function EditorPage({
 
   const shortIdLike = (await searchParams).id;
 
+  const createEditor = async <DataT extends ShareableCommon>(
+    Helper: new () => DBShareableRepository<DataT>,
+    Editor: ComponentType<{ initialData: DataT | undefined }>
+  ) => {
+    let item: DataT | undefined = undefined;
+    let accessGuardAttributes: AccessGuardAttributes | undefined;
+
+    if (typeof shortIdLike === 'string') {
+      item = await new Helper().getItem({ shortId: shortIdLike });
+      if (!item) {
+        return notFound();
+      }
+
+      accessGuardAttributes = {
+        type: 'adminAccess' as const,
+        shortId: item.shortId,
+        viewPasscodeVersion: item.viewPasscodeVersion,
+        adminPasscodeVersion: item.adminPasscodeVersion,
+      };
+    }
+
+    return (
+      <AccessGuard attributes={accessGuardAttributes}>
+        <DialogProvider>
+          <EditorContextProvider>
+            <Editor initialData={item} />
+          </EditorContextProvider>
+        </DialogProvider>
+      </AccessGuard>
+    );
+  };
+
   switch (entityName) {
     case 'checklist':
-      return await createEditor(
-        shortIdLike,
-        DBChecklistHelper,
-        ChecklistEditor
-      );
+      return await createEditor(DBChecklistHelper, ChecklistEditor);
 
     case 'event':
-      return await createEditor(shortIdLike, DBEventHelper, EventEditor);
+      return await createEditor(DBEventHelper, EventEditor);
 
     default:
       return (
@@ -51,37 +79,4 @@ export default async function EditorPage({
         </FlexCenter>
       );
   }
-}
-
-async function createEditor<DataT extends ShareableCommon>(
-  shortId: unknown,
-  Helper: new () => DBShareableRepository<DataT>,
-  Editor: ComponentType<{ initialData: DataT | undefined }>
-) {
-  let item: DataT | undefined = undefined;
-  let accessGuardAttributes: AccessGuardAttributes | undefined;
-
-  if (typeof shortId === 'string') {
-    item = await new Helper().getItem({ shortId });
-    if (!item) {
-      return notFound();
-    }
-
-    accessGuardAttributes = {
-      type: 'adminAccess' as const,
-      shortId: item.shortId,
-      viewPasscodeVersion: item.viewPasscodeVersion,
-      adminPasscodeVersion: item.adminPasscodeVersion,
-    };
-  }
-
-  return (
-    <AccessGuard attributes={accessGuardAttributes}>
-      <DialogProvider>
-        <EditorContextProvider>
-          <Editor initialData={item} />
-        </EditorContextProvider>
-      </DialogProvider>
-    </AccessGuard>
-  );
 }
