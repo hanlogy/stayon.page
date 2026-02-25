@@ -119,3 +119,53 @@ can still access the content and clone it into a new shareable entity.
 | name       | string                 |
 | response   | {going/notGoing/maybe} |
 | guestCount | number                 |
+
+## Entity: poll (multi-question)
+
+### Entity-specific attributes
+
+| Field             | Type                              |
+| ----------------- | --------------------------------- |
+| note              | string                            |
+| resultsVisibility | always / afterSubmit / afterClose |
+| closesAt          | string(ISO)                       |
+| questions         | PollQuestion[]                    |
+
+### PollQuestion object
+
+| Field          | Type                 |
+| -------------- | -------------------- |
+| pollQuestionId | UUID                 |
+| title          | string               |
+| isMultiple     | boolean              |
+| isRequired     | boolean              |
+| options        | PollQuestionOption[] |
+
+### PollQuestionOption object
+
+| Field                | Type   |
+| -------------------- | ------ |
+| pollQuestionOptionId | UUID   |
+| label                | string |
+
+## Entity: poll_vote
+
+### Table design
+
+| Field     | Value             |
+| --------- | ----------------- |
+| pk        | poll_vote#shortId |
+| sk        | 01#{code}#        |
+| shortId   | string            |
+| name      | string?           |
+| code      | string            |
+| answers   | PollAnswer[]      |
+| createdAt | string (ISO)      |
+| updatedAt | string (ISO)      |
+
+### PollAnswer object
+
+| Field          | Type   |
+| -------------- | ------ |
+| pollQuestionId | UUID   |
+| optionIds      | UUID[] |
