@@ -9,10 +9,12 @@ import { shareableEntityNames } from '@/definitions/constants';
 import { ShareableCommon } from '@/definitions/types';
 import { DBChecklistHelper } from '@/dynamodb/DBChecklistHelper';
 import { DBEventHelper } from '@/dynamodb/DBEventHelper';
+import { DBPollHelper } from '@/dynamodb/DBPollHelper';
 import { DBShareableRepository } from '@/dynamodb/types';
 import { EditorContextProvider } from '../state/provider';
 import { ChecklistEditor } from './checklist/ChecklistEditor';
 import { EventEditor } from './event/EventEditor';
+import { PollEditor } from './poll/PollEditor';
 
 export const metadata: Metadata = {
   title: null,
@@ -71,6 +73,9 @@ export default async function EditorPage({
 
     case 'event':
       return await createEditor(DBEventHelper, EventEditor);
+
+    case 'poll':
+      return await createEditor(DBPollHelper, PollEditor);
 
     default:
       return (

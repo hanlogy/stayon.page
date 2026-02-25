@@ -57,7 +57,7 @@ export function EditorLayout<
       return {
         hasViewPasscode: false,
         hasAdminPasscode: false,
-        expiresAfter: '7',
+        expiresAfter: '30',
       };
     }
     const { viewPasscodeVersion, adminPasscodeVersion, expiresAfter } =
