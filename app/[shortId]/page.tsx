@@ -3,12 +3,13 @@ import { notFound } from 'next/navigation';
 import { AccessGuard } from '@/component/AccessGuard';
 import { Layout } from '@/component/Layout';
 import { LazyLink } from '@/component/LazyLink';
-import type { Checklist, Event } from '@/definitions/types';
+import type { Checklist, Event, Poll } from '@/definitions/types';
 import { DBShareableHelper } from '@/dynamodb/DBShareableHelper';
 import { normalizeShortId } from '@/helpers/shortId';
 import { ChecklistView } from './checklist/ChecklistView';
 import { ShareButton } from './components/ShareButton';
 import { EventView } from './event/EventView';
+import { PollView } from './poll/PollView';
 
 export default async function SharingPage({ params }: PageProps<'/[shortId]'>) {
   const maybeShortId = (await params).shortId;
@@ -46,20 +47,20 @@ export default async function SharingPage({ params }: PageProps<'/[shortId]'>) {
         }
       >
         <title>{item.name}</title>
-        <main className="flex-1">
-          {(() => {
-            switch (item.entity) {
-              case 'checklist':
-                // Checlist item is safe to cast.
-                return <ChecklistView item={item as Checklist} />;
-              case 'event':
-                // Event item is safe to cast.
-                return <EventView item={item as Event} />;
-            }
+        {(() => {
+          switch (item.entity) {
+            case 'checklist':
+              // Checlist item is safe to cast.
+              return <ChecklistView item={item as Checklist} />;
+            case 'event':
+              // Event item is safe to cast.
+              return <EventView item={item as Event} />;
+            case 'poll':
+              return <PollView item={item as Poll} />;
+          }
 
-            return <div className="text-center">Ready soon</div>;
-          })()}
-        </main>
+          return <div className="text-center">Ready soon</div>;
+        })()}
       </Layout>
     </AccessGuard>
   );

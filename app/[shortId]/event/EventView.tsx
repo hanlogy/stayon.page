@@ -10,7 +10,7 @@ export function EventView({
     startTime,
     endTime,
     location,
-    type,
+    // type,
     description,
     rsvpDeadline,
   },
