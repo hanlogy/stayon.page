@@ -1,20 +1,37 @@
 import { IconWrapper } from '@hanlogy/react-web-ui';
-import { CheckBoxBlankIcon, CheckBoxCheckedIcon } from '@/component/icons';
+import clsx from 'clsx';
+import {
+  CheckBoxBlankIcon,
+  CheckBoxCheckedIcon,
+  RadioBlankIcon,
+  RadioCheckedIcon,
+} from '@/component/icons';
 import { PollQuestion } from '@/definitions/types';
 
 export function QuestionCard({
+  error,
   question,
   answer = [],
   onSelectOption,
 }: {
+  error?: string;
   question: PollQuestion;
   answer?: string[];
   onSelectOption: (question: PollQuestion, optionId: string) => void;
 }) {
   const { title, options } = question;
   return (
-    <>
-      <div className="text-xl">{title}</div>
+    <div>
+      <div
+        className={clsx('text-xl', {
+          'text-red-600': !!error,
+        })}
+      >
+        {title}
+      </div>
+      {error && (
+        <div className="mt-1 text-sm font-semibold text-red-600">{error}</div>
+      )}
       <div className="mt-2">
         {options.map(({ pollQuestionOptionId, label }) => {
           return (
@@ -26,9 +43,15 @@ export function QuestionCard({
               >
                 <IconWrapper className="mr-2">
                   {answer.includes(pollQuestionOptionId) ? (
-                    <CheckBoxCheckedIcon />
-                  ) : (
+                    question.isMultiple ? (
+                      <CheckBoxCheckedIcon />
+                    ) : (
+                      <RadioCheckedIcon />
+                    )
+                  ) : question.isMultiple ? (
                     <CheckBoxBlankIcon />
+                  ) : (
+                    <RadioBlankIcon />
                   )}
                 </IconWrapper>
                 <div className="flex-1">{label}</div>
@@ -37,6 +60,6 @@ export function QuestionCard({
           );
         })}
       </div>
-    </>
+    </div>
   );
 }

@@ -1,27 +1,46 @@
 'use client';
 
 import { SubmitEvent, useState } from 'react';
-import { useForm } from '@hanlogy/react-web-ui';
-import { TextField } from '@/component/form/fields';
+import { useDialog } from '@hanlogy/react-web-ui';
+import { FilledButton } from '@/component/buttons';
 import { Poll, PollQuestion, PollVoteAnswer } from '@/definitions/types';
 import { QuestionCard } from './QuestionCard';
-import { VoteButton } from './VoteButton';
+import { VoteDialog } from './VoteDialog';
 
-interface FormData {
-  name: string;
-}
-export function PollView({ item: { name, questions, note } }: { item: Poll }) {
-  const { register, validate } = useForm<FormData>();
+export function PollView({ item: { shortId,name, questions, note } }: { item: Poll }) {
   const [answers, setAnswers] = useState<PollVoteAnswer[]>(
     questions.map(({ pollQuestionId }) => ({ pollQuestionId, optionIds: [] }))
   );
 
+  const [errors, setErrors] = useState<Record<string, string | undefined>>({});
+  const { openDialog } = useDialog();
+
   const handleSubmit = (e: SubmitEvent) => {
     e.preventDefault();
 
-    if (!validate()) {
-      return;
+    for (const { isRequired, pollQuestionId } of questions) {
+      if (!isRequired) {
+        continue;
+      }
+      const selectedOptions = answers.find(
+        (e) => e.pollQuestionId === pollQuestionId
+      )?.optionIds;
+
+      if (!selectedOptions?.length) {
+        setErrors({ ...errors, [pollQuestionId]: 'Required' });
+        return;
+      }
     }
+
+    openDialog(({ closeDialog }) => {
+      return (
+        <VoteDialog
+          shortId={shortId}
+          answers={answers}
+          closeDialog={closeDialog}
+        />
+      );
+    });
   };
 
   const handleOnSelectOption = (question: PollQuestion, optionId: string) => {
@@ -30,6 +49,8 @@ export function PollView({ item: { name, questions, note } }: { item: Poll }) {
         if (answer.pollQuestionId !== question.pollQuestionId) {
           return answer;
         }
+        setErrors({ ...errors, [question.pollQuestionId]: undefined });
+
         const { pollQuestionId, optionIds } = answer;
         const isMultiple = question.isMultiple;
         let optionUpdated: string[];
@@ -54,21 +75,10 @@ export function PollView({ item: { name, questions, note } }: { item: Poll }) {
       <div className="text-gray-800">{name}</div>
       {note && <div className="mt-1 text-gray-500">{note}</div>}
       <div className="mt-6 space-y-8">
-        <div className="w-60">
-          <TextField
-            label="Your name"
-            controller={register('name', {
-              validator: ({ name }) => {
-                if (!name?.trim()) {
-                  return 'Name is required';
-                }
-              },
-            })}
-          />
-        </div>
         {questions.map((question) => {
           return (
             <QuestionCard
+              error={errors[question.pollQuestionId]}
               onSelectOption={handleOnSelectOption}
               answer={
                 answers.find(
@@ -82,7 +92,9 @@ export function PollView({ item: { name, questions, note } }: { item: Poll }) {
         })}
       </div>
       <div className="flex-center py-10">
-        <VoteButton />
+        <FilledButton type="submit" size="medium" className="min-w-40">
+          Vote
+        </FilledButton>
       </div>
     </form>
   );
