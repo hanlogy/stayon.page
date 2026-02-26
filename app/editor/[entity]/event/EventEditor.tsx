@@ -10,7 +10,6 @@ import { EntityNameField } from '@/editor/components/EntityNameField';
 import { safeParseField, safeParseFields } from '@/helpers/schemaHelpers';
 import { normalizeDateTime, transformDateTime } from '../../helpers';
 import { DateTimeFieldToggle } from './DateTimeFieldToggle';
-import { RsvpListButton } from './RsvpListButton';
 import { EventFormData, publishEvent } from './actions';
 import { startTimeSchema, timeFieldsSchema } from './schema';
 
@@ -59,14 +58,6 @@ export function EventEditor({ initialData }: { initialData?: Event }) {
       action={publishEvent}
       getValues={() => formManager.getValues()}
       formManager={formManager}
-      topbar={
-        initialData?.shortId &&
-        initialData.rsvpDeadline && (
-          <div className="flex-center mt-2">
-            <RsvpListButton shortId={initialData.shortId} />
-          </div>
-        )
-      }
     >
       <div className="space-y-6">
         <EntityNameField

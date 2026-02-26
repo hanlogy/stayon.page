@@ -1,10 +1,4 @@
-import {
-  useState,
-  SubmitEvent,
-  PropsWithChildren,
-  useMemo,
-  ReactNode,
-} from 'react';
+import { useState, SubmitEvent, PropsWithChildren, useMemo } from 'react';
 import {
   clsx,
   FlexCenter,
@@ -35,7 +29,6 @@ export function EditorLayout<
   getValues,
   formManager,
   initialData,
-  topbar,
 }: PropsWithChildren<{
   nameForTitle: string;
   className?: string;
@@ -46,7 +39,6 @@ export function EditorLayout<
   getValues: () => ActionDataT;
   formManager: FormManager<FormDataT>;
   initialData: DataT | undefined;
-  topbar?: ReactNode;
 }>) {
   const { tabName } = useEditorContext();
   const { validate, register } = formManager;
@@ -89,7 +81,7 @@ export function EditorLayout<
     }
     setIsPending(false);
   };
-  const title = `${isManage ? 'Manage' : 'Create'} ${nameForTitle}`;
+  const title = `${isManage ? 'Update' : 'Create'} ${nameForTitle}`;
 
   return (
     <Layout
@@ -118,7 +110,6 @@ export function EditorLayout<
       }
     >
       <title>{title}</title>
-      {topbar}
       <div className={clsx('mx-auto px-4', className)}>
         <FlexCenter className="mt-8 mb-8">
           <EditorTabs />
