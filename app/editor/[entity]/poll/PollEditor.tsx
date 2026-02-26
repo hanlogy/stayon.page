@@ -13,7 +13,7 @@ import {
   DeleteIconButton,
   EditIconButton,
 } from '@/editor/components/buttons';
-import { transformDateTime } from '../../helpers';
+import { normalizeDateTime, transformDateTime } from '../../helpers';
 import { PollFormData, publishPoll } from './actions';
 import { usePollQuestionDialog } from './usePollQuestionDialog';
 
@@ -23,6 +23,7 @@ export function PollEditor({ initialData }: { initialData?: Poll }) {
     const {
       name,
       note = '',
+      closesAt,
       resultsVisibility,
       questions = [],
     } = initialData ?? {};
@@ -30,6 +31,7 @@ export function PollEditor({ initialData }: { initialData?: Poll }) {
     return {
       name,
       note,
+      closesAt: closesAt ? normalizeDateTime(closesAt) : '',
       resultsVisibility,
       questions,
     };
@@ -39,7 +41,9 @@ export function PollEditor({ initialData }: { initialData?: Poll }) {
     defaultValues.questions
   );
 
-  const [withCloseAt, setWithCloseAt] = useState<boolean>(false);
+  const [withCloseAt, setWithCloseAt] = useState<boolean>(
+    !!defaultValues.closesAt
+  );
 
   const { register, setFieldValue } = formManager;
 
@@ -91,6 +95,7 @@ export function PollEditor({ initialData }: { initialData?: Poll }) {
           <div>
             <TextField
               label="Close at"
+              defaultValue={defaultValues.closesAt}
               controller={register('closesAt', {
                 transform: transformDateTime,
               })}
