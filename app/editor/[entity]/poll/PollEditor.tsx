@@ -78,9 +78,9 @@ export function PollEditor({ initialData }: { initialData?: Poll }) {
             options={pollResultsVisibilities.map((v) => ({
               value: v,
               label: {
-                always: 'Always',
-                afterSubmit: 'After submit',
-                afterClose: 'After close',
+                always: 'Everyone - Always',
+                afterClose: 'Everyone - After close',
+                admin: 'Admin only',
               }[v],
             }))}
           />
