@@ -23,7 +23,7 @@ export function Layout({
     <>
       <header
         className={clsx(
-          'fixed top-0 right-0 left-0',
+          'fixed top-0 right-0 left-0 z-50',
           'h-14 px-4 md:h-18 md:px-6',
           'bg-white',
           'grid grid-cols-[1fr_auto_1fr] items-center'

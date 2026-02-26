@@ -22,11 +22,13 @@ export type EventFormData = SettingsFormData &
     | 'rsvpVisibility'
   >;
 
+export type EventActionData = Partial<EventFormData>;
+
 export async function publishEvent(
   shortId: string | undefined,
-  formData: Partial<EventFormData>
+  actionData: EventActionData
 ): Promise<ActionResponse> {
-  const { error, data } = parseWithSchema(eventSchema, formData);
+  const { error, data } = parseWithSchema(eventSchema, actionData);
 
   if (error || !data) {
     return toActionFailure({

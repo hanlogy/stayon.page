@@ -24,13 +24,15 @@ import { EditorTabs } from './EditorTabs';
 import { FeatureSettings } from './FeatureSettings';
 
 export function EditorLayout<
-  T extends FormDataConstraint<T>,
+  FormDataT extends FormDataConstraint<FormDataT> & SettingsFormData,
+  ActionDataT extends object,
   DataT extends ShareableCommon,
 >({
   nameForTitle,
   className,
   children,
   action,
+  getValues,
   formManager,
   initialData,
   topbar,
@@ -39,9 +41,10 @@ export function EditorLayout<
   className?: string;
   action: (
     shortId: string | undefined,
-    formData: Partial<T & SettingsFormData>
+    actionData: ActionDataT
   ) => ActionResponse | Promise<ActionResponse>;
-  formManager: FormManager<T & SettingsFormData>;
+  getValues: () => ActionDataT;
+  formManager: FormManager<FormDataT>;
   initialData: DataT | undefined;
   topbar?: ReactNode;
 }>) {
@@ -79,7 +82,7 @@ export function EditorLayout<
 
     setError(null);
     setIsPending(true);
-    const { success, error } = await action(shortId, formManager.getValues());
+    const { success, error } = await action(shortId, getValues());
 
     if (!success) {
       setError(error?.message ?? 'Something is wrong');
@@ -134,7 +137,7 @@ export function EditorLayout<
         <div className="p-4 text-center text-red-600">{error}</div>
       </div>
       <div className="h-22 sm:h-30"></div>
-      <div className="pointer-events-none fixed right-0 bottom-0 left-0 flex h-22 items-center justify-center sm:h-30">
+      <div className="pointer-events-none fixed right-0 bottom-0 left-0 z-50 flex h-22 items-center justify-center sm:h-30">
         <FilledButton
           disabled={isPending}
           type="submit"

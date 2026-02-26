@@ -10,23 +10,18 @@ import { checklistSchema } from './schema';
 
 export type ChecklistFormData = SettingsFormData & {
   name: string;
-  items: string;
   note?: string;
+};
+
+export type ChecklistActionData = Partial<ChecklistFormData> & {
+  items: readonly ChecklistItem[];
 };
 
 export async function publishChecklist(
   shortId: string | undefined,
-  formData: Partial<ChecklistFormData>
+  { items, ...formData }: ChecklistActionData
 ): Promise<ActionResponse> {
   const { error, data } = parseWithSchema(checklistSchema, formData);
-
-  let items: ChecklistItem[] = [];
-
-  if (formData.items) {
-    try {
-      items = JSON.parse(formData.items);
-    } catch {}
-  }
 
   if (error || !data) {
     return toActionFailure({

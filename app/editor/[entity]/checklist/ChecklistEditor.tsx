@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { HiddenField, useForm } from '@hanlogy/react-web-ui';
+import { useForm } from '@hanlogy/react-web-ui';
 import { Checklist } from '@/definitions/types';
 import { EntityNameField } from '@/editor/components/EntityNameField';
 import { EditorLayout } from '../../components/EditorLayout';
@@ -18,11 +18,7 @@ export function ChecklistEditor({ initialData }: { initialData?: Checklist }) {
   const { items, setItems, openItemDialog } = useChecklistItemDialog(
     initialData?.items
   );
-  const { register, setFieldValue, setValuesChangeListener } = formManager;
-
-  useEffect(() => {
-    setFieldValue('items', JSON.stringify(items));
-  }, [items, setFieldValue]);
+  const { register, setValuesChangeListener } = formManager;
 
   useEffect(() => {
     setValuesChangeListener(() => {
@@ -36,6 +32,9 @@ export function ChecklistEditor({ initialData }: { initialData?: Checklist }) {
       className="max-w-2xl"
       initialData={initialData}
       action={publishChecklist}
+      getValues={() => {
+        return { ...formManager.getValues(), items };
+      }}
       formManager={formManager}
     >
       <EntityNameField
@@ -43,8 +42,6 @@ export function ChecklistEditor({ initialData }: { initialData?: Checklist }) {
         register={register}
         defaultValue={initialData?.name}
       />
-
-      <HiddenField controller={register('items')} />
 
       <div className="py-4">
         {!items.length && (
