@@ -40,7 +40,7 @@ export function RsvpResponseForm({
           <span className="font-semibold">{rsvp.code}</span>
         </div>
       )}
-      <HiddenField controller={register('response')} />
+      <HiddenField defaultValue={response} controller={register('response')} />
       <ButtonGroup
         value={response}
         className="w-full"

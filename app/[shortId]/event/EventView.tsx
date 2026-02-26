@@ -1,5 +1,6 @@
 import { MarkdownViewer } from '@/component/MarkdownViewer';
 import { Event } from '@/definitions/types';
+import { RsvpListButton } from '@/[shortId]/event/RsvpListButton';
 import { RsvpButton } from './RsvpButton';
 import { StartTimeAndEndTime } from './StartTimeAndEndTime';
 
@@ -31,6 +32,7 @@ export function EventView({
         {rsvpDeadline && (
           <RsvpButton shortId={shortId} rsvpDeadline={rsvpDeadline} />
         )}
+        <RsvpListButton className="mt-4 justify-self-end" shortId={shortId} />
       </div>
 
       {description && (
