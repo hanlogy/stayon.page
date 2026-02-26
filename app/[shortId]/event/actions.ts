@@ -69,3 +69,12 @@ export async function searchRsvp({
 
   return toActionSuccess(item);
 }
+
+export async function fetchRsvpList(
+  shortId: string
+): Promise<ActionResponse<EventRsvp[]>> {
+  const helper = new DBEventRsvpHelper();
+
+  const items = await helper.getItems({ shortId });
+  return toActionSuccess(items);
+}

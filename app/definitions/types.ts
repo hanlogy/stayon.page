@@ -2,6 +2,7 @@ import {
   accessTypes,
   eventTypes,
   expiresAfterOptions,
+  pollResultsVisibilities,
   rsvpResponses,
   rsvpVisibilities,
   shareableEntityNames,
@@ -14,6 +15,8 @@ export type ExpiresAfterValue = (typeof expiresAfterOptions)[number];
 export type EventType = (typeof eventTypes)[number];
 export type RsvpVisibility = (typeof rsvpVisibilities)[number];
 export type RsvpResponse = (typeof rsvpResponses)[number];
+
+export type PollResultsVisibility = (typeof pollResultsVisibilities)[number];
 
 export type YesOrNo = 'yes' | 'no';
 
@@ -60,6 +63,40 @@ export interface EventRsvp {
   readonly guestCount?: number;
 }
 
+// Poll
+export interface Poll extends ShareableCommon {
+  readonly note?: string;
+  readonly resultsVisibility: PollResultsVisibility;
+  readonly closesAt?: string;
+  readonly questions: readonly PollQuestion[];
+}
+
+export interface PollQuestion {
+  readonly pollQuestionId: string;
+  readonly title: string;
+  readonly isMultiple: boolean;
+  readonly isRequired: boolean;
+  readonly options: PollQuestionOption[];
+}
+
+export interface PollQuestionOption {
+  readonly pollQuestionOptionId: string;
+  readonly label: string;
+}
+
+export interface PollVote {
+  readonly shortId: string;
+  readonly code: string;
+  readonly name?: string;
+  readonly answers: PollVoteAnswer[];
+}
+
+export interface PollVoteAnswer {
+  readonly pollQuestionId: string;
+  readonly optionIds: string[];
+}
+
+// Action response
 export interface ActionSuccess<DataT = undefined> {
   readonly success: true;
   readonly data: DataT;

@@ -8,10 +8,9 @@ import { Event } from '@/definitions/types';
 import { EditorLayout } from '@/editor/components/EditorLayout';
 import { EntityNameField } from '@/editor/components/EntityNameField';
 import { safeParseField, safeParseFields } from '@/helpers/schemaHelpers';
+import { normalizeDateTime, transformDateTime } from '../../helpers';
 import { DateTimeFieldToggle } from './DateTimeFieldToggle';
-import { RsvpListButton } from './RsvpListButton';
 import { EventFormData, publishEvent } from './actions';
-import { normalizeDateTime, transformDateTime } from './helpers';
 import { startTimeSchema, timeFieldsSchema } from './schema';
 
 export function EventEditor({ initialData }: { initialData?: Event }) {
@@ -57,15 +56,8 @@ export function EventEditor({ initialData }: { initialData?: Event }) {
       className="mx-auto max-w-2xl space-y-4"
       initialData={initialData}
       action={publishEvent}
+      getValues={() => formManager.getValues()}
       formManager={formManager}
-      topbar={
-        initialData?.shortId &&
-        initialData.rsvpDeadline && (
-          <div className="flex-center mt-2">
-            <RsvpListButton shortId={initialData.shortId} />
-          </div>
-        )
-      }
     >
       <div className="space-y-6">
         <EntityNameField

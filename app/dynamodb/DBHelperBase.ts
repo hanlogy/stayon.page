@@ -20,4 +20,23 @@ export abstract class DBHelperBase {
 
     return new HelperClass({ db: this.db });
   }
+
+  protected async generateCode(
+    shortId: string,
+    checkExist: (code: string) => Promise<boolean>,
+    retryCount: number = 0
+  ): Promise<string> {
+    if (retryCount > 5) {
+      throw new Error('Faild to generate code');
+    }
+
+    const code = Math.floor(Math.random() * 1_000_000)
+      .toString()
+      .padStart(6, '0');
+
+    if (await checkExist(code)) {
+      return this.generateCode(shortId, checkExist, retryCount++);
+    }
+    return code;
+  }
 }

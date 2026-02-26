@@ -17,19 +17,19 @@ const options = [
   {
     name: 'Poll',
     icon: <CircleQuestionMarkIcon />,
-    description: 'Ask a question, collect votes.',
+    description: 'Ask one or more questions, collect votes.',
     path: 'poll',
   },
   {
     name: 'Event',
     icon: <BalloonIcon />,
-    description: 'Share details and get RSVPs.',
+    description: 'Share details and collect RSVPs.',
     path: 'event',
   },
   {
     name: 'Time slots',
     icon: <CalendarClockIcon />,
-    description: 'Offer slots, others pick one.',
+    description: 'Propose times, others pick what works.',
     path: 'time-slots',
   },
 ] as const;

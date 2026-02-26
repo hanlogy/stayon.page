@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 import { CloseDialogFn, useDialog } from '@hanlogy/react-web-ui';
 import clsx from 'clsx';
@@ -7,12 +9,18 @@ import { TextButton } from '@/component/buttons';
 import { EventRsvp, RsvpResponse } from '@/definitions/types';
 import { fetchRsvpList } from './actions';
 
-export function RsvpListButton({ shortId }: { shortId: string }) {
+export function RsvpListButton({
+  shortId,
+  className,
+}: {
+  shortId: string;
+  className?: string;
+}) {
   const { openDialog } = useDialog();
 
   return (
     <button
-      className="flex items-center"
+      className={clsx('flex-center', className)}
       onClick={() => {
         openDialog(({ closeDialog }) => (
           <RsvpListDialog closeDialog={closeDialog} shortId={shortId} />

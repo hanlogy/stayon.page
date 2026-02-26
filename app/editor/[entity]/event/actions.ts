@@ -1,12 +1,11 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { ActionResponse, Event, EventRsvp } from '@/definitions/types';
+import { ActionResponse, Event } from '@/definitions/types';
 import { DBEventHelper } from '@/dynamodb/DBEventHelper';
-import { DBEventRsvpHelper } from '@/dynamodb/DBEventRsvpHelper';
 import { parseWithSchema } from '@/editor/schema/helpers';
 import { SettingsFormData } from '@/editor/types';
-import { toActionFailure, toActionSuccess } from '@/helpers/action';
+import { toActionFailure } from '@/helpers/action';
 import { eventSchema } from './schema';
 
 export type EventFormData = SettingsFormData &
@@ -22,11 +21,13 @@ export type EventFormData = SettingsFormData &
     | 'rsvpVisibility'
   >;
 
+export type EventActionData = Partial<EventFormData>;
+
 export async function publishEvent(
   shortId: string | undefined,
-  formData: Partial<EventFormData>
+  actionData: EventActionData
 ): Promise<ActionResponse> {
-  const { error, data } = parseWithSchema(eventSchema, formData);
+  const { error, data } = parseWithSchema(eventSchema, actionData);
 
   if (error || !data) {
     return toActionFailure({
@@ -49,13 +50,4 @@ export async function publishEvent(
   }
 
   redirect(`/${shortId}`);
-}
-
-export async function fetchRsvpList(
-  shortId: string
-): Promise<ActionResponse<EventRsvp[]>> {
-  const helper = new DBEventRsvpHelper();
-
-  const items = await helper.getItems({ shortId });
-  return toActionSuccess(items);
 }
