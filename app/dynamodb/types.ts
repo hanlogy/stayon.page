@@ -3,6 +3,7 @@ import {
   Event,
   EventRsvp,
   Poll,
+  PollVote,
   ShareableCommon,
 } from '@/definitions/types';
 
@@ -74,6 +75,8 @@ export type ShareableEntity<T extends ShareableCommon = ShareableCommon> = T & {
   readonly viewPasscodeVersion?: number;
   readonly adminPasscodeVersion?: number;
 };
+
+export type VoteCreateFields = Omit<PollVote, 'code'>;
 
 export interface DBShareableRepository<T extends ShareableCommon> {
   getItem: ({ shortId }: { shortId: string }) => Promise<T | undefined>;

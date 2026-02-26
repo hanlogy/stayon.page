@@ -1,12 +1,12 @@
-import { EventRsvp } from '@/definitions/types';
+import { PollVote } from '@/definitions/types';
 import { DBHelperBase } from './DBHelperBase';
-import { RsvpCreateFields, RsvpUpdateFields } from './types';
+import { VoteCreateFields } from './types';
 
-export class DBEventRsvpHelper extends DBHelperBase {
+export class DBPollVoteHelper extends DBHelperBase {
   skPrefix = '01#';
 
   private buildPk({ shortId }: { shortId: string }) {
-    return this.db.buildKey('EVENT_RSVP', shortId);
+    return this.db.buildKey('POLL_VOTE', shortId);
   }
 
   private buildSk({ code }: { code: string }) {
@@ -23,7 +23,7 @@ export class DBEventRsvpHelper extends DBHelperBase {
   }: {
     shortId: string;
     code: string;
-  }): Promise<EventRsvp | undefined> {
+  }): Promise<PollVote | undefined> {
     const result = await this.db.get({
       keys: this.buildKeys({ code, shortId }),
     });
@@ -32,18 +32,12 @@ export class DBEventRsvpHelper extends DBHelperBase {
       return undefined;
     }
 
-    const { response, name, guestCount } = result.item;
+    const { name, answers } = result.item;
 
-    return {
-      shortId,
-      code,
-      response,
-      name,
-      guestCount,
-    };
+    return { shortId, code, name, answers };
   }
 
-  async getItems({ shortId }: { shortId: string }): Promise<EventRsvp[]> {
+  async getItems({ shortId }: { shortId: string }): Promise<PollVote[]> {
     const { items } = await this.db.query({
       keyConditions: [
         { attribute: 'pk', value: this.buildPk({ shortId }) },
@@ -51,18 +45,17 @@ export class DBEventRsvpHelper extends DBHelperBase {
       ],
     });
 
-    return items.map(({ response, name, guestCount, code }) => {
+    return items.map(({ name, answers, code }) => {
       return {
         shortId,
         code,
-        response,
         name,
-        guestCount,
+        answers,
       };
     });
   }
 
-  async createItem({ shortId, name, response, guestCount }: RsvpCreateFields) {
+  async createItem({ shortId, name, answers }: VoteCreateFields) {
     const code = await this.generateCode(
       shortId,
       async (code) => !!(await this.getItem({ shortId, code }))
@@ -71,8 +64,7 @@ export class DBEventRsvpHelper extends DBHelperBase {
     const item = {
       shortId,
       name,
-      response,
-      guestCount,
+      answers,
       code,
     };
 
@@ -82,36 +74,5 @@ export class DBEventRsvpHelper extends DBHelperBase {
     });
 
     return item;
-  }
-
-  async updateItem({
-    code,
-    shortId,
-    name,
-    response,
-    guestCount,
-  }: RsvpUpdateFields) {
-    const setAttributes = {
-      name,
-      response,
-      guestCount,
-    };
-    const removeAttributes: string[] = [];
-
-    if (response === 'notGoing') {
-      removeAttributes.push('guestCount');
-    }
-
-    await this.db.update({
-      keys: this.buildKeys({ shortId, code }),
-      setAttributes,
-      removeAttributes,
-    });
-
-    return {
-      code,
-      shortId,
-      ...setAttributes,
-    };
   }
 }

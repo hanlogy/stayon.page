@@ -21,6 +21,8 @@ export function VoteDialog({
 }) {
   const { register, validate, getValues } = useForm<FormData>();
   const [error, setError] = useState<string | undefined>();
+  const [isSucess, setIsSucess] = useState<boolean>(false);
+  const [isPending, setIsPending] = useState<boolean>(false);
 
   const handleSubmit = async () => {
     if (!validate()) {
@@ -32,33 +34,45 @@ export function VoteDialog({
       return;
     }
 
-    const { error } = await saveVote({ shortId, answers, name });
+    setIsPending(true);
+    const { error } = await saveVote({ shortId }, { answers, name });
+    setIsPending(false);
     if (error) {
       setError('Something is wrong');
+      return;
     }
+    setIsSucess(true);
   };
 
   return (
     <Dialog
-      title="Confirm to vote"
+      title={isSucess ? 'Success' : 'Confirm to vote'}
       actions={
         <>
-          <FilledButton onClick={handleSubmit}>Submit</FilledButton>
+          {!isSucess && (
+            <FilledButton disabled={isPending} onClick={handleSubmit}>
+              Submit
+            </FilledButton>
+          )}
           <TextButton onClick={() => closeDialog()}>Close</TextButton>
         </>
       }
     >
-      <TextField
-        autoComplete="off"
-        label="Your name"
-        controller={register('name', {
-          validator: ({ name }) => {
-            if (!name?.trim()) {
-              return 'Name is required';
-            }
-          },
-        })}
-      />
+      {isSucess ? (
+        <div>Vote submitted.</div>
+      ) : (
+        <TextField
+          autoComplete="off"
+          label="Your name"
+          controller={register('name', {
+            validator: ({ name }) => {
+              if (!name?.trim()) {
+                return 'Name is required';
+              }
+            },
+          })}
+        />
+      )}
       {error && (
         <div className="pt-6 pb-2 text-center text-red-600">{error}</div>
       )}
