@@ -23,7 +23,6 @@ export function usePollQuestionDialog(initialData?: readonly PollQuestion[]) {
     if (!result) {
       return;
     }
-    console.log(result);
 
     if (question) {
       setQuestions((prev) =>

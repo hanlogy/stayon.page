@@ -26,7 +26,6 @@ export function QuestionEditorDialog({
       isRequired = false,
       options = [],
     } = initialData ?? {};
-    console.log(options);
 
     return {
       title,

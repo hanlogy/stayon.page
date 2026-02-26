@@ -53,7 +53,10 @@ export function PollEditor({ initialData }: { initialData?: Poll }) {
       className="mx-auto max-w-2xl space-y-4"
       initialData={initialData}
       action={publishPoll}
-      getValues={() => ({ ...formManager.getValues(), questions })}
+      getValues={() => ({
+        ...formManager.getValues(),
+        questions: questions.filter((e) => !!e.title),
+      })}
       formManager={formManager}
     >
       <div className="space-y-6">

@@ -28,7 +28,6 @@ export async function publishPoll(
   { questions, ...formData }: PollActionData
 ): Promise<ActionResponse> {
   const { error, data } = parseWithSchema(pollSchema, formData);
-  console.log(error);
   if (error || !data) {
     return toActionFailure({
       message: 'Invalid data',
