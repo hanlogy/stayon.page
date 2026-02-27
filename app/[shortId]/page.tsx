@@ -11,16 +11,20 @@ import { ShareButton } from './components/ShareButton';
 import { EventView } from './event/EventView';
 import { PollView } from './poll/PollView';
 
-export default async function SharingPage({ params }: PageProps<'/[shortId]'>) {
+export default async function SharingPage({
+  params,
+  searchParams,
+}: PageProps<'/[shortId]'>) {
   const maybeShortId = (await params).shortId;
   const shortId = normalizeShortId(maybeShortId);
+  const searchRecord = await searchParams;
 
   if (!shortId) {
     return notFound();
   }
 
   const dbHelper = new DBShareableHelper();
-  const item = await dbHelper.getItem({ shortId });
+  const item = await dbHelper.getItem({ shortId, search: searchRecord });
   if (!item) {
     return notFound();
   }
@@ -47,7 +51,7 @@ export default async function SharingPage({ params }: PageProps<'/[shortId]'>) {
         }
       >
         <title>{item.name}</title>
-        {(() => {
+        {(async () => {
           switch (item.entity) {
             case 'checklist':
               // Checlist item is safe to cast.
@@ -56,7 +60,13 @@ export default async function SharingPage({ params }: PageProps<'/[shortId]'>) {
               // Event item is safe to cast.
               return <EventView item={item as Event} />;
             case 'poll':
-              return <PollView item={item as Poll} />;
+              const view = searchRecord.view;
+              return (
+                <PollView
+                  currentView={typeof view === 'string' ? view : 'questions'}
+                  item={item as Poll}
+                />
+              );
           }
 
           return <div className="text-center">Ready soon</div>;

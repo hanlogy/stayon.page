@@ -130,6 +130,7 @@ can still access the content and clone it into a new shareable entity.
 | resultsVisibility | always / afterSubmit / afterClose |
 | closesAt          | string(ISO)                       |
 | questions         | PollQuestion[]                    |
+| isClosed          | boolean                           |
 
 ### PollQuestion object
 

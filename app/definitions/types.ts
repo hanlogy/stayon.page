@@ -69,6 +69,7 @@ export interface Poll extends ShareableCommon {
   readonly resultsVisibility: PollResultsVisibility;
   readonly closesAt?: string;
   readonly questions: readonly PollQuestion[];
+  readonly isClosed: boolean;
 }
 
 export interface PollQuestion {

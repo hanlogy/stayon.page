@@ -20,6 +20,7 @@ export class DBPollHelper
   async createItem(fields: PollCreateFields): Promise<Poll> {
     const result = await this.shareableHelper.createItem({
       ...fields,
+      isClosed: false,
       entity: ENTITY_NAME,
     });
 
