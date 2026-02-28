@@ -1,4 +1,8 @@
-import { ActionFailure, ActionSuccess } from '@/definitions/types';
+import type {
+  ActionFailure,
+  ActionSuccess,
+  ErrorCode,
+} from '@/definitions/ActionResponse';
 
 export function toActionSuccess(): ActionSuccess<undefined>;
 export function toActionSuccess<DataT>(data: DataT): ActionSuccess<DataT>;
@@ -13,7 +17,7 @@ export function toActionSuccess<DataT>(data?: DataT) {
 export function toActionFailure({
   code = 'unknown',
   message,
-}: { code?: string; message?: string | undefined } = {}): ActionFailure {
+}: { code?: ErrorCode; message?: string | undefined } = {}): ActionFailure {
   return {
     success: false,
     error: { code, message },
