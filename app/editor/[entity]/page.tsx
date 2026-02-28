@@ -1,11 +1,13 @@
-import { ComponentType } from 'react';
+import { ComponentType, ReactNode } from 'react';
 import { DialogProvider } from '@hanlogy/react-web-ui';
 import { FlexCenter } from '@hanlogy/react-web-ui';
 import { kebabToCamel } from '@hanlogy/ts-lib';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getShareableItem } from '@/actions/getShareableItem';
-import { AccessGuard, AccessGuardAttributes } from '@/component/AccessGuard';
+import { AuthForm } from '@/component/AuthForm/AuthForm';
+import { Layout } from '@/component/Layout';
+import { NoAdminPasscode } from '@/component/NoAdminPasscode';
 import { shareableEntityNames } from '@/definitions/constants';
 import { Checklist, Event, Poll, ShareableCommon } from '@/definitions/types';
 import { ShareableEntityStripped } from '@/dynamodb/types';
@@ -39,38 +41,43 @@ export default async function EditorPage({
     }>
   ) => {
     let item: ShareableEntityStripped<DataT> | undefined = undefined;
-    let accessGuardAttributes: AccessGuardAttributes | undefined;
 
     if (typeof shortIdLike === 'string') {
       const { data, error } = await getShareableItem<DataT>({
         shortId: shortIdLike,
+        accessType: 'adminAccess',
       });
 
       if (error) {
-        if (error.code === 'notFound') {
+        const { code: errorCode, data: errorData } = error;
+        if (errorCode === 'notFound') {
           return notFound();
+        }
+
+        if (errorCode === 'unauthorized') {
+          let accessDeniedView: ReactNode;
+          if (errorData && errorData.hasAdminPassword === false) {
+            accessDeniedView = <NoAdminPasscode shortId={errorData.shortId} />;
+          } else {
+            accessDeniedView = (
+              <AuthForm type="adminAccess" shortId={shortIdLike} />
+            );
+          }
+
+          return <Layout>{accessDeniedView}</Layout>;
         }
 
         throw new Error('unknown error');
       }
       item = data;
-
-      accessGuardAttributes = {
-        type: 'adminAccess' as const,
-        shortId: item.shortId,
-        viewPasscodeVersion: item.viewPasscodeVersion,
-        adminPasscodeVersion: item.adminPasscodeVersion,
-      };
     }
 
     return (
-      <AccessGuard attributes={accessGuardAttributes}>
-        <DialogProvider>
-          <EditorContextProvider>
-            <Editor initialData={item} />
-          </EditorContextProvider>
-        </DialogProvider>
-      </AccessGuard>
+      <DialogProvider>
+        <EditorContextProvider>
+          <Editor initialData={item} />
+        </EditorContextProvider>
+      </DialogProvider>
     );
   };
 

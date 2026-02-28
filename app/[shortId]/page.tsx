@@ -1,7 +1,7 @@
 import { EditIcon } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import { getShareableItem } from '@/actions/getShareableItem';
-import { AccessGuard } from '@/component/AccessGuard';
+import { AuthForm } from '@/component/AuthForm/AuthForm';
 import { Layout } from '@/component/Layout';
 import { LazyLink } from '@/component/LazyLink';
 import type { Checklist, Event, Poll } from '@/definitions';
@@ -23,60 +23,62 @@ export default async function SharingPage({
     return notFound();
   }
 
-  const { data: item, error } = await getShareableItem({ shortId });
+  const { data: item, error } = await getShareableItem({
+    shortId,
+    accessType: 'viewAccess',
+  });
   if (error) {
-    if (error.code == 'notFound') {
+    if (error.code === 'notFound') {
       return notFound();
+    }
+
+    if (error.code === 'unauthorized') {
+      return (
+        <Layout>
+          <AuthForm type="viewAccess" shortId={shortId} />
+        </Layout>
+      );
     }
 
     // TODO: More error handlers
     throw new Error('Unhandled error');
   }
 
-  const { viewPasscodeVersion, adminPasscodeVersion, entity } = item;
+  const { entity } = item;
 
   return (
-    <AccessGuard
-      attributes={{
-        type: 'viewAccess',
-        shortId,
-        viewPasscodeVersion,
-        adminPasscodeVersion,
-      }}
+    <Layout
+      leading="home"
+      trailing={
+        <div className="flex items-center space-x-4">
+          <ShareButton shortId={shortId} />
+          <LazyLink href={`/editor/${entity}?id=${shortId}`}>
+            <EditIcon size={18} />
+          </LazyLink>
+        </div>
+      }
     >
-      <Layout
-        leading="home"
-        trailing={
-          <div className="flex items-center space-x-4">
-            <ShareButton shortId={shortId} />
-            <LazyLink href={`/editor/${entity}?id=${shortId}`}>
-              <EditIcon size={18} />
-            </LazyLink>
-          </div>
+      <title>{item.name}</title>
+      {(async () => {
+        switch (item.entity) {
+          case 'checklist':
+            // Checlist item is safe to cast.
+            return <ChecklistView item={item as Checklist} />;
+          case 'event':
+            // Event item is safe to cast.
+            return <EventView item={item as Event} />;
+          case 'poll':
+            const view = searchRecord.view;
+            return (
+              <PollView
+                currentView={typeof view === 'string' ? view : 'questions'}
+                item={item as Poll}
+              />
+            );
         }
-      >
-        <title>{item.name}</title>
-        {(async () => {
-          switch (item.entity) {
-            case 'checklist':
-              // Checlist item is safe to cast.
-              return <ChecklistView item={item as Checklist} />;
-            case 'event':
-              // Event item is safe to cast.
-              return <EventView item={item as Event} />;
-            case 'poll':
-              const view = searchRecord.view;
-              return (
-                <PollView
-                  currentView={typeof view === 'string' ? view : 'questions'}
-                  item={item as Poll}
-                />
-              );
-          }
 
-          return <div className="text-center">Ready soon</div>;
-        })()}
-      </Layout>
-    </AccessGuard>
+        return <div className="text-center">Ready soon</div>;
+      })()}
+    </Layout>
   );
 }
