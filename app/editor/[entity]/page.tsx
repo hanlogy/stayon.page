@@ -4,12 +4,11 @@ import { FlexCenter } from '@hanlogy/react-web-ui';
 import { kebabToCamel } from '@hanlogy/ts-lib';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { getShareableItem } from '@/actions/getShareableItem';
 import { AccessGuard, AccessGuardAttributes } from '@/component/AccessGuard';
-import { type ShareableCommon, shareableEntityNames } from '@/definitions';
-import { DBChecklistHelper } from '@/dynamodb/DBChecklistHelper';
-import { DBEventHelper } from '@/dynamodb/DBEventHelper';
-import { DBPollHelper } from '@/dynamodb/DBPollHelper';
-import { DBShareableRepository } from '@/dynamodb/types';
+import { shareableEntityNames } from '@/definitions/constants';
+import { Checklist, Event, Poll, ShareableCommon } from '@/definitions/types';
+import { ShareableEntityStripped } from '@/dynamodb/types';
 import { EditorContextProvider } from '../state/provider';
 import { ChecklistEditor } from './checklist/ChecklistEditor';
 import { EventEditor } from './event/EventEditor';
@@ -35,17 +34,26 @@ export default async function EditorPage({
   const shortIdLike = (await searchParams).id;
 
   const createEditor = async <DataT extends ShareableCommon>(
-    Helper: new () => DBShareableRepository<DataT>,
-    Editor: ComponentType<{ initialData: DataT | undefined }>
+    Editor: ComponentType<{
+      initialData: ShareableEntityStripped<DataT> | undefined;
+    }>
   ) => {
-    let item: DataT | undefined = undefined;
+    let item: ShareableEntityStripped<DataT> | undefined = undefined;
     let accessGuardAttributes: AccessGuardAttributes | undefined;
 
     if (typeof shortIdLike === 'string') {
-      item = await new Helper().getItem({ shortId: shortIdLike });
-      if (!item) {
-        return notFound();
+      const { data, error } = await getShareableItem<DataT>({
+        shortId: shortIdLike,
+      });
+
+      if (error) {
+        if (error.code === 'notFound') {
+          return notFound();
+        }
+
+        throw new Error('unknown error');
       }
+      item = data;
 
       accessGuardAttributes = {
         type: 'adminAccess' as const,
@@ -68,13 +76,13 @@ export default async function EditorPage({
 
   switch (entityName) {
     case 'checklist':
-      return await createEditor(DBChecklistHelper, ChecklistEditor);
+      return await createEditor<Checklist>(ChecklistEditor);
 
     case 'event':
-      return await createEditor(DBEventHelper, EventEditor);
+      return await createEditor<Event>(EventEditor);
 
     case 'poll':
-      return await createEditor(DBPollHelper, PollEditor);
+      return await createEditor<Poll>(PollEditor);
 
     default:
       return (

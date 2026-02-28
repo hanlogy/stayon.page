@@ -1,18 +1,11 @@
 import type { Event, ShareableEntityName } from '@/definitions';
 import { DBHelperBase } from './DBHelperBase';
 import { DBShareableHelper } from './DBShareableHelper';
-import type {
-  DBShareableRepository,
-  EventCreateFields,
-  EventUpdateFields,
-} from './types';
+import type { EventCreateFields, EventUpdateFields } from './types';
 
 const ENTITY_NAME: ShareableEntityName = 'event';
 
-export class DBEventHelper
-  extends DBHelperBase
-  implements DBShareableRepository<Event>
-{
+export class DBEventHelper extends DBHelperBase {
   private get shareableHelper() {
     return this.createHelper(DBShareableHelper);
   }
@@ -38,9 +31,5 @@ export class DBEventHelper
       },
       { removeAttributes }
     );
-  }
-
-  async getItem({ shortId }: { shortId: string }): Promise<Event | undefined> {
-    return this.shareableHelper.getItem<Event>({ shortId });
   }
 }

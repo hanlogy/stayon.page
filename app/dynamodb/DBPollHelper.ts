@@ -1,18 +1,11 @@
 import type { Poll, ShareableEntityName } from '@/definitions/types';
 import { DBHelperBase } from './DBHelperBase';
 import { DBShareableHelper } from './DBShareableHelper';
-import type {
-  DBShareableRepository,
-  PollCreateFields,
-  PollUpdateFields,
-} from './types';
+import type { PollCreateFields, PollUpdateFields } from './types';
 
 const ENTITY_NAME: ShareableEntityName = 'poll';
 
-export class DBPollHelper
-  extends DBHelperBase
-  implements DBShareableRepository<Poll>
-{
+export class DBPollHelper extends DBHelperBase {
   private get shareableHelper() {
     return this.createHelper(DBShareableHelper);
   }
@@ -39,9 +32,5 @@ export class DBPollHelper
       },
       { removeAttributes }
     );
-  }
-
-  async getItem({ shortId }: { shortId: string }): Promise<Poll | undefined> {
-    return this.shareableHelper.getItem<Poll>({ shortId });
   }
 }

@@ -96,7 +96,3 @@ export type ShareableEntityStripped<
 > = Omit<ShareableEntity<T>, 'viewPasscode' | 'adminPasscode' | 'pk' | 'sk'>;
 
 export type VoteCreateFields = Omit<PollVote, 'code'>;
-
-export interface DBShareableRepository<T extends ShareableCommon> {
-  getItem: ({ shortId }: { shortId: string }) => Promise<T | undefined>;
-}
