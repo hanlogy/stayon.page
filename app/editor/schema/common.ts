@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { expiresAfterOptions } from '@/definitions/constants';
+import { expiresAfterOptions } from '@/definitions';
 
 export const expiresAfterSchema = z
   .enum(expiresAfterOptions)

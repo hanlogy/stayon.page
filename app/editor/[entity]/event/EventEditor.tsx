@@ -3,8 +3,7 @@
 import { useMemo, useState } from 'react';
 import { useForm } from '@hanlogy/react-web-ui';
 import { SelectField, TextareaField, TextField } from '@/component/form/fields';
-import { eventTypes } from '@/definitions/constants';
-import { Event } from '@/definitions/types';
+import { type Event, eventTypes } from '@/definitions';
 import { EditorLayout } from '@/editor/components/EditorLayout';
 import { EntityNameField } from '@/editor/components/EntityNameField';
 import { safeParseField, safeParseFields } from '@/helpers/schemaHelpers';

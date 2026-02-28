@@ -1,4 +1,4 @@
-import { PollVote } from '@/definitions/types';
+import type { PollVote } from '@/definitions';
 import { DBHelperBase } from './DBHelperBase';
 import { VoteCreateFields } from './types';
 

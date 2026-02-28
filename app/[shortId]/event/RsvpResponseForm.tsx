@@ -8,7 +8,7 @@ import {
 } from '@hanlogy/react-web-ui';
 import { CheckIcon } from 'lucide-react';
 import { TextField } from '@/component/form/fields';
-import { EventRsvp, RsvpResponse } from '@/definitions/types';
+import type { EventRsvp, RsvpResponse } from '@/definitions';
 import { safeParseField } from '@/helpers/schemaHelpers';
 import type { RsvpFormData } from './actions';
 import { rsvpNameSchema } from './schema';

@@ -1,11 +1,11 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import {
+import type {
   ActionResponse,
   PollQuestion,
   PollResultsVisibility,
-} from '@/definitions/types';
+} from '@/definitions';
 import { DBPollHelper } from '@/dynamodb/DBPollHelper';
 import { parseWithSchema } from '@/editor/schema/helpers';
 import { SettingsFormData } from '@/editor/types';

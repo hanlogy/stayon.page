@@ -6,7 +6,7 @@ import {
   RadioBlankIcon,
   RadioCheckedIcon,
 } from '@/component/icons';
-import { PollQuestion } from '@/definitions/types';
+import type { PollQuestion } from '@/definitions';
 
 export function QuestionCard({
   error,

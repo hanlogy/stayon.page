@@ -9,7 +9,7 @@ import { EyeIcon } from 'lucide-react';
 import { Layout } from '@/component/Layout';
 import { LazyLink } from '@/component/LazyLink';
 import { FilledButton } from '@/component/buttons';
-import { ActionResponse, ShareableCommon } from '@/definitions/types';
+import type { ActionResponse, ShareableCommon } from '@/definitions';
 import { formId } from '../constants';
 import { useEditorContext } from '../state/hooks';
 import { SettingsFormData } from '../types';

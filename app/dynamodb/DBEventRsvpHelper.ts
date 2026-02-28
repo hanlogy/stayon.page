@@ -1,4 +1,4 @@
-import { EventRsvp } from '@/definitions/types';
+import type { EventRsvp } from '@/definitions';
 import { DBHelperBase } from './DBHelperBase';
 import { RsvpCreateFields, RsvpUpdateFields } from './types';
 

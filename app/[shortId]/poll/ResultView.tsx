@@ -1,4 +1,4 @@
-import { PollResultsVisibility } from '@/definitions/types';
+import type { PollResultsVisibility } from '@/definitions';
 
 export function ResultView({
   resultsVisibility,

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDialog } from '@hanlogy/react-web-ui';
-import { PollQuestion } from '@/definitions/types';
+import { type PollQuestion } from '@/definitions';
 import { QuestionEditorDialog } from './QuestionEditorDialog';
 
 export function usePollQuestionDialog(initialData?: readonly PollQuestion[]) {

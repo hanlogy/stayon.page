@@ -1,11 +1,11 @@
-import {
+import type {
   Checklist,
   Event,
   EventRsvp,
   Poll,
   PollVote,
   ShareableCommon,
-} from '@/definitions/types';
+} from '@/definitions';
 
 // The user provided fields.
 export type ShareableCreateFields = Pick<

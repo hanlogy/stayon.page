@@ -1,6 +1,6 @@
 import { RsvpListButton } from '@/[shortId]/event/RsvpListButton';
 import { MarkdownViewer } from '@/component/MarkdownViewer';
-import { Event } from '@/definitions/types';
+import type { Event } from '@/definitions';
 import { RsvpButton } from './RsvpButton';
 import { StartTimeAndEndTime } from './StartTimeAndEndTime';
 

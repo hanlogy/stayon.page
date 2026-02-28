@@ -1,7 +1,7 @@
 'use server';
 
 import { refresh } from 'next/cache';
-import { AccessType, ActionResponse } from '@/definitions/types';
+import type { AccessType, ActionResponse } from '@/definitions';
 import { DBShareableHelper } from '@/dynamodb/DBShareableHelper';
 import { toActionFailure, toActionSuccess } from '@/helpers/action';
 import { grantAccess } from '@/lib/auth/grantAccess';

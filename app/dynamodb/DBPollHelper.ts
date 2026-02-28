@@ -1,4 +1,4 @@
-import { Poll, ShareableEntityName } from '@/definitions/types';
+import type { Poll, ShareableEntityName } from '@/definitions/types';
 import { DBHelperBase } from './DBHelperBase';
 import { DBShareableHelper } from './DBShareableHelper';
 import type {

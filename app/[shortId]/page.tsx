@@ -4,7 +4,7 @@ import { getShareableItem } from '@/actions/getShareableItem';
 import { AccessGuard } from '@/component/AccessGuard';
 import { Layout } from '@/component/Layout';
 import { LazyLink } from '@/component/LazyLink';
-import type { Checklist, Event, Poll } from '@/definitions/types';
+import type { Checklist, Event, Poll } from '@/definitions';
 import { normalizeShortId } from '@/helpers/shortId';
 import { ChecklistView } from './checklist/ChecklistView';
 import { ShareButton } from './components/ShareButton';

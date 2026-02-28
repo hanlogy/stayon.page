@@ -3,7 +3,7 @@ import { CloseDialogFn, useForm } from '@hanlogy/react-web-ui';
 import { Dialog } from '@/component/Dialog';
 import { FilledButton, TextButton } from '@/component/buttons';
 import { TextField } from '@/component/form/fields';
-import { PollVoteAnswer } from '@/definitions/types';
+import { PollVoteAnswer } from '@/definitions';
 import { saveVote } from './actions';
 
 interface FormData {

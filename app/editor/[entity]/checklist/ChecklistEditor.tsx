@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useForm } from '@hanlogy/react-web-ui';
-import { Checklist } from '@/definitions/types';
+import type { Checklist } from '@/definitions';
 import { EntityNameField } from '@/editor/components/EntityNameField';
 import { EditorLayout } from '../../components/EditorLayout';
 import {

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { rsvpResponses } from '@/definitions/constants';
+import { rsvpResponses } from '@/definitions';
 
 export const rsvpNameSchema = z.string().trim().min(1, 'Name is required');
 

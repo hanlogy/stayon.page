@@ -3,8 +3,7 @@
 import { useMemo, useState } from 'react';
 import { useForm } from '@hanlogy/react-web-ui';
 import { SelectField, TextareaField, TextField } from '@/component/form/fields';
-import { pollResultsVisibilities } from '@/definitions/constants';
-import type { Poll } from '@/definitions/types';
+import { pollResultsVisibilities, type Poll } from '@/definitions';
 import { AddOrRemoveFieldToggle } from '@/editor/components/AddOrRemoveFieldToggle';
 import { EditorLayout } from '@/editor/components/EditorLayout';
 import { EntityNameField } from '@/editor/components/EntityNameField';

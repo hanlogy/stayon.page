@@ -1,6 +1,6 @@
 'use server';
 
-import { ActionResponse, EventRsvp, RsvpResponse } from '@/definitions/types';
+import type { ActionResponse, EventRsvp, RsvpResponse } from '@/definitions';
 import { DBEventRsvpHelper } from '@/dynamodb/DBEventRsvpHelper';
 import { toActionFailure, toActionSuccess } from '@/helpers/action';
 import { safeParseFields } from '@/helpers/schemaHelpers';

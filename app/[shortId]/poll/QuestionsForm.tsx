@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useDialog } from '@hanlogy/react-web-ui';
 import { FilledButton } from '@/component/buttons';
-import { PollQuestion, PollVoteAnswer } from '@/definitions/types';
+import type { PollQuestion, PollVoteAnswer } from '@/definitions';
 import { QuestionCard } from './QuestionCard';
 import { VoteDialog } from './VoteDialog';
 

@@ -1,5 +1,5 @@
 import { PropsWithChildren, ReactNode } from 'react';
-import { AccessType } from '@/definitions/types';
+import type { AccessType } from '@/definitions';
 import { checkAccess } from '@/lib/auth/checkAccess';
 import { AuthForm } from './AuthForm/AuthForm';
 import { Layout } from './Layout';

@@ -2,7 +2,7 @@
 
 import { IconButton } from '@hanlogy/react-web-ui';
 import { CheckBoxBlankIcon, CheckBoxCheckedIcon } from '@/component/icons';
-import { Checklist } from '@/definitions/types';
+import type { Checklist } from '@/definitions';
 import { useStateStore } from './useStateStore';
 
 export function ChecklistView({

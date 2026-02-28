@@ -1,4 +1,4 @@
-import { YesOrNo } from '@/definitions/types';
+import type { YesOrNo } from '@/definitions';
 
 export interface SettingsFormData {
   viewPasscode?: string;

@@ -1,7 +1,7 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { ActionResponse, Event } from '@/definitions/types';
+import { ActionResponse, Event } from '@/definitions';
 import { DBEventHelper } from '@/dynamodb/DBEventHelper';
 import { parseWithSchema } from '@/editor/schema/helpers';
 import { SettingsFormData } from '@/editor/types';

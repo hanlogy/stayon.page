@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { ChartPieIcon, CircleQuestionMarkIcon } from 'lucide-react';
 import { LazyLink } from '@/component/LazyLink';
-import type { Poll } from '@/definitions/types';
+import type { Poll } from '@/definitions';
 import { QuestionsForm } from './QuestionsForm';
 import { ResultView } from './ResultView';
 

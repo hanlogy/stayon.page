@@ -3,7 +3,7 @@ import { CloseDialogFn, useForm } from '@hanlogy/react-web-ui';
 import { Dialog } from '@/component/Dialog';
 import { FilledButton, TextButton } from '@/component/buttons';
 import { CheckboxField, TextField } from '@/component/form/fields';
-import { PollQuestion, PollQuestionOption } from '@/definitions/types';
+import type { PollQuestion, PollQuestionOption } from '@/definitions';
 import { QuestionOptionsForm } from './QuestionOptionsForm';
 
 interface FormData {

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { eventTypes } from '@/definitions/constants';
+import { eventTypes } from '@/definitions';
 
 export const startTimeSchema = z
   .string()

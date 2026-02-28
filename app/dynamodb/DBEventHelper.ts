@@ -1,4 +1,4 @@
-import { Event, ShareableEntityName } from '@/definitions/types';
+import type { Event, ShareableEntityName } from '@/definitions';
 import { DBHelperBase } from './DBHelperBase';
 import { DBShareableHelper } from './DBShareableHelper';
 import type {

@@ -1,4 +1,4 @@
-import { ShareableCommon } from '@/definitions/types';
+import type { ShareableCommon } from '@/definitions';
 import { formatShortId } from '@/helpers/shortId';
 import { DBHelperBase } from './DBHelperBase';
 import {

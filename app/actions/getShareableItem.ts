@@ -1,5 +1,4 @@
-import { ActionResponse } from '@/definitions/ActionResponse';
-import { AccessType, ShareableCommon } from '@/definitions/types';
+import { ActionResponse, AccessType, ShareableCommon } from '@/definitions';
 import { DBShareableHelper } from '@/dynamodb/DBShareableHelper';
 import { ShareableEntity } from '@/dynamodb/types';
 import { toActionFailure, toActionSuccess } from '@/helpers/action';
