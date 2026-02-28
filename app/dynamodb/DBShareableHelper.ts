@@ -151,8 +151,8 @@ export class DBShareableHelper extends DBHelperBase {
     const {
       pk: _pk,
       sk: _sk,
-      viewPasscode: _vp,
-      adminPasscode: _ap,
+      viewPasscode: _viewPasscode,
+      adminPasscode: _adminPasscode,
       ...rest
     } = item;
 

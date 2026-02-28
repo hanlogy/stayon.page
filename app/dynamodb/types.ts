@@ -72,8 +72,6 @@ export type ShareableEntity<T extends ShareableCommon = ShareableCommon> = T & {
   readonly sk: string;
   readonly viewPasscode?: string;
   readonly adminPasscode?: string;
-  readonly viewPasscodeVersion?: number;
-  readonly adminPasscodeVersion?: number;
 };
 
 export type VoteCreateFields = Omit<PollVote, 'code'>;
