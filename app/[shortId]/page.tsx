@@ -1,10 +1,10 @@
 import { EditIcon } from 'lucide-react';
 import { notFound } from 'next/navigation';
+import { getShareableItem } from '@/actions/getShareableItem';
 import { AccessGuard } from '@/component/AccessGuard';
 import { Layout } from '@/component/Layout';
 import { LazyLink } from '@/component/LazyLink';
 import type { Checklist, Event, Poll } from '@/definitions/types';
-import { DBShareableHelper } from '@/dynamodb/DBShareableHelper';
 import { normalizeShortId } from '@/helpers/shortId';
 import { ChecklistView } from './checklist/ChecklistView';
 import { ShareButton } from './components/ShareButton';
@@ -23,11 +23,16 @@ export default async function SharingPage({
     return notFound();
   }
 
-  const dbHelper = new DBShareableHelper();
-  const item = await dbHelper.getItem({ shortId, search: searchRecord });
-  if (!item) {
-    return notFound();
+  const { data: item, error } = await getShareableItem({ shortId });
+  if (error) {
+    if (error.code == 'notFound') {
+      return notFound();
+    }
+
+    // TODO: More error handlers
+    throw new Error('Unhandled error');
   }
+
   const { viewPasscodeVersion, adminPasscodeVersion, entity } = item;
 
   return (
