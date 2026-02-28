@@ -10,6 +10,7 @@ import { grantAccessIfNeeded } from './grantAccessIfNeeded';
 import type {
   ShareableCreateFields,
   ShareableEntity,
+  ShareableEntityStripped,
   ShareableUpdateFields,
 } from './types';
 
@@ -135,10 +136,7 @@ export class DBShareableHelper extends DBHelperBase {
   }: {
     shortId: string;
     search?: Record<string, unknown>;
-  }): Promise<
-    | Omit<ShareableEntity<T>, 'viewPasscode' | 'adminPasscode' | 'pk' | 'sk'>
-    | undefined
-  > {
+  }): Promise<ShareableEntityStripped<T> | undefined> {
     const item = await this.get<ShareableEntity<T>>({ shortId });
     if (!item) {
       return undefined;
