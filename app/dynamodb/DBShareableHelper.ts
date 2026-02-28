@@ -132,18 +132,12 @@ export class DBShareableHelper extends DBHelperBase {
 
   async getItem<T extends ShareableCommon>({
     shortId,
-    search = {},
   }: {
     shortId: string;
-    search?: Record<string, unknown>;
   }): Promise<ShareableEntityStripped<T> | undefined> {
     const item = await this.get<ShareableEntity<T>>({ shortId });
     if (!item) {
       return undefined;
-    }
-
-    if (item.entity === 'poll' && search.view === 'result') {
-      // TODO:
     }
 
     const {
