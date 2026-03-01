@@ -4,9 +4,9 @@ import { useMemo, useState } from 'react';
 import { useForm } from '@hanlogy/react-web-ui';
 import { SelectField, TextareaField, TextField } from '@/component/form/fields';
 import { pollResultsVisibilities, type Poll } from '@/definitions';
-import { AddOrRemoveFieldToggle } from '@/editor/components/AddOrRemoveFieldToggle';
 import { EditorLayout } from '@/editor/components/EditorLayout';
 import { EntityNameField } from '@/editor/components/EntityNameField';
+import { WithExtraFields } from '@/editor/components/WithExtraFields';
 import {
   AddButtonWithIcon,
   DeleteIconButton,
@@ -48,10 +48,6 @@ export function PollEditor({ initialData }: { initialData?: Poll }) {
     }
   );
 
-  const [withCloseAt, setWithCloseAt] = useState<boolean>(
-    !!defaultValues.closesAt
-  );
-
   const { register, setFieldValue } = formManager;
 
   return (
@@ -84,7 +80,25 @@ export function PollEditor({ initialData }: { initialData?: Poll }) {
           label="Note"
           controller={register('note')}
         />
-        <div>
+        <WithExtraFields
+          isExpandedDefault={!!defaultValues.closesAt}
+          label="Close time"
+          onToggle={(v) => {
+            if (!v) {
+              setFieldValue('closesAt', '');
+            }
+          }}
+          extra={
+            <TextField
+              label="Close at"
+              defaultValue={defaultValues.closesAt}
+              controller={register('closesAt', {
+                transform: transformDateTime,
+              })}
+              type="datetime-local"
+            />
+          }
+        >
           <SelectField
             defaultValue={defaultValues.resultsVisibility}
             label="Vote results visibility"
@@ -98,36 +112,7 @@ export function PollEditor({ initialData }: { initialData?: Poll }) {
               }[v],
             }))}
           />
-          {!withCloseAt && (
-            <AddOrRemoveFieldToggle
-              onClick={() => {
-                setWithCloseAt(true);
-              }}
-              label="Close time"
-              isAdd={true}
-            />
-          )}
-        </div>
-        {withCloseAt && (
-          <div>
-            <TextField
-              label="Close at"
-              defaultValue={defaultValues.closesAt}
-              controller={register('closesAt', {
-                transform: transformDateTime,
-              })}
-              type="datetime-local"
-            />
-            <AddOrRemoveFieldToggle
-              label="Close time"
-              isAdd={false}
-              onClick={() => {
-                setWithCloseAt(false);
-                setFieldValue('closesAt', '');
-              }}
-            />
-          </div>
-        )}
+        </WithExtraFields>
       </div>
       <div className="mt-6 text-xl">Questions</div>
       <div className="py-4">

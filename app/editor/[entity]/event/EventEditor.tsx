@@ -1,14 +1,14 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useForm } from '@hanlogy/react-web-ui';
 import { SelectField, TextareaField, TextField } from '@/component/form/fields';
 import { type Event, eventTypes } from '@/definitions';
 import { EditorLayout } from '@/editor/components/EditorLayout';
 import { EntityNameField } from '@/editor/components/EntityNameField';
+import { WithExtraFields } from '@/editor/components/WithExtraFields';
 import { safeParseField, safeParseFields } from '@/helpers/schemaHelpers';
 import { normalizeDateTime, transformDateTime } from '../../helpers';
-import { DateTimeFieldToggle } from './DateTimeFieldToggle';
 import { EventFormData, publishEvent } from './actions';
 import { startTimeSchema, timeFieldsSchema } from './schema';
 
@@ -40,13 +40,6 @@ export function EventEditor({ initialData }: { initialData?: Event }) {
     };
   }, [initialData]);
 
-  const [withEndTime, setWithEndTime] = useState<boolean>(
-    !!defaultValues.endTime
-  );
-
-  const [withRsvpDeadline, setWithRsvpDeadline] = useState<boolean>(
-    !!defaultValues.rsvpDeadline
-  );
   const { register, setFieldValue } = formManager;
 
   return (
@@ -64,34 +57,15 @@ export function EventEditor({ initialData }: { initialData?: Event }) {
           register={register}
           defaultValue={defaultValues.name}
         />
-        <div>
-          <TextField
-            defaultValue={defaultValues.startTime}
-            label="Start date and time"
-            controller={register('startTime', {
-              transform: transformDateTime,
-              validator: ({ startTime }) => {
-                const { error } = safeParseField(startTimeSchema, startTime);
-                if (error) {
-                  return error;
-                }
-              },
-            })}
-            type="datetime-local"
-          />
-          {!withEndTime && (
-            <DateTimeFieldToggle
-              field="endTime"
-              isAdd={true}
-              onClick={() => {
-                setWithEndTime(true);
-              }}
-            />
-          )}
-        </div>
-
-        {withEndTime && (
-          <div>
+        <WithExtraFields
+          isExpandedDefault={!!!!defaultValues.endTime}
+          label="End date and time"
+          onToggle={(v) => {
+            if (!v) {
+              setFieldValue('endTime', '');
+            }
+          }}
+          extra={
             <TextField
               defaultValue={defaultValues.endTime}
               label="End date and time"
@@ -113,16 +87,24 @@ export function EventEditor({ initialData }: { initialData?: Event }) {
               })}
               type="datetime-local"
             />
-            <DateTimeFieldToggle
-              field="endTime"
-              isAdd={false}
-              onClick={() => {
-                setWithEndTime(false);
-                setFieldValue('endTime', '');
-              }}
-            />
-          </div>
-        )}
+          }
+        >
+          <TextField
+            defaultValue={defaultValues.startTime}
+            label="Start date and time"
+            controller={register('startTime', {
+              transform: transformDateTime,
+              validator: ({ startTime }) => {
+                const { error } = safeParseField(startTimeSchema, startTime);
+                if (error) {
+                  return error;
+                }
+              },
+            })}
+            type="datetime-local"
+          />
+        </WithExtraFields>
+
         <SelectField
           defaultValue={defaultValues.type}
           label="In persion or virtural?"
@@ -137,25 +119,15 @@ export function EventEditor({ initialData }: { initialData?: Event }) {
           label="Address / URL"
           controller={register('location')}
         />
-        <div>
-          <TextareaField
-            rows={5}
-            defaultValue={defaultValues.description}
-            label="Description"
-            controller={register('description')}
-          />
-          {!withRsvpDeadline && (
-            <DateTimeFieldToggle
-              field="rsvpDeadline"
-              isAdd={true}
-              onClick={() => {
-                setWithRsvpDeadline(true);
-              }}
-            />
-          )}
-        </div>
-        {withRsvpDeadline && (
-          <div>
+        <WithExtraFields
+          isExpandedDefault={!!!!defaultValues.rsvpDeadline}
+          label="RSVP deadline"
+          onToggle={(v) => {
+            if (!v) {
+              setFieldValue('rsvpDeadline', '');
+            }
+          }}
+          extra={
             <TextField
               defaultValue={defaultValues.rsvpDeadline}
               label="RSVP deadline"
@@ -164,16 +136,15 @@ export function EventEditor({ initialData }: { initialData?: Event }) {
               })}
               type="datetime-local"
             />
-            <DateTimeFieldToggle
-              field="rsvpDeadline"
-              isAdd={false}
-              onClick={() => {
-                setWithRsvpDeadline(false);
-                setFieldValue('rsvpDeadline', '');
-              }}
-            />
-          </div>
-        )}
+          }
+        >
+          <TextareaField
+            rows={5}
+            defaultValue={defaultValues.description}
+            label="Description"
+            controller={register('description')}
+          />
+        </WithExtraFields>
       </div>
     </EditorLayout>
   );
