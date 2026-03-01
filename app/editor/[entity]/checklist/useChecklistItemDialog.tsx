@@ -3,10 +3,16 @@ import { useDialog } from '@hanlogy/react-web-ui';
 import type { ChecklistItem } from '@/definitions';
 import { ItemEditorDialog } from './ItemEditorDialog';
 
-export function useChecklistItemDialog(initialItem?: readonly ChecklistItem[]) {
+export function useChecklistItemDialog({
+  initialItems,
+  onChange,
+}: {
+  initialItems?: readonly ChecklistItem[];
+  onChange: () => void;
+}) {
   const { openDialog } = useDialog();
   const [items, setItems] = useState<readonly ChecklistItem[]>(
-    initialItem ?? []
+    initialItems ?? []
   );
 
   const openItemDialog = async (item?: ChecklistItem) => {
@@ -27,6 +33,7 @@ export function useChecklistItemDialog(initialItem?: readonly ChecklistItem[]) {
     } else {
       setItems((prev) => [...prev, result]);
     }
+    onChange();
   };
 
   return {

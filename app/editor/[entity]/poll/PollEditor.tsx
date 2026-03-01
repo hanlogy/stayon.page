@@ -40,7 +40,12 @@ export function PollEditor({ initialData }: { initialData?: Poll }) {
   }, [initialData]);
 
   const { questions, setQuestions, openQuestionDialog } = usePollQuestionDialog(
-    defaultValues.questions
+    {
+      initialData: defaultValues.questions,
+      onChange: () => {
+        setError('');
+      },
+    }
   );
 
   const [withCloseAt, setWithCloseAt] = useState<boolean>(
@@ -58,17 +63,13 @@ export function PollEditor({ initialData }: { initialData?: Poll }) {
       getValues={() => {
         setError(undefined);
 
-        const validQuestions = questions.filter((e) => !!e.title);
-        if (!validQuestions.length) {
+        if (!questions.length) {
           setError('A poll requires at least one question');
           setTabName('detail');
           return undefined;
         }
 
-        return {
-          ...formManager.getValues(),
-          questions: validQuestions,
-        };
+        return { ...formManager.getValues(), questions };
       }}
       formManager={formManager}
     >

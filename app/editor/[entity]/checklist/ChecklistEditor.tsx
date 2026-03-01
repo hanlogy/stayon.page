@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from '@hanlogy/react-web-ui';
 import type { Checklist } from '@/definitions';
 import { EntityNameField } from '@/editor/components/EntityNameField';
+import { useEditorContext } from '@/editor/state/hooks';
 import { EditorLayout } from '../../components/EditorLayout';
 import {
   AddButtonWithIcon,
@@ -15,10 +16,15 @@ import { useChecklistItemDialog } from './useChecklistItemDialog';
 
 export function ChecklistEditor({ initialData }: { initialData?: Checklist }) {
   const formManager = useForm<ChecklistFormData>();
-  const { items, setItems, openItemDialog } = useChecklistItemDialog(
-    initialData?.items
-  );
+  const { items, setItems, openItemDialog } = useChecklistItemDialog({
+    initialItems: initialData?.items,
+    onChange: () => {
+      setError('');
+    },
+  });
+  const [error, setError] = useState<string | undefined>();
   const { register, setValuesChangeListener } = formManager;
+  const { setTabName } = useEditorContext();
 
   useEffect(() => {
     setValuesChangeListener(() => {
@@ -33,6 +39,14 @@ export function ChecklistEditor({ initialData }: { initialData?: Checklist }) {
       initialData={initialData}
       action={publishChecklist}
       getValues={() => {
+        setError(undefined);
+
+        if (!items.length) {
+          setError('Checklist items cannot be empty');
+          setTabName('detail');
+          return undefined;
+        }
+
         return { ...formManager.getValues(), items };
       }}
       formManager={formManager}
@@ -79,6 +93,7 @@ export function ChecklistEditor({ initialData }: { initialData?: Checklist }) {
           Add item
         </AddButtonWithIcon>
       </div>
+      {error && <div className="my-6 text-center text-red-600">{error}</div>}
     </EditorLayout>
   );
 }

@@ -57,7 +57,7 @@ export function QuestionEditorDialog({
       title,
       isMultiple,
       isRequired,
-      options,
+      options: validOptions,
     });
   };
 

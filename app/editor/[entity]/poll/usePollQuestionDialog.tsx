@@ -3,7 +3,13 @@ import { useDialog } from '@hanlogy/react-web-ui';
 import { type PollQuestion } from '@/definitions';
 import { QuestionEditorDialog } from './QuestionEditorDialog';
 
-export function usePollQuestionDialog(initialData?: readonly PollQuestion[]) {
+export function usePollQuestionDialog({
+  initialData,
+  onChange,
+}: {
+  initialData?: readonly PollQuestion[];
+  onChange: () => void;
+}) {
   const { openDialog } = useDialog();
   const [questions, setQuestions] = useState<readonly PollQuestion[]>(
     initialData ?? []
@@ -33,6 +39,7 @@ export function usePollQuestionDialog(initialData?: readonly PollQuestion[]) {
     } else {
       setQuestions((prev) => [...prev, result]);
     }
+    onChange();
   };
 
   return {
