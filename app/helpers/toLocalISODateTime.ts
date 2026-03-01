@@ -15,14 +15,14 @@ export function toLocalISODateTime(input: Date): {
     })
     .split(' ');
 
-  const [year, ...dateRest] = localDateTime[0].split('-');
-  const dateText = [year.padStart(4, '0'), ...dateRest].join('-');
+  const [year, ...dateRest] = localDateTime[0]!.split('-');
+  const dateText = [year!.padStart(4, '0'), ...dateRest].join('-');
 
   const timeText = localDateTime[1];
 
   return {
     date: dateText,
-    time: timeText,
+    time: timeText!,
     dateTime: [dateText, timeText].join('T'),
   };
 }
