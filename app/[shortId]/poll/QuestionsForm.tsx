@@ -9,9 +9,11 @@ import { VoteDialog } from './VoteDialog';
 
 export function QuestionsForm({
   shortId,
+  isClosed,
   questions,
 }: {
   shortId: string;
+  isClosed: boolean;
   questions: readonly PollQuestion[];
 }) {
   const [answers, setAnswers] = useState<PollVoteAnswer[]>(
@@ -92,16 +94,18 @@ export function QuestionsForm({
           );
         })}
       </div>
-      <div className="flex-center py-10">
-        <FilledButton
-          onClick={handleVote}
-          type="button"
-          size="medium"
-          className="min-w-40"
-        >
-          Vote
-        </FilledButton>
-      </div>
+      {!isClosed && (
+        <div className="flex-center py-10">
+          <FilledButton
+            onClick={handleVote}
+            type="button"
+            size="medium"
+            className="min-w-40"
+          >
+            Vote
+          </FilledButton>
+        </div>
+      )}
     </>
   );
 }

@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import { ChartPieIcon, CircleQuestionMarkIcon } from 'lucide-react';
+import { PollAnswersResponse } from '@/actions/getPollAnswers';
 import { LazyLink } from '@/component/LazyLink';
 import type { Poll } from '@/definitions';
 import { QuestionsForm } from './QuestionsForm';
@@ -11,16 +12,19 @@ const tabItems = [
 ];
 
 export function PollView({
-  currentView,
-  item: { shortId, name, questions, note, resultsVisibility, isClosed },
+  item,
 }: {
-  item: Poll;
-  currentView: string;
+  item: Poll & { pollAnswers?: PollAnswersResponse };
 }) {
+  const { shortId, name, questions, isClosed, note, pollAnswers } = item;
+  const currentView = pollAnswers ? 'result' : 'questions';
+
   return (
     <div className="mx-auto max-w-3xl pb-10">
       <div className="mb-2 flex flex-col px-4">
-        <div className="text-lg text-gray-800">{name}</div>
+        <div className="text-center text-lg text-gray-800 sm:text-left">
+          {name}
+        </div>
         {note && <div className="mt-1 text-gray-500">{note}</div>}
         <div className="mt-4 flex self-center sm:self-end">
           {tabItems.map(({ view, Icon, label }) => {
@@ -45,11 +49,13 @@ export function PollView({
         </div>
       </div>
       {currentView === 'questions' && (
-        <QuestionsForm questions={questions} shortId={shortId} />
+        <QuestionsForm
+          isClosed={isClosed}
+          questions={questions}
+          shortId={shortId}
+        />
       )}
-      {currentView === 'result' && (
-        <ResultView resultsVisibility={resultsVisibility} isClosed={isClosed} />
-      )}
+      {pollAnswers && <ResultView poll={item} answers={pollAnswers} />}
     </div>
   );
 }

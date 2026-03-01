@@ -11,7 +11,7 @@ import { DBShareableHelper } from '@/dynamodb/DBShareableHelper';
 import { ShareableEntity } from '@/dynamodb/types';
 import { toActionFailure, toActionSuccess } from '@/helpers/action';
 import { checkAccess } from '@/lib/auth/checkAccess';
-import { getPollResult } from './getPollResult';
+import { getPollAnswers, PollAnswersResponse } from './getPollAnswers';
 
 export async function getShareableItem<T extends ShareableCommon>({
   shortId: shortIdLike,
@@ -23,7 +23,9 @@ export async function getShareableItem<T extends ShareableCommon>({
   search?: Record<string, string>;
 }): Promise<
   ActionResponse<
-    Omit<ShareableEntity<T>, 'viewPasscode' | 'adminPasscode' | 'pk' | 'sk'>,
+    Omit<ShareableEntity<T>, 'viewPasscode' | 'adminPasscode' | 'pk' | 'sk'> & {
+      pollAnswers?: PollAnswersResponse;
+    },
     | {
         shortId: string;
         entity: ShareableEntityName;
@@ -59,13 +61,12 @@ export async function getShareableItem<T extends ShareableCommon>({
     });
   }
 
-  if (item.entity === 'poll') {
-    const result = await getPollResult({
+  if (item.entity === 'poll' && search.view === 'result') {
+    const result = await getPollAnswers({
       poll: item as unknown as Poll,
-      view: search.view,
     });
 
-    return toActionSuccess({ ...item, result });
+    return toActionSuccess({ ...item, pollAnswers: result });
   }
 
   return toActionSuccess(item);

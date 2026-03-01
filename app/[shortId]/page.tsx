@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { EditIcon } from 'lucide-react';
 import { notFound } from 'next/navigation';
+import { PollAnswersResponse } from '@/actions/getPollAnswers';
 import { getShareableItem } from '@/actions/getShareableItem';
 import { AuthForm } from '@/component/AuthForm/AuthForm';
 import { Layout } from '@/component/Layout';
@@ -76,8 +77,7 @@ export default async function SharingPage({
             case 'poll':
               return (
                 <PollView
-                  currentView={searchRecord.view ?? 'questions'}
-                  item={item as Poll}
+                  item={item as Poll & { pollAnswers?: PollAnswersResponse }}
                 />
               );
           }
