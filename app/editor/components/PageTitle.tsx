@@ -2,11 +2,13 @@
 
 import { kebabToCamel } from '@hanlogy/ts-lib';
 import { notFound, usePathname } from 'next/navigation';
-import { shareableEntityNames } from '@/definitions/constants';
+import { shareableEntityNames } from '@/definitions';
 
 export function PageTitle() {
   const featureKey = usePathname().replace('/editor/', '');
-  const featureType = shareableEntityNames.find((e) => e === kebabToCamel(featureKey));
+  const featureType = shareableEntityNames.find(
+    (e) => e === kebabToCamel(featureKey)
+  );
 
   if (!featureType) {
     return notFound();

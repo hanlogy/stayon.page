@@ -2,7 +2,7 @@ import { CloseDialogFn, useForm } from '@hanlogy/react-web-ui';
 import { Dialog } from '@/component/Dialog';
 import { FilledButton, TextButton } from '@/component/buttons';
 import { TextareaField, TextField } from '@/component/form/fields';
-import { ChecklistItem } from '@/definitions/types';
+import type { ChecklistItem } from '@/definitions';
 
 interface FormData {
   name: string;

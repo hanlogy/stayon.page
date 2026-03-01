@@ -1,4 +1,4 @@
-import { AccessType } from '@/definitions/types';
+import type { AccessType } from '@/definitions';
 
 export function buildCookieName({
   type,

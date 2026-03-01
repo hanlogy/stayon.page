@@ -3,7 +3,7 @@
 import { SubmitEvent, useState } from 'react';
 import { useForm } from '@hanlogy/react-web-ui';
 import clsx from 'clsx';
-import { AccessType } from '@/definitions/types';
+import { type AccessType } from '@/definitions';
 import { FilledButton } from '../buttons';
 import { createTextFieldWith } from '../form/fields';
 import { auth } from './action';
@@ -51,7 +51,7 @@ export function AuthForm({
     }
 
     return {
-      title: 'Enter admin passcode to manage',
+      title: 'Enter admin passcode to continue',
       placeholder: 'Admin passcode',
     };
   })();

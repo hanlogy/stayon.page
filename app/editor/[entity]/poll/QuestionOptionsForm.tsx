@@ -1,7 +1,7 @@
 import { IconButton, TextInput } from '@hanlogy/react-web-ui';
 import { PlusIcon, Trash2Icon } from 'lucide-react';
 import { OutlinedButton } from '@/component/buttons';
-import { PollQuestionOption } from '@/definitions/types';
+import { type PollQuestionOption } from '@/definitions/types';
 
 export function QuestionOptionsForm({
   options,

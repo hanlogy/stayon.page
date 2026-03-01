@@ -3,7 +3,7 @@ import { CloseDialogFn, useForm } from '@hanlogy/react-web-ui';
 import { ChevronLeft } from 'lucide-react';
 import { Dialog } from '@/component/Dialog';
 import { FilledButton, OutlinedButton, TextButton } from '@/component/buttons';
-import { EventRsvp } from '@/definitions/types';
+import { EventRsvp } from '@/definitions';
 import { RsvpConfirmedView } from './RsvpConfirmedView';
 import { RsvpResponseForm } from './RsvpResponseForm';
 import { SearchRsvpForm } from './SearchRsvpForm';

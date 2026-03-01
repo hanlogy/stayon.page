@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDialog } from '@hanlogy/react-web-ui';
-import { ChecklistItem } from '@/definitions/types';
+import type { ChecklistItem } from '@/definitions';
 import { ItemEditorDialog } from './ItemEditorDialog';
 
 export function useChecklistItemDialog(initialItem?: readonly ChecklistItem[]) {

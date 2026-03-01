@@ -1,4 +1,4 @@
-import { ShareableCommon } from '@/definitions/types';
+import type { ShareableCommon } from '@/definitions';
 import { formatShortId } from '@/helpers/shortId';
 import { DBHelperBase } from './DBHelperBase';
 import {
@@ -10,6 +10,7 @@ import { grantAccessIfNeeded } from './grantAccessIfNeeded';
 import type {
   ShareableCreateFields,
   ShareableEntity,
+  ShareableEntityStripped,
   ShareableUpdateFields,
 } from './types';
 
@@ -133,10 +134,7 @@ export class DBShareableHelper extends DBHelperBase {
     shortId,
   }: {
     shortId: string;
-  }): Promise<
-    | Omit<ShareableEntity<T>, 'viewPasscode' | 'adminPasscode' | 'pk' | 'sk'>
-    | undefined
-  > {
+  }): Promise<ShareableEntityStripped<T> | undefined> {
     const item = await this.get<ShareableEntity<T>>({ shortId });
     if (!item) {
       return undefined;
@@ -145,8 +143,8 @@ export class DBShareableHelper extends DBHelperBase {
     const {
       pk: _pk,
       sk: _sk,
-      viewPasscode: _vp,
-      adminPasscode: _ap,
+      viewPasscode: _viewPasscode,
+      adminPasscode: _adminPasscode,
       ...rest
     } = item;
 

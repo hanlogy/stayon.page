@@ -1,7 +1,7 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { ActionResponse } from '@/definitions/types';
+import type { ActionResponse } from '@/definitions';
 import { DBShareableHelper } from '@/dynamodb/DBShareableHelper';
 import { toActionFailure } from '@/helpers/action';
 

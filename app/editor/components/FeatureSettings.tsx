@@ -1,6 +1,6 @@
 import { FormFieldRegister } from '@hanlogy/react-web-ui';
 import { SelectField } from '@/component/form/fields';
-import { expiresAfterOptions } from '@/definitions/constants';
+import { expiresAfterOptions } from '@/definitions';
 import { formId } from '../constants';
 import { SettingsFormData } from '../types';
 import { PasswordField } from './PasswordField';

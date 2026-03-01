@@ -1,4 +1,4 @@
-import { Checklist } from '@/definitions/types';
+import type { Checklist } from '@/definitions';
 
 const CHECKLIST_EDITOR_KEY = 'checklist_editor';
 

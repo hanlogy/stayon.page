@@ -1,16 +1,16 @@
-import { ComponentType } from 'react';
+import { ComponentType, ReactNode } from 'react';
 import { DialogProvider } from '@hanlogy/react-web-ui';
 import { FlexCenter } from '@hanlogy/react-web-ui';
 import { kebabToCamel } from '@hanlogy/ts-lib';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { AccessGuard, AccessGuardAttributes } from '@/component/AccessGuard';
+import { getShareableItem } from '@/actions/getShareableItem';
+import { AuthForm } from '@/component/AuthForm/AuthForm';
+import { Layout } from '@/component/Layout';
+import { NoAdminPasscode } from '@/component/NoAdminPasscode';
 import { shareableEntityNames } from '@/definitions/constants';
-import { ShareableCommon } from '@/definitions/types';
-import { DBChecklistHelper } from '@/dynamodb/DBChecklistHelper';
-import { DBEventHelper } from '@/dynamodb/DBEventHelper';
-import { DBPollHelper } from '@/dynamodb/DBPollHelper';
-import { DBShareableRepository } from '@/dynamodb/types';
+import { Checklist, Event, Poll, ShareableCommon } from '@/definitions/types';
+import { ShareableEntityStripped } from '@/dynamodb/types';
 import { EditorContextProvider } from '../state/provider';
 import { ChecklistEditor } from './checklist/ChecklistEditor';
 import { EventEditor } from './event/EventEditor';
@@ -36,46 +36,65 @@ export default async function EditorPage({
   const shortIdLike = (await searchParams).id;
 
   const createEditor = async <DataT extends ShareableCommon>(
-    Helper: new () => DBShareableRepository<DataT>,
-    Editor: ComponentType<{ initialData: DataT | undefined }>
+    Editor: ComponentType<{
+      initialData: ShareableEntityStripped<DataT> | undefined;
+    }>
   ) => {
-    let item: DataT | undefined = undefined;
-    let accessGuardAttributes: AccessGuardAttributes | undefined;
+    let item: ShareableEntityStripped<DataT> | undefined = undefined;
 
     if (typeof shortIdLike === 'string') {
-      item = await new Helper().getItem({ shortId: shortIdLike });
-      if (!item) {
-        return notFound();
-      }
+      const { data, error } = await getShareableItem<DataT>({
+        shortId: shortIdLike,
+        accessType: 'adminAccess',
+      });
 
-      accessGuardAttributes = {
-        type: 'adminAccess' as const,
-        shortId: item.shortId,
-        viewPasscodeVersion: item.viewPasscodeVersion,
-        adminPasscodeVersion: item.adminPasscodeVersion,
-      };
+      if (error) {
+        const { code: errorCode, data: errorData } = error;
+        if (errorCode === 'notFound') {
+          return notFound();
+        }
+
+        if (errorCode === 'unauthorized') {
+          let accessDeniedView: ReactNode;
+          if (errorData && errorData.hasAdminPassword === false) {
+            accessDeniedView = <NoAdminPasscode shortId={errorData.shortId} />;
+          } else {
+            accessDeniedView = (
+              <AuthForm type="adminAccess" shortId={shortIdLike} />
+            );
+          }
+
+          return (
+            <Layout>
+              <title>Access Denied</title>
+              {accessDeniedView}
+            </Layout>
+          );
+        }
+
+        throw new Error('unknown error');
+      }
+      item = data;
     }
 
     return (
-      <AccessGuard attributes={accessGuardAttributes}>
-        <DialogProvider>
-          <EditorContextProvider>
-            <Editor initialData={item} />
-          </EditorContextProvider>
-        </DialogProvider>
-      </AccessGuard>
+      <DialogProvider>
+        <EditorContextProvider>
+          <Editor initialData={item} />
+        </EditorContextProvider>
+      </DialogProvider>
     );
   };
 
   switch (entityName) {
     case 'checklist':
-      return await createEditor(DBChecklistHelper, ChecklistEditor);
+      return await createEditor<Checklist>(ChecklistEditor);
 
     case 'event':
-      return await createEditor(DBEventHelper, EventEditor);
+      return await createEditor<Event>(EventEditor);
 
     case 'poll':
-      return await createEditor(DBPollHelper, PollEditor);
+      return await createEditor<Poll>(PollEditor);
 
     default:
       return (

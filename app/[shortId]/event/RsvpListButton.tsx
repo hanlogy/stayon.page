@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import { UsersIcon } from 'lucide-react';
 import { Dialog } from '@/component/Dialog';
 import { TextButton } from '@/component/buttons';
-import { EventRsvp, RsvpResponse } from '@/definitions/types';
+import type { EventRsvp, RsvpResponse } from '@/definitions';
 import { fetchRsvpList } from './actions';
 
 export function RsvpListButton({

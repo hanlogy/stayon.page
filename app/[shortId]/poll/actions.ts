@@ -1,6 +1,6 @@
 'use server';
 
-import type { ActionResponse, PollVoteAnswer } from '@/definitions/types';
+import type { PollVoteAnswer, ActionResponse } from '@/definitions';
 import { DBPollVoteHelper } from '@/dynamodb/DBPollVoteHelper';
 import { toActionFailure, toActionSuccess } from '@/helpers/action';
 

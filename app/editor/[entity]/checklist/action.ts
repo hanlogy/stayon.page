@@ -1,7 +1,7 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { ActionResponse, ChecklistItem } from '@/definitions/types';
+import type { ActionResponse, ChecklistItem } from '@/definitions';
 import { DBChecklistHelper } from '@/dynamodb/DBChecklistHelper';
 import { parseWithSchema } from '@/editor/schema/helpers';
 import { SettingsFormData } from '@/editor/types';

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { pollResultsVisibilities } from '@/definitions/constants';
+import { pollResultsVisibilities } from '@/definitions';
 
 export const resultsVisibilitySchema = z.enum(pollResultsVisibilities);
 

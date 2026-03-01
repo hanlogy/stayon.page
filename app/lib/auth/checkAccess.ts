@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { AccessType } from '@/definitions/types';
+import type { AccessType } from '@/definitions';
 import { verifyJwt } from '../jwt';
 import { buildCookieName } from './helpers';
 

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { YesOrNo } from '@/definitions/types';
+import type { YesOrNo } from '@/definitions';
 import { safeParseFields } from '@/helpers/schemaHelpers';
 import { commonFieldsSchemas } from './common';
 
