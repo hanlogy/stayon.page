@@ -12,12 +12,15 @@ import {
   DeleteIconButton,
   EditIconButton,
 } from '@/editor/components/buttons';
+import { useEditorContext } from '@/editor/state/hooks';
 import { normalizeDateTime, transformDateTime } from '../../helpers';
 import { PollFormData, publishPoll } from './actions';
 import { usePollQuestionDialog } from './usePollQuestionDialog';
 
 export function PollEditor({ initialData }: { initialData?: Poll }) {
   const formManager = useForm<PollFormData>();
+  const [error, setError] = useState<string | undefined>();
+  const { setTabName } = useEditorContext();
   const defaultValues = useMemo(() => {
     const {
       name,
@@ -52,10 +55,21 @@ export function PollEditor({ initialData }: { initialData?: Poll }) {
       className="mx-auto max-w-2xl space-y-4"
       initialData={initialData}
       action={publishPoll}
-      getValues={() => ({
-        ...formManager.getValues(),
-        questions: questions.filter((e) => !!e.title),
-      })}
+      getValues={() => {
+        setError(undefined);
+
+        const validQuestions = questions.filter((e) => !!e.title);
+        if (!validQuestions.length) {
+          setError('A poll requires at least one question');
+          setTabName('detail');
+          return undefined;
+        }
+
+        return {
+          ...formManager.getValues(),
+          questions: validQuestions,
+        };
+      }}
       formManager={formManager}
     >
       <div className="space-y-6">
@@ -158,6 +172,7 @@ export function PollEditor({ initialData }: { initialData?: Poll }) {
           Add question
         </AddButtonWithIcon>
       </div>
+      {error && <div className="my-6 text-center text-red-600">{error}</div>}
     </EditorLayout>
   );
 }

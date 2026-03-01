@@ -36,7 +36,7 @@ export function EditorLayout<
     shortId: string | undefined,
     actionData: ActionDataT
   ) => ActionResponse | Promise<ActionResponse>;
-  getValues: () => ActionDataT;
+  getValues: () => ActionDataT | undefined | null;
   formManager: FormManager<FormDataT>;
   initialData: DataT | undefined;
 }>) {
@@ -71,10 +71,14 @@ export function EditorLayout<
     if (!validate()) {
       return;
     }
+    const values = getValues();
+    if (!values) {
+      return;
+    }
 
     setError(null);
     setIsPending(true);
-    const { success, error } = await action(shortId, getValues());
+    const { success, error } = await action(shortId, values);
 
     if (!success) {
       setError(error?.message ?? 'Something is wrong');
