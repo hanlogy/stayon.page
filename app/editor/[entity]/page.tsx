@@ -64,7 +64,12 @@ export default async function EditorPage({
             );
           }
 
-          return <Layout>{accessDeniedView}</Layout>;
+          return (
+            <Layout>
+              <title>Access Denied</title>
+              {accessDeniedView}
+            </Layout>
+          );
         }
 
         throw new Error('unknown error');

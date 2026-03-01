@@ -47,7 +47,12 @@ export default async function SharingPage({
         return notFound();
 
       case 'unauthorized':
-        content = <AuthForm type="viewAccess" shortId={shortId} />;
+        content = (
+          <>
+            <title>Access Denied</title>
+            <AuthForm type="viewAccess" shortId={shortId} />
+          </>
+        );
         break;
 
       default:
