@@ -1,4 +1,9 @@
-import { ActionResponse, AccessType, ShareableCommon } from '@/definitions';
+import {
+  ActionResponse,
+  AccessType,
+  ShareableCommon,
+  ShareableEntityName,
+} from '@/definitions';
 import { DBShareableHelper } from '@/dynamodb/DBShareableHelper';
 import { ShareableEntity } from '@/dynamodb/types';
 import { toActionFailure, toActionSuccess } from '@/helpers/action';
@@ -16,6 +21,7 @@ export async function getShareableItem<T extends ShareableCommon>({
     Omit<ShareableEntity<T>, 'viewPasscode' | 'adminPasscode' | 'pk' | 'sk'>,
     | {
         shortId: string;
+        entity: ShareableEntityName;
         hasAdminPassword: boolean;
       }
     | undefined
@@ -42,6 +48,7 @@ export async function getShareableItem<T extends ShareableCommon>({
       code: 'unauthorized',
       data: {
         shortId,
+        entity: item.entity,
         hasAdminPassword: !!adminPasscodeVersion,
       },
     });
