@@ -5,6 +5,7 @@ import { AuthForm } from '@/component/AuthForm/AuthForm';
 import { Layout } from '@/component/Layout';
 import { LazyLink } from '@/component/LazyLink';
 import type { Checklist, Event, Poll } from '@/definitions';
+import { searchParamsToStringRecord } from '@/helpers/searchParamsToStringRecord';
 import { normalizeShortId } from '@/helpers/shortId';
 import { ChecklistView } from './checklist/ChecklistView';
 import { ShareButton } from './components/ShareButton';
@@ -17,7 +18,7 @@ export default async function SharingPage({
 }: PageProps<'/[shortId]'>) {
   const maybeShortId = (await params).shortId;
   const shortId = normalizeShortId(maybeShortId);
-  const searchRecord = await searchParams;
+  const searchRecord = searchParamsToStringRecord(await searchParams);
 
   if (!shortId) {
     return notFound();
@@ -26,6 +27,7 @@ export default async function SharingPage({
   const { data: item, error } = await getShareableItem({
     shortId,
     accessType: 'viewAccess',
+    search: searchRecord,
   });
   if (error) {
     if (error.code === 'notFound') {
@@ -68,10 +70,9 @@ export default async function SharingPage({
             // Event item is safe to cast.
             return <EventView item={item as Event} />;
           case 'poll':
-            const view = searchRecord.view;
             return (
               <PollView
-                currentView={typeof view === 'string' ? view : 'questions'}
+                currentView={searchRecord.view ?? 'questions'}
                 item={item as Poll}
               />
             );
