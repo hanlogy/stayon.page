@@ -50,6 +50,7 @@ export interface Event extends ShareableCommon {
   readonly type?: EventType;
   readonly location?: string;
   readonly description?: string;
+  readonly isRsvpRequired: boolean;
   readonly rsvpDeadline?: string;
   readonly rsvpVisibility?: RsvpVisibility;
   readonly rsvpList?: readonly EventRsvp[];

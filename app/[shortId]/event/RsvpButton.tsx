@@ -8,7 +8,7 @@ export function RsvpButton({
   rsvpDeadline,
   shortId,
 }: {
-  rsvpDeadline: string;
+  rsvpDeadline?: string;
   shortId: string;
 }) {
   const { openDialog } = useDialog();
@@ -24,14 +24,16 @@ export function RsvpButton({
     );
   };
 
-  const dateTime = toDate(rsvpDeadline).toLocaleString([], {
-    year: 'numeric',
-    month: 'short',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  });
+  const deadlineFormatted = rsvpDeadline
+    ? toDate(rsvpDeadline).toLocaleString([], {
+        year: 'numeric',
+        month: 'short',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      })
+    : undefined;
 
   return (
     <div className="mt-3">
@@ -41,9 +43,11 @@ export function RsvpButton({
       >
         RSVP
       </button>
-      <div className="mt-1 text-sm text-gray-500">
-        Please respond before {dateTime}
-      </div>
+      {deadlineFormatted && (
+        <div className="mt-1 text-sm text-gray-500">
+          Please respond before {deadlineFormatted}
+        </div>
+      )}
     </div>
   );
 }

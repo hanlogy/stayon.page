@@ -1,15 +1,20 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useForm } from '@hanlogy/react-web-ui';
-import { SelectField, TextareaField, TextField } from '@/component/form/fields';
+import {
+  CheckboxField,
+  SelectField,
+  TextareaField,
+  TextField,
+} from '@/component/form/fields';
 import { type Event, eventTypes } from '@/definitions';
 import { EditorLayout } from '@/editor/components/EditorLayout';
 import { EntityNameField } from '@/editor/components/EntityNameField';
 import { WithExtraFields } from '@/editor/components/WithExtraFields';
 import { safeParseField, safeParseFields } from '@/helpers/schemaHelpers';
 import { normalizeDateTime, transformDateTime } from '../../helpers';
-import { EventFormData, publishEvent } from './actions';
+import { type EventFormData, publishEvent } from './actions';
 import { startTimeSchema, timeFieldsSchema } from './schema';
 
 export function EventEditor({ initialData }: { initialData?: Event }) {
@@ -26,6 +31,7 @@ export function EventEditor({ initialData }: { initialData?: Event }) {
       type,
       location,
       description,
+      isRsvpRequired,
       rsvpDeadline,
     } = initialData;
 
@@ -36,11 +42,16 @@ export function EventEditor({ initialData }: { initialData?: Event }) {
       type: type && eventTypes.includes(type) ? type : '',
       location,
       description,
+      isRsvpRequired,
       rsvpDeadline: normalizeDateTime(rsvpDeadline),
     };
   }, [initialData]);
 
   const { register, setFieldValue } = formManager;
+
+  const [withRsvpDeadline, setWithRsvpDeadline] = useState<boolean>(
+    !!defaultValues.isRsvpRequired
+  );
 
   return (
     <EditorLayout
@@ -108,8 +119,9 @@ export function EventEditor({ initialData }: { initialData?: Event }) {
         <SelectField
           defaultValue={defaultValues.type}
           label="In persion or virtural?"
+          isOptional
           controller={register('type')}
-          options={(['', ...eventTypes] as const).map((v) => ({
+          options={eventTypes.map((v) => ({
             value: v,
             label: { '': '', inPerson: 'In person', virtual: 'virtual' }[v],
           }))}
@@ -119,32 +131,31 @@ export function EventEditor({ initialData }: { initialData?: Event }) {
           label="Address / URL"
           controller={register('location')}
         />
-        <WithExtraFields
-          isExpandedDefault={!!!!defaultValues.rsvpDeadline}
-          label="RSVP deadline"
-          onToggle={(v) => {
-            if (!v) {
-              setFieldValue('rsvpDeadline', '');
-            }
-          }}
-          extra={
-            <TextField
-              defaultValue={defaultValues.rsvpDeadline}
-              label="RSVP deadline"
-              controller={register('rsvpDeadline', {
-                transform: transformDateTime,
-              })}
-              type="datetime-local"
-            />
-          }
-        >
-          <TextareaField
-            rows={5}
-            defaultValue={defaultValues.description}
-            label="Description"
-            controller={register('description')}
+        <TextareaField
+          rows={5}
+          defaultValue={defaultValues.description}
+          label="Description"
+          controller={register('description')}
+        />
+        <CheckboxField
+          defaultChecked={defaultValues.isRsvpRequired}
+          controller={register('isRsvpRequired', {
+            onValueChange: ({ isRsvpRequired }) => {
+              setWithRsvpDeadline(!!isRsvpRequired);
+            },
+          })}
+          label="RSVP required"
+        />
+        {withRsvpDeadline && (
+          <TextField
+            defaultValue={defaultValues.rsvpDeadline}
+            label="RSVP deadline"
+            controller={register('rsvpDeadline', {
+              transform: transformDateTime,
+            })}
+            type="datetime-local"
           />
-        </WithExtraFields>
+        )}
       </div>
     </EditorLayout>
   );

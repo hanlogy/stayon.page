@@ -17,6 +17,7 @@ export type EventFormData = SettingsFormData &
     | 'type'
     | 'location'
     | 'description'
+    | 'isRsvpRequired'
     | 'rsvpDeadline'
     | 'rsvpVisibility'
   >;

@@ -13,6 +13,7 @@ export function EventView({
     location,
     // type,
     description,
+    isRsvpRequired,
     rsvpDeadline,
   },
 }: {
@@ -29,10 +30,10 @@ export function EventView({
           {name}
         </div>
         {location && <div className="mt-2 text-gray-600">{location}</div>}
-        {rsvpDeadline && (
+        {isRsvpRequired && (
           <RsvpButton shortId={shortId} rsvpDeadline={rsvpDeadline} />
         )}
-        {rsvpDeadline && (
+        {isRsvpRequired && (
           <div className="mt-4 flex justify-end">
             <RsvpListButton shortId={shortId} />
           </div>
